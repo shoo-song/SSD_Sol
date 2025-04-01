@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 	int bytes_read;
 	//check param
 	ReadOrWrite = (char)argv[1];
-	LBA = strtol(argv[2], NULL, 16);
+	LBA = (int)argv[2];
 	if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w')) {
 		data = argv[3];
 	}

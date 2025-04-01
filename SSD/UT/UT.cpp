@@ -1,12 +1,20 @@
-/*
 #include <gmock/gmock.h>
 #include "../SSD.cpp"
 using namespace testing;
-
+using namespace std;
+class MockReader : public ReadDriver {
+public:
+	MOCK_METHOD(string, Read_SSD, (int LBA, int nand_fd, int result_fd), ());
+};
+class MockWriter : public WriteDriver {
+public:
+	MOCK_METHOD(int, Write_SSD, (int LBA, int nand_fd, char* data), ());
+};
 class SSDTestFixture : public Test
 {
 public:
-	
+	MockReader Reader;
+	MockWriter Writer;
 };
 
 
@@ -35,13 +43,28 @@ TEST_F(SSDTestFixture, invalidecheck4) {
 
 TEST_F(SSDTestFixture, Read1) {
 	//적은적 없으면 0 으로 return
+	string result = Reader.Read_SSD(0/*LBA*/, 0, 0);
+	EXPECT_EQ(result, "00000000");
 }
 TEST_F(SSDTestFixture, Read2) {
 	//SSD_output.txt 가 없으면 file 생성
+	char filename_r[100] = "ssd_output.txt";
+	//refact필요. Read_SSD는 LBA만 받도록
+	Reader.Read_SSD(0/*LBA*/, 0, 0);
+	int result = _access(filename_r, O_RDWR);
+	EXPECT_THAT(result, Ne(-1));
 
 }
 TEST_F(SSDTestFixture, Read3) {
 //Read 요청을 SSD_Output.txt 에 write하고, read 하여 write 내용이 읽혀야함
+	char filename_r[100] = "ssd_output.txt";
+	char filename_w[100] = "ssd_nand.txt";
+	int LBA = 10;
+	char* data = {};
+	//refact필요. Write_SSD는 LBA, Data를 받도록
+	Writer.Write_SSD(LBA, 0, 0);
+	string result = Reader.Read_SSD(LBA, 0, 0);
+	EXPECT_EQ(result, data);
 }
 TEST_F(SSDTestFixture, Read4) {
 // 임이 LBA (0~99) 수행 시, LBA 검색하여 data read
@@ -65,4 +88,3 @@ int main() {
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
 }
-*/
