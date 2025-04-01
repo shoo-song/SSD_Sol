@@ -5,6 +5,7 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SSD", "SSD\SSD.vcxproj", "{FEC41720-0753-4D5C-938A-5D952A583ABF}"
 EndProject
+
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shell", "Shell\Shell.vcxproj", "{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}"
 EndProject
 Global
