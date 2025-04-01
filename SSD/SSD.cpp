@@ -51,65 +51,62 @@ public:
 };
 class SSDInterface {
 public:
-	int main(int argc, char* argv[]) {
-		char ReadOrWrite = 0;
-		int LBA = 0;
-		char* data = (char*)"ABABABAB";
-		int nand_fd;
-		int result_fd;
-		int bytes_write;
-		int bytes_read;
-		//check param
-		if (argc == 3)
-		{
-			ReadOrWrite = (char)argv[1];
-			LBA = strtol(argv[2], NULL, 16);
-			data = argv[3];
-		}
-		else {
-			cout << "Check argument count\n";
-			return 0;
-		}
-		WriteDriver Writer;
-		ReadDriver Reader;
-		if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w'))
-		{
-			if (_access(filename_w, O_RDWR) == -1) {
-				_sopen_s(&nand_fd, filename_w, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-				Writer.Format_SSD(nand_fd, buf);
-				Writer.Write_SSD(LBA, nand_fd, data);
-			}
-			else {
-				_sopen_s(&nand_fd, filename_w, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-				Writer.Write_SSD(LBA, nand_fd, data);
-			}
-		}
-		else if ((ReadOrWrite == 'R') || (ReadOrWrite == 'r')) {
-			if (_access(filename_w, O_RDWR) == -1) {
-				//file doesn't exist - format
-				_sopen_s(&nand_fd, filename_w, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-				Writer.Format_SSD(nand_fd, buf);
-			}
-			else {
-				_sopen_s(&nand_fd, filename_w, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-				if (nand_fd == -1) {
-					//open error
-					return 0;
-				}
-			}
-			_sopen_s(&result_fd, filename_r, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-			Reader.Read_SSD(LBA, nand_fd, result_fd);
-			_close(result_fd);
-		}
-		else {
-			cout << "R or W cmd only\n";
-		}
-		_close(nand_fd);
-		return 0;
-	}
+	
 private:
+
+};
+int main(int argc, char* argv[]) {
 	char filename_w[100] = "ssd_nand.txt";
 	char filename_r[100] = "ssd_output.txt";
 	char* buf = (char*)"00000000";
-};
+	char ReadOrWrite = 0;
+	int LBA = 0;
+	char* data = (char*)"ABABABAB";
+	int nand_fd;
+	int result_fd;
+	int bytes_write;
+	int bytes_read;
+	//check param
+	ReadOrWrite = (char)argv[1];
+	LBA = strtol(argv[2], NULL, 16);
+	if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w')) {
+		data = argv[3];
+	}
 
+	WriteDriver Writer;
+	ReadDriver Reader;
+	if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w'))
+	{
+		if (_access(filename_w, O_RDWR) == -1) {
+			_sopen_s(&nand_fd, filename_w, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+			Writer.Format_SSD(nand_fd, buf);
+			Writer.Write_SSD(LBA, nand_fd, data);
+		}
+		else {
+			_sopen_s(&nand_fd, filename_w, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+			Writer.Write_SSD(LBA, nand_fd, data);
+		}
+	}
+	else if ((ReadOrWrite == 'R') || (ReadOrWrite == 'r')) {
+		if (_access(filename_w, O_RDWR) == -1) {
+			//file doesn't exist - format
+			_sopen_s(&nand_fd, filename_w, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+			Writer.Format_SSD(nand_fd, buf);
+		}
+		else {
+			_sopen_s(&nand_fd, filename_w, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+			if (nand_fd == -1) {
+				//open error
+				return 0;
+			}
+		}
+		_sopen_s(&result_fd, filename_r, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+		Reader.Read_SSD(LBA, nand_fd, result_fd);
+		_close(result_fd);
+	}
+	else {
+		cout << "R or W cmd only\n";
+	}
+	_close(nand_fd);
+	return 0;
+}

@@ -60,7 +60,6 @@ TEST_F(SSDTestFixture, Write4) {
 // 동일 LBA write는 LBA 검색 후, data 변경 (overwrite이나, 위치는 무관)
 }
 
-
 int main() {
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
