@@ -49,12 +49,8 @@ public:
 		//end format
 	}
 };
-class SSDInterface {
-public:
-	
-private:
 
-};
+#ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
 	char filename_w[100] = "ssd_nand.txt";
 	char filename_r[100] = "ssd_output.txt";
@@ -110,3 +106,4 @@ int main(int argc, char* argv[]) {
 	_close(nand_fd);
 	return 0;
 }
+#endif

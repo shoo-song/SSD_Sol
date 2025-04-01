@@ -1,14 +1,44 @@
-/*
+
 #include <gmock/gmock.h>
-#include "../SSD.cpp"
+#include "../SSD_Interface.cpp"
 using namespace testing;
 
 class SSDTestFixture : public Test
 {
 public:
-	
+	SSDInterface* SSDIn;
 };
 
+class MockFile : public SSDInterface {
+public:
+	MOCK_METHOD(bool, open, (const std::string& filename), ());
+};
+
+TEST_F(SSDTestFixture, FileOpen) {
+	MockFile file;
+	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
+
+	SSDInterface ssdIO;
+	EXPECT_EQ(true, ssdIO.open("ssd_nand.txt"));
+}
+
+TEST_F(SSDTestFixture, FileOpenCheck) {
+	MockFile file;
+	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
+
+	SSDInterface ssdIO;
+	EXPECT_EQ(true, ssdIO.isOpen());
+}
+
+TEST_F(SSDTestFixture, FileClose) {
+	MockFile file;
+    EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(false));
+
+	SSDInterface ssdIO;
+	ssdIO.close();
+
+	EXPECT_EQ(false, ssdIO.isOpen());
+}
 
 // (invalide check) Read Wrie 공통부
 TEST_F(SSDTestFixture, invalidecheck1) {
@@ -61,8 +91,9 @@ TEST_F(SSDTestFixture, Write4) {
 // 동일 LBA write는 LBA 검색 후, data 변경 (overwrite이나, 위치는 무관)
 }
 
+#ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
 }
-*/
+#endif
