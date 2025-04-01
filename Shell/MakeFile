@@ -1,0 +1,27 @@
+# Makefile
+
+CXX = g++
+CXXFLAGS = -Wall -std=c++17
+
+# 경로 포함한 소스파일
+A_SRC = UT/ScriptUt.cpp
+B_SRC = UT/SsdDriverUt.cpp
+
+# 실행 파일 이름
+A_TARGET = ScriptUt
+B_TARGET = SsdDriverUt
+
+# 기본: 아무것도 하지 않음
+all:
+	@echo "사용법: make a 또는 make b"
+
+# 개별 타겟 빌드
+a: $(A_SRC)
+	$(CXX) $(CXXFLAGS) -o $(A_TARGET) $(A_SRC)
+
+b: $(B_SRC)
+	$(CXX) $(CXXFLAGS) -o $(B_TARGET) $(B_SRC)
+
+# 정리
+clean:
+	rm -f $(A_TARGET) $(B_TARGET)
