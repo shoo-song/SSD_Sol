@@ -128,7 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SSD_test.cpp" />
+
+    <ClCompile Include="UT\UT.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
