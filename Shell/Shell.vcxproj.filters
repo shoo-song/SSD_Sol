@@ -30,11 +30,10 @@
     <ClCompile Include="SsdDriverUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptUt.cpp">
+    <ClCompile Include="ShellInterfaceUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
   </ItemGroup>
-
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="MakeFile" />
