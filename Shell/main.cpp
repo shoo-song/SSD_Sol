@@ -1,5 +1,5 @@
 #include <gmock/gmock.h>
-
+#include "SSD.cpp"
 class SsdDriverFixture : public testing::Test
 {
 public:

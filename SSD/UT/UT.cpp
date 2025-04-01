@@ -1,5 +1,5 @@
 #include <gmock/gmock.h>
-
+#include "../SSD.cpp"
 using namespace testing;
 
 class SSDTestFixture : public Test
