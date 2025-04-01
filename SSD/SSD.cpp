@@ -4,8 +4,8 @@
 using namespace std;
 class ReadDriver {
 public:
-	string Read_SSD(int LBA, int nand_fd, int result_fd) {
-		char* data;
+	void Read_SSD(int LBA, int nand_fd, int result_fd) {
+		char* data = {};
 		int bytes_read = 0;
 		int fd;
 		if (_lseek(nand_fd, LBA * 10, SEEK_SET) == -1) {
@@ -20,7 +20,7 @@ public:
 };
 class WriteDriver {
 public:
-	string Write_SSD(int LBA, int write_fd, char* data) {
+	void Write_SSD(int LBA, int write_fd, char* data) {
 		int bytes_write = 0;
 		if (_lseek(write_fd, LBA * 10, SEEK_SET) == -1) {
 			//lseek error
@@ -30,12 +30,12 @@ public:
 			//write error
 		}
 	}
-	int Format_SSD(int fd, char* buf) {
+	void Format_SSD(int fd, char* buf) {
 		//file doesn't exist - format
 		int bytes_write = 0;
 		if (fd == -1) {
 			//open error
-			return 0;
+			return;
 		}
 		for (off_t offset = 0; offset < 100 * 10; offset += 10) {
 			if (_lseek(fd, offset, SEEK_SET) == -1) {
