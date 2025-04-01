@@ -16,7 +16,6 @@ TEST_F(ShellInterfaceFixture, parseWriteTest) {
     EXPECT_EQ(WRITE_COMMAND, shellInterface.parse("write"));
 };
 
-
 TEST_F(ShellInterfaceFixture, parseExitTest) {
     EXPECT_EQ(EXIT_COMMAND, shellInterface.parse("exit"));
 }

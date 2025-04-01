@@ -14,7 +14,6 @@ enum ShellCommand {
 using std::string;
 
 class ShellInterface {
-private:
 public:
 	ShellCommand parse(string commandArg) {
 		if (commandArg.compare("read") == 0) {
@@ -37,4 +36,5 @@ public:
 		}
 		return UNKOWN;
 	}
+private:
 };
