@@ -5,6 +5,14 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SSD", "SSD\SSD.vcxproj", "{FEC41720-0753-4D5C-938A-5D952A583ABF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{6CF50D98-DA44-4440-97E3-4A13FB2B0A99}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shell", "Shell\Shell.vcxproj", "{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +29,14 @@ Global
 		{FEC41720-0753-4D5C-938A-5D952A583ABF}.Release|x64.Build.0 = Release|x64
 		{FEC41720-0753-4D5C-938A-5D952A583ABF}.Release|x86.ActiveCfg = Release|Win32
 		{FEC41720-0753-4D5C-938A-5D952A583ABF}.Release|x86.Build.0 = Release|Win32
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Debug|x64.ActiveCfg = Debug|x64
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Debug|x64.Build.0 = Debug|x64
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Debug|x86.ActiveCfg = Debug|Win32
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Debug|x86.Build.0 = Debug|Win32
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Release|x64.ActiveCfg = Release|x64
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Release|x64.Build.0 = Release|x64
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Release|x86.ActiveCfg = Release|Win32
+		{4391A2D7-A2DD-4EAA-A658-2FC3D66A3A24}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
