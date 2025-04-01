@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ShellInterface.cpp"
 #include <gmock/gmock.h>
 
 TEST(ShellInterfaceUt, parseReadTest) {
@@ -18,23 +18,23 @@ TEST(ShellInterfaceUt, parseWriteTest) {
 TEST(ShellInterfaceUt, parseExitTest) {
     ShellInterface shellInterface;
 
-    EXPECT_EQ(EXIT_COMMAND, shellInterface.parse("exit");
-};
+    EXPECT_EQ(EXIT_COMMAND, shellInterface.parse("exit"));
+}
 
 TEST(ShellInterfaceUt, parseHelpTest) {
     ShellInterface shellInterface;
 
-    EXPECT_EQ(HELP_COMMAND, shellInterface.parse("help");
-};
+    EXPECT_EQ(HELP_COMMAND, shellInterface.parse("help"));
+}
 
 TEST(ShellInterfaceUt, parseFullwriteTest) {
     ShellInterface shellInterface;
 
-    EXPECT_EQ(FULLWRITE_COMMAND, shellInterface.parse(("fullwrite"));
-};
+    EXPECT_EQ(FULLWRITE_COMMAND, shellInterface.parse("fullwrite"));
+}
 
 TEST(ShellInterfaceUt, parseFullreadTest) {
     ShellInterface shellInterface;
 
-    EXPECT_EQ("fullread", tsshellInterface.parse(("fullread"));
-};
+    EXPECT_EQ(FULLREAD_COMMAND, shellInterface.parse("fullread"));
+}
