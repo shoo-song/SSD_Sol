@@ -30,8 +30,11 @@
     <ClCompile Include="SsdDriverUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptUt.cpp">
+    <ClCompile Include="ShellInterfaceUt.cpp">
       <Filter>UT</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellInterface.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

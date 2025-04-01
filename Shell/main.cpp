@@ -1,5 +1,4 @@
-#include "ScriptUt.cpp"
-#include "SsdDriverUt.cpp"
+#include <gmock/gmock.h>
 
 int main(int argc, char** argv) {
     testing::InitGoogleMock(&argc, argv);

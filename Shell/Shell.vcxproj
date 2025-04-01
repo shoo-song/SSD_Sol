@@ -128,7 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ScriptUt.cpp">
+    <ClCompile Include="ShellInterface.cpp" />
+    <ClCompile Include="ShellInterfaceUt.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="SsdDriverUt.cpp">
