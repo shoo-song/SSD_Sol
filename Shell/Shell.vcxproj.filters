@@ -19,12 +19,12 @@
     <Filter Include="UT\dummy_files">
       <UniqueIdentifier>{e22d4804-87a1-4955-a66a-08bd1e936636}</UniqueIdentifier>
     </Filter>
-   <Filter Include="common">
+    <Filter Include="common">
       <UniqueIdentifier>{17cafafb-a41a-4e5d-a146-aae4ef7d299d}</UniqueIdentifier>
     </Filter>
     <Filter Include="shellcommand">
       <UniqueIdentifier>{46237640-09bc-460b-b959-4fd6b6dc941c}</UniqueIdentifier>
-     </Filter>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -98,6 +98,15 @@
     </ClCompile>
     <ClCompile Include="Shell.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellHelpCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellFullReadCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellFullWriteCommand.cpp">
+      <Filter>shellcommand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

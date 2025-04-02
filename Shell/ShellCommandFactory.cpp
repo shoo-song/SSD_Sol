@@ -4,6 +4,9 @@
 #include "ShellCommandInterface.h"
 #include "ShellReadCommand.cpp"
 #include "ShellWriteCommand.cpp"
+#include "ShellFullReadCommand.cpp"
+#include "ShellFullWriteCommand.cpp"
+#include "ShellHelpCommand.cpp"
 #include "ShellScript1.cpp"
 #include "ShellScript2.cpp"
 #include "ShellScript3.cpp"
@@ -23,6 +26,12 @@ public:
 				return std::make_shared<ShellReadCommand>(mpDriverInterface);
 			case WRITE_COMMAND:
 				return std::make_shared<ShellWriteCommand>(mpDriverInterface);
+			case FULLREAD_COMMAND:
+				return std::make_shared<ShellFullReadCommand>(mpDriverInterface);
+			case FULLWRITE_COMMAND:
+				return std::make_shared<ShellFullWriteCommand>(mpDriverInterface);
+			case HELP_COMMAND:
+				return std::make_shared<ShellHelpCommand>();
 			case SCRIPT_1:
 				return std::make_shared<ShellScript1>(mpDriverInterface);
 			case SCRIPT_2:
