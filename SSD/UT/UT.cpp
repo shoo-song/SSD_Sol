@@ -11,34 +11,44 @@ public:
 
 class MockFile : public SSDInterface {
 public:
-	MOCK_METHOD(bool, open, (const std::string& filename), ());
+	MOCK_METHOD(bool, open, (const std::string& filename), (override));
+	MOCK_METHOD(void, write, (const int& LBA, const unsigned int& data), (override));
 };
 
 TEST_F(SSDTestFixture, FileOpen) {
-	MockFile file;
-	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
-
 	SSDInterface ssdIO;
 	EXPECT_EQ(true, ssdIO.open("ssd_nand.txt"));
 }
 
 TEST_F(SSDTestFixture, FileOpenCheck) {
-	MockFile file;
-	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
-
 	SSDInterface ssdIO;
+	ssdIO.open("ssd_nand.txt");
 	EXPECT_EQ(true, ssdIO.isOpen());
 }
 
 TEST_F(SSDTestFixture, FileClose) {
-	MockFile file;
-    EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(false));
-
 	SSDInterface ssdIO;
 	ssdIO.close();
 
 	EXPECT_EQ(false, ssdIO.isOpen());
 }
+
+TEST_F(SSDTestFixture, FileReadAtFileBegin) {
+	SSDInterface ssdIO;
+	ssdIO.open("ssd_nand.txt");
+	unsigned int data = 0x12345678;
+	ssdIO.write(0, data);
+	EXPECT_EQ(data, ssdIO.read(0));
+
+	data = 0x3;
+	ssdIO.write(1, data);
+	EXPECT_EQ(data, ssdIO.read(1));
+
+	data = 0x324567;
+	ssdIO.write(2, data);
+	EXPECT_EQ(data, ssdIO.read(2));
+}
+
 
 // (invalide check) Read Wrie °øÅëºÎ
 TEST_F(SSDTestFixture, invalidecheck1) {
