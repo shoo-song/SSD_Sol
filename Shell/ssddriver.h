@@ -5,10 +5,10 @@
 class SsdDriver : public SsdDriverInterface {
 public:
 
-    uint32_t readSSD(int LSD);
+    uint32_t readSSD(int LBA);
 
     
-    void writeSSD(int LSD, uint32_t data);
+    void writeSSD(int LBA, uint32_t data);
         
 };
 

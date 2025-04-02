@@ -4,8 +4,8 @@
 #include <cstdint>
 
 class SsdDriverInterface {
-    virtual uint32_t readSSD(int LSD) = 0;
-    virtual void writeSSD(int LSD, uint32_t data) = 0;
+    virtual uint32_t readSSD(int LBA) = 0;
+    virtual void writeSSD(int LBA, uint32_t data) = 0;
 };
 
 #endif // !
