@@ -111,6 +111,7 @@ TEST_F(SSDTestFixture, ReadAndWriteTest) {
 }
 TEST_F(SSDTestFixture, OutputERROR1) {
 	//invalid lba read
+	//given : Invalid LBA range
 	std::string ErrorMsg = "ERROR";
 	SSDRead.DoRead(100);
 	FileInterface file;
@@ -118,6 +119,7 @@ TEST_F(SSDTestFixture, OutputERROR1) {
 }
 TEST_F(SSDTestFixture, OutputERROR2) {
 	//invalid lba write
+	//given : Invalid LBA range
 	std::string ErrorMsg = "ERROR";
 	std::string data1 = "0x1289CDEF";
 	SSDWrite.DoWrite(100, data1);
@@ -126,6 +128,7 @@ TEST_F(SSDTestFixture, OutputERROR2) {
 }
 TEST_F(SSDTestFixture, OutputERROR3) {
 	//invalid data pattern
+	//given : not hexa data1
 	std::string ErrorMsg = "ERROR";
 	std::string data1 = "0x1289CDEG";
 	SSDWrite.DoWrite(100, data1);
@@ -134,6 +137,7 @@ TEST_F(SSDTestFixture, OutputERROR3) {
 }
 TEST_F(SSDTestFixture, OutputERROR4) {
 	//invalid data pattern
+	//given : not hexa data2
 	std::string ErrorMsg = "ERROR";
 	std::string data1 = "0x1x89CDEF";
 	SSDWrite.DoWrite(100, data1);
@@ -142,8 +146,18 @@ TEST_F(SSDTestFixture, OutputERROR4) {
 }
 TEST_F(SSDTestFixture, OutputERROR5) {
 	//invalid data pattern
+	//given : not hexa format
 	std::string ErrorMsg = "ERROR";
 	std::string data1 = "12345678";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR6) {
+	//invalid data pattern
+	//given : not data length
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x123456789";
 	SSDWrite.DoWrite(100, data1);
 	FileInterface file;
 	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
