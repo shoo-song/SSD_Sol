@@ -1,109 +1,70 @@
 #include "gmock/gmock.h"
+#include "File_Interface.cpp"
 #include <fcntl.h>
 #include <iostream>
 using namespace std;
+#define BYTE_PER_LBA (10)
 class ReadDriver {
 public:
-	void Read_SSD(int LBA, int nand_fd, int result_fd) {
-		char* data = {};
-		int bytes_read = 0;
-		int fd;
-		if (_lseek(nand_fd, LBA * 10, SEEK_SET) == -1) {
-			//lseek error
-		}
-		bytes_read = _read(nand_fd, data, 10);
-		if (bytes_read == -1) {
-			//read error
-		}
-		_write(result_fd, data, 10);
-	}
 };
 class WriteDriver {
 public:
-	void Write_SSD(int LBA, int write_fd, char* data) {
-		int bytes_write = 0;
-		if (_lseek(write_fd, LBA * 10, SEEK_SET) == -1) {
-			//lseek error
-		}
-		bytes_write = _write(write_fd, data, 10);
-		if (bytes_write == -1) {
-			//write error
-		}
-	}
-	void Format_SSD(int fd, char* buf) {
-		//file doesn't exist - format
-		int bytes_write = 0;
-		if (fd == -1) {
-			//open error
-			return;
-		}
-		for (off_t offset = 0; offset < 100 * 10; offset += 10) {
-			if (_lseek(fd, offset, SEEK_SET) == -1) {
-				//lseek error
-			}
-			bytes_write = _write(fd, buf, 10);
-			if (bytes_write == -1) {
-				//write error
-			}
-		}
-		//end format
-	}
 };
 
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
-	char filename_w[100] = "ssd_nand.txt";
-	char filename_r[100] = "ssd_output.txt";
-	char* buf = (char*)"00000000";
+	char filename_nand[100] = "ssd_nand.txt";
+	char filename_output[100] = "ssd_output.txt";
+	char read_buf[20] = "00000000";
+	char write_buf[20] = "00000000";
 	char ReadOrWrite = 0;
 	int LBA = 0;
-	char* data = (char*)"ABABABAB";
 	int nand_fd;
 	int result_fd;
 	int bytes_write;
 	int bytes_read;
 	//check param
-	ReadOrWrite = (char)argv[1];
-	LBA = strtol(argv[2], NULL, 16);
+	ReadOrWrite = *argv[1];
+	LBA = stoi(argv[2]);
 	if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w')) {
-		data = argv[3];
+		strcpy_s(write_buf,argv[3]);
+	}
+	// parsing end
+	FileInterface NandFileForWrite;
+	FileInterface NandFileForRead;
+	FileInterface OutputFileForWrite;
+	bool bNeedFormat = false;
+	if (_access(filename_nand, O_RDWR) == -1) {
+		bNeedFormat = true;
+		cout << "need format" << endl;
 	}
 
-	WriteDriver Writer;
-	ReadDriver Reader;
-	if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w'))
-	{
-		if (_access(filename_w, O_RDWR) == -1) {
-			_sopen_s(&nand_fd, filename_w, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-			Writer.Format_SSD(nand_fd, buf);
-			Writer.Write_SSD(LBA, nand_fd, data);
+	if (bNeedFormat == true) {
+		NandFileForWrite.open(filename_nand, true/*IsFormat*/, true/*IsOpenForWrite*/);
+		for (int formatLBA = 0; formatLBA < 100; formatLBA++) {
+			NandFileForWrite.write(write_buf, formatLBA * BYTE_PER_LBA);
 		}
-		else {
-			_sopen_s(&nand_fd, filename_w, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-			Writer.Write_SSD(LBA, nand_fd, data);
-		}
+		NandFileForWrite.close();
+	}
+
+	if ((ReadOrWrite == 'W') || (ReadOrWrite == 'w')) {
+		NandFileForWrite.open(filename_nand, false, true/*IsOpenForWrite*/);
+		NandFileForWrite.write(write_buf, LBA * BYTE_PER_LBA);
+		NandFileForWrite.close();
 	}
 	else if ((ReadOrWrite == 'R') || (ReadOrWrite == 'r')) {
-		if (_access(filename_w, O_RDWR) == -1) {
-			//file doesn't exist - format
-			_sopen_s(&nand_fd, filename_w, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-			Writer.Format_SSD(nand_fd, buf);
-		}
-		else {
-			_sopen_s(&nand_fd, filename_w, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-			if (nand_fd == -1) {
-				//open error
-				return 0;
-			}
-		}
-		_sopen_s(&result_fd, filename_r, _O_CREAT | _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-		Reader.Read_SSD(LBA, nand_fd, result_fd);
-		_close(result_fd);
+		NandFileForRead.open(filename_nand, false, false/*IsOpenForWrite*/);
+		NandFileForRead.read(read_buf, LBA * BYTE_PER_LBA);
+		NandFileForRead.close();
+
+		OutputFileForWrite.open(filename_output, true, true/*IsOpenForWrite*/);
+		OutputFileForWrite.write(read_buf, 0);
+		OutputFileForWrite.close();
 	}
 	else {
-		cout << "R or W cmd only\n";
+		cout << "Read or Write needed" << endl;
 	}
-	_close(nand_fd);
+	
 	return 0;
 }
 #endif

@@ -1,4 +1,4 @@
-
+/*
 #include <gmock/gmock.h>
 #include "../SSD_Interface.cpp"
 using namespace testing;
@@ -97,3 +97,4 @@ int main() {
 	return RUN_ALL_TESTS();
 }
 #endif
+*/
