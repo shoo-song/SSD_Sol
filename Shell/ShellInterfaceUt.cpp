@@ -66,5 +66,5 @@ TEST_F(ShellInterfaceFixture, readCmdParseArgTest4) {
 
 TEST_F(ShellInterfaceFixture, readCmdParseArgTest5) {
     inputArgs.push_back("aaa");
-    EXPECT_EQ(false, shellInterface.convertCmdArgs(READ_COMMAND, inputArgs));
+    EXPECT_THROW(shellInterface.convertCmdArgs(READ_COMMAND, inputArgs), ShellArgConvertException);
 }
