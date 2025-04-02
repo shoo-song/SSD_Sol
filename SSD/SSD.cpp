@@ -36,21 +36,27 @@ private:
 	int LBA = 0;
 	char input_data[20] = {};
 };
+
 class SSDReadDriver {
 public:
-	void DoRead(int LBA) {
-		FileObj.read(LBA);
+	SSDReadDriver() : FileObj(std::make_unique<FileInterface>()) {
+	}
+	string DoRead(int LBA) {
+		return FileObj->read(LBA);
 	}
 private:
-	FileInterface FileObj;
+	std::unique_ptr<FileInterface> FileObj;
 };
 class SSDWriteDriver {
 public:
-	void DoWrite(int LBA, char* data) {
-		FileObj.write(LBA, data);
+	SSDWriteDriver() : FileObj(std::make_unique<FileInterface>()) {
+	}
+	void DoWrite(const int& LBA, const string& data) {
+		if (FileObj == nullptr) return;
+		FileObj->write(LBA, data);		
 	}
 private:
-	FileInterface FileObj;
+	std::unique_ptr<FileInterface> FileObj;
 };
 
 #ifndef UNIT_TEST

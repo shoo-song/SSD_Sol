@@ -1,3 +1,4 @@
+#pragma once
 #include "iostream"
 #include "fstream"
 #include <io.h>
@@ -39,7 +40,7 @@ public:
 		}
 	}
 
-	bool write(int LBA, char* data) {
+	bool write(int LBA, string data) {
 		bool result = true;
 		CheckAndDoFormat();
 		open(filename_nand, false, true);
@@ -51,7 +52,7 @@ public:
 		close();
 		return result;
 	}
-	bool read(int LBA) {
+	string read(int LBA) {
 		bool result = true;
 		CheckAndDoFormat();
 		
@@ -67,7 +68,7 @@ public:
 		}
 		close();
 		
-		return result;
+		return data_buf;
 	}
 	void close() {
 		if (Write_file_.is_open()) {
