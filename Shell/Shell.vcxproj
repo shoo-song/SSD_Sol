@@ -127,18 +127,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="mock_ssddriver.h" />
+    <ClCompile Include="ssddriver_interface.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShellInterface.cpp" />
     <ClCompile Include="ShellInterfaceUt.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="ssddriver.cpp" />
     <ClCompile Include="SsdDriverUt.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="ssdexception.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MakeFile" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ssddriver.h" />
+    <ClInclude Include="ssddriver_exception.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
