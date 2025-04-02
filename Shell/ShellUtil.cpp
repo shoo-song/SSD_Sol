@@ -22,6 +22,10 @@ public:
 		if (input == "1_FullWriteAndReadCompare" || input.rfind("1_", 0) == 0) {
 			return SCRIPT_1;
 		}
+		// 2번 조건 검사
+		if (input == "2_PartialLBAWrite" || input.rfind("2_", 0) == 0) {
+			return SCRIPT_2;
+		}
 
 		return UNKOWN;  // 매칭되는 조건이 없을 경우
 	}

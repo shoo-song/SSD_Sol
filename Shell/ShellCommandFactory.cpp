@@ -5,6 +5,7 @@
 #include "ShellReadCommand.cpp"
 #include "ShellWriteCommand.cpp"
 #include "ShellScript1.cpp"
+#include "ShellScript2.cpp"
 #include <memory>
 
 using std::shared_ptr;
@@ -23,6 +24,8 @@ public:
 				return std::make_shared<ShellWriteCommand>(mpDriverInterface);
 			case SCRIPT_1:
 				return std::make_shared<ShellScript1>(mpDriverInterface);
+			case SCRIPT_2:
+				return std::make_shared<ShellScript2>(mpDriverInterface);
 		}
 		return nullptr;
 	}

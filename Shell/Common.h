@@ -9,6 +9,7 @@ enum ShellCommand {
 	FULLREAD_COMMAND,
 
 	SCRIPT_1,
+	SCRIPT_2,
 
 	UNKOWN
 };
