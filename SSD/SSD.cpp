@@ -2,6 +2,7 @@
 #include "File_Interface.cpp"
 #include <iostream>
 using namespace std;
+class InvalidInputException : public std::exception {};
 class InputData {
 public:
 	void ReadInput(char RorW, string LBAstring, char* data = NULL) {
@@ -13,10 +14,12 @@ public:
 		}
 		else {
 			cout << "R or W needed\n";
+			throw InvalidInputException();
 		}
 		LBA = stoi(LBAstring);
 		if (LBA >= 100) {
 			cout << "LBA overflow\n";
+			throw InvalidInputException();
 		}
 		if (data != NULL) {
 			strcpy_s(input_data, data);
