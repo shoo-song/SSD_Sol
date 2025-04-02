@@ -16,29 +16,17 @@ public:
 		static ShellUtil shellInterfaceUtil;
 		return shellInterfaceUtil;
 	}
-	ShellCommand parse(string commandArg) {
-		if (commandArg.compare("read") == 0) {
-			return READ_COMMAND;
+
+	ShellCommand parseScript(const string input) {
+		// 1번 조건 검사
+		if (input == "1_FullWriteAndReadCompare" || input.rfind("1_", 0) == 0) {
+			return SCRIPT_1;
 		}
-		if (commandArg.compare("write") == 0) {
-			return WRITE_COMMAND;
-		}
-		if (commandArg.compare("help") == 0) {
-			return HELP_COMMAND;
-		}
-		if (commandArg.compare("exit") == 0) {
-			return EXIT_COMMAND;
-		}
-		if (commandArg.compare("fullwrite") == 0) {
-			return FULLWRITE_COMMAND;
-		}
-		if (commandArg.compare("fullread") == 0) {
-			return FULLREAD_COMMAND;
-		}
-		return UNKOWN;
+
+		return UNKOWN;  // 매칭되는 조건이 없을 경우
 	}
 
-	ShellCommand parseScript(string commandArg) {
+	ShellCommand parse(string commandArg) {
 		if (commandArg.compare("read") == 0) {
 			return READ_COMMAND;
 		}

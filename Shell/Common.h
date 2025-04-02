@@ -7,5 +7,8 @@ enum ShellCommand {
 	EXIT_COMMAND,
 	FULLWRITE_COMMAND,
 	FULLREAD_COMMAND,
+
+	SCRIPT_1,
+
 	UNKOWN
 };

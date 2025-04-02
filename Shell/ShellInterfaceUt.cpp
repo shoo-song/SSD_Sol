@@ -74,14 +74,15 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    ON_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
-        .WillByDefault(::testing::Invoke([&memory](int pos, int data) {
-        memory[pos] = data;
-            }));
+    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+        .Times(14)
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
+            memory[pos] = data;
+           }));
 
-    // read 호출 시 해당 위치의 데이터를 반환
-    ON_CALL(mockDriver, readSSD(::testing::_))
-        .WillByDefault(::testing::Invoke([&memory](int pos) -> int {
+    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+        .Times(14)
+        .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
         auto it = memory.find(pos);
         if (it != memory.end()) {
             return it->second;
@@ -89,10 +90,8 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    shellExecutor.execute("1_FullWriteAndReadCompare");
+    EXPECT_EQ("PASS", shellExecutor.execute("1_FullWriteAndReadCompare"));
 
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_)).Times(14);
-    EXPECT_CALL(mockDriver, readSSD(::testing::_)).Times(14);;
 }
 
 TEST_F(ShellExecutorFixture, script1_wildcard) {
@@ -102,14 +101,15 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    ON_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
-        .WillByDefault(::testing::Invoke([&memory](int pos, int data) {
+    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+        .Times(14)
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
         memory[pos] = data;
             }));
 
-    // read 호출 시 해당 위치의 데이터를 반환
-    ON_CALL(mockDriver, readSSD(::testing::_))
-        .WillByDefault(::testing::Invoke([&memory](int pos) -> int {
+    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+        .Times(14)
+        .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
         auto it = memory.find(pos);
         if (it != memory.end()) {
             return it->second;
@@ -117,8 +117,5 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    shellExecutor.execute("1_");
-
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_)).Times(14);
-    EXPECT_CALL(mockDriver, readSSD(::testing::_)).Times(14);
+    EXPECT_EQ("PASS", shellExecutor.execute("1_"));
 }
