@@ -9,7 +9,7 @@ class ShellInterfaceFixture : public testing::Test
 {
 public:
     ShellInterface shellInterface;
-    vector<unsigned int> expectedArgs;
+    vector<int> expectedArgs;
     vector<string> inputArgs;
 };
 

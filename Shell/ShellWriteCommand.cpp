@@ -1,37 +1,20 @@
 #pragma once
-#include "ShellCommandFactory.cpp"
+#include "ShellCommandInterface.h"
+#include "ShellException.cpp"
 
-class ShellInterface {
+class ShellWriteCommand : public ShellCommandInterface {
 public:
-	ShellCommand parse(string commandArg) {
-		if (commandArg.compare("read") == 0) {
-			return READ_COMMAND;
-		}
-		if (commandArg.compare("write") == 0) {
-			return WRITE_COMMAND;
-		}
-		if (commandArg.compare("help") == 0) {
-			return HELP_COMMAND;
-		}
-		if (commandArg.compare("exit") == 0) {
-			return EXIT_COMMAND;
-		}
-		if (commandArg.compare("fullwrite") == 0) {
-			return FULLWRITE_COMMAND;
-		}
-		if (commandArg.compare("fullread") == 0) {
-			return FULLREAD_COMMAND;
-		}
-		return UNKOWN;
-	}
-	vector<unsigned int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
-
+	vector<unsigned int>  convertCmdArgs(vector<string> args) {
 		try {
-			ShellCommandFactory commandFactory;
+			vector<unsigned int> output;
+			if (args.size() != 2) {
+				throw ShellArgConvertException("args parameter size invalid");
+			}
 
-			shared_ptr<ShellCommandInterface> commandExecuter = commandFactory.getCommand(cmd);
+			output.push_back(convertDecimalStringForLba(args[0]));
+			output.push_back(convertHexStringForData(args[1]));
 
-			return commandExecuter->convertCmdArgs(args);
+			return output;
 		}
 		catch (ShellArgConvertException e) {
 			throw e;
@@ -40,7 +23,6 @@ public:
 			throw ShellArgConvertException("invalid args");
 		}
 	}
-
 private:
 	// LBA 문자열 변환 (10진수, 0~99)
 	unsigned int convertDecimalStringForLba(const std::string& input) {
