@@ -124,6 +124,30 @@ TEST_F(SSDTestFixture, OutputERROR2) {
 	FileInterface file;
 	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
 }
+TEST_F(SSDTestFixture, OutputERROR3) {
+	//invalid data pattern
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x1289CDEG";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR4) {
+	//invalid data pattern
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x1x89CDEF";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR5) {
+	//invalid data pattern
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "12345678";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
