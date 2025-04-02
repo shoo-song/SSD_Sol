@@ -1,4 +1,3 @@
-
 #include <gmock/gmock.h>
 #include "../File_Interface.cpp"
 #include "../SSD.cpp"
@@ -86,8 +85,20 @@ TEST_F(SSDTestFixture, CheckReadFile) {
 
 	FileInterface file;
 	EXPECT_EQ(data1, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, FullWriteTest) {
+	std::string data1 = "0xABABABAB";
+	for (int LBA = 0; LBA < 100; LBA++) {
+		SSDWrite.DoWrite(LBA, data1);
 	}
-
+	EXPECT_EQ(SSDRead.DoRead(0), data1);
+}
+TEST_F(SSDTestFixture, FullReadTest) {
+	std::string data1 = "0xABABABAB";
+	for (int LBA = 0; LBA < 100; LBA++) {
+		EXPECT_EQ(SSDRead.DoRead(LBA), data1);
+	}
+}
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
