@@ -1,5 +1,6 @@
 #pragma once
 #include "ShellInterface.cpp"
+#include "mock_ssddriver.h"
 #include <gmock/gmock.h>
 #include <vector>
 
@@ -40,18 +41,23 @@ TEST_F(ShellInterfaceFixture, readWriteTest1) {
     MockSsdDriver mockDriver;
     shellInterface.setDriverInterface(&mockDriver);
 
+    EXPECT_CALL(mockDriver, readSSD(1))
+        .WillOnce(testing::Return(0xAAAABBBB));
+
     EXPECT_EQ("[Write] Done", shellInterface.execute("write 01 0xAAAABBBB"));
-    EXPECT_EQ("[Read] LBA 00 : 0xAAAABBBB", shellInterface.execute("read 01"));
+    EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellInterface.execute("read 01"));
 }
 
 TEST_F(ShellInterfaceFixture, readTest1) {
     MockSsdDriver mockDriver;
     shellInterface.setDriverInterface(&mockDriver);
-    EXPECT_THROW(shellInterface.convertCmdArgs(shellInterface.execute("read 200"), ShellArgConvertException);
+
+    EXPECT_THROW(shellInterface.execute("read 200"), ShellArgConvertException);
 }
 
 TEST_F(ShellInterfaceFixture, writeTest1) {
     MockSsdDriver mockDriver;
     shellInterface.setDriverInterface(&mockDriver);
-    EXPECT_THROW(shellInterface.convertCmdArgs(shellInterface.execute("write 200 200"), ShellArgConvertException);
+
+    EXPECT_THROW(shellInterface.execute("write 200 200"), ShellArgConvertException);
 }

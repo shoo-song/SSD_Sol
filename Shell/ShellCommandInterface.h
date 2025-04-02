@@ -7,5 +7,5 @@ using std::vector;
 
 class ShellCommandInterface {
 public:
-	virtual vector<unsigned int> convertCmdArgs(vector<string> args) = 0;
+	virtual string execute(vector<string> args) = 0;
 };

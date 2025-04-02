@@ -3,7 +3,9 @@
 
 #include "Common.h"
 #include "ShellException.cpp"
-
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 class ShellInterfaceUtil {
 public:
@@ -67,6 +69,18 @@ public:
 		}
 
 		return value;
+	}
+
+	string toTwoDigitString(unsigned int value) {
+		std::ostringstream oss;
+		oss << std::setw(2) << std::setfill('0') << value;
+		return oss.str();
+	}
+
+	string toHexFormat(unsigned int value) {
+		std::ostringstream oss;
+		oss << "0x" << std::setw(8) << std::setfill('0') << std::hex << std::uppercase << value;
+		return oss.str();
 	}
 private:
 	ShellInterfaceUtil() {

@@ -1,21 +1,25 @@
 #pragma once
 #include "ShellCommandFactory.cpp"
 #include "ShellInterfaceUtil.cpp"
+#include "ssddriver_interface.h"
+#include <sstream>
 
 class ShellInterface {
 public:
-	ShellCommand parse(string commandArg) {
-		return ShellInterfaceUtil::getUtilObj().parse(commandArg);
+	void setDriverInterface(SsdDriverInterface* pDriverInterface) {
+		mpDriverInterface = pDriverInterface;
+		mCommandFactory.setDriverInterface(pDriverInterface);
 	}
 
-	vector<unsigned int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
+	string execute(string input) {
 
 		try {
-			ShellCommandFactory commandFactory;
+			vector<string> separatedStr = splitString(input);
 
-			shared_ptr<ShellCommandInterface> commandExecuter = commandFactory.getCommand(cmd);
+			ShellCommand cmd = ShellInterfaceUtil::getUtilObj().parse(separatedStr[0]);
+			shared_ptr<ShellCommandInterface> commandExecuter = mCommandFactory.getCommand(cmd);
 
-			return commandExecuter->convertCmdArgs(args);
+			return commandExecuter->execute(separatedStr);
 		}
 		catch (ShellArgConvertException e) {
 			throw e;
@@ -26,6 +30,17 @@ public:
 	}
 
 private:
+	std::vector<std::string> splitString(const std::string& s) {
+		std::vector<std::string> result;
+		std::istringstream iss(s);
+		std::string word;
+
+		while (iss >> word) { // 공백과 탭을 자동으로 구분
+			result.push_back(word);
+		}
+
+		return result;
+	}
 	// LBA 문자열 변환 (10진수, 0~99)
 	unsigned int convertDecimalStringForLba(const std::string& input) {
 		size_t pos;
@@ -61,4 +76,7 @@ private:
 
 		return value;
 	}
+
+	SsdDriverInterface* mpDriverInterface;
+	ShellCommandFactory mCommandFactory;
 };
