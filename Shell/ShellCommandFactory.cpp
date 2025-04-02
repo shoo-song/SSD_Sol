@@ -10,14 +10,19 @@ using std::shared_ptr;
 
 class ShellCommandFactory {
 public:
+	void setDriverInterface(SsdDriverInterface* pDriverInterface) {
+		mpDriverInterface = pDriverInterface;
+	}
+
 	shared_ptr<ShellCommandInterface> getCommand(ShellCommand cmd) {
 		switch (cmd) {
 			case READ_COMMAND:
-				return std::make_shared<ShellReadCommand>();
+				return std::make_shared<ShellReadCommand>(mpDriverInterface);
 			case WRITE_COMMAND:
-				return std::make_shared<ShellWriteCommand>();
+				return std::make_shared<ShellWriteCommand>(mpDriverInterface);
 		}
 		return nullptr;
 	}
-
+private:
+	SsdDriverInterface* mpDriverInterface;
 };

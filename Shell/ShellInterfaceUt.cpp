@@ -1,77 +1,63 @@
 #pragma once
-#include "ShellInterface.cpp"
+#include "ShellExecutor.cpp"
+#include "mock_ssddriver.h"
 #include <gmock/gmock.h>
 #include <vector>
 
 using namespace std;
 
-class ShellInterfaceFixture : public testing::Test
+class ShellExecutorFixture : public testing::Test
 {
 public:
-    ShellInterface shellInterface;
-    vector<int> expectedArgs;
-    vector<string> inputArgs;
+    ShellExecutor shellExecutor;
+    string result;
 };
 
-TEST_F(ShellInterfaceFixture, parseReadTest) {
-    EXPECT_EQ(READ_COMMAND, shellInterface.parse("read"));
+TEST_F(ShellExecutorFixture, parseReadTest) {
+    EXPECT_EQ(READ_COMMAND, ShellUtil::getUtilObj().parse("read"));
 };
 
-TEST_F(ShellInterfaceFixture, parseWriteTest) {
-    EXPECT_EQ(WRITE_COMMAND, shellInterface.parse("write"));
+TEST_F(ShellExecutorFixture, parseWriteTest) {
+    EXPECT_EQ(WRITE_COMMAND, ShellUtil::getUtilObj().parse("write"));
 };
 
-TEST_F(ShellInterfaceFixture, parseExitTest) {
-    EXPECT_EQ(EXIT_COMMAND, shellInterface.parse("exit"));
+TEST_F(ShellExecutorFixture, parseExitTest) {
+    EXPECT_EQ(EXIT_COMMAND, ShellUtil::getUtilObj().parse("exit"));
 }
 
-TEST_F(ShellInterfaceFixture, parseHelpTest) {
-    EXPECT_EQ(HELP_COMMAND, shellInterface.parse("help"));
+TEST_F(ShellExecutorFixture, parseHelpTest) {
+    EXPECT_EQ(HELP_COMMAND, ShellUtil::getUtilObj().parse("help"));
 }
 
-TEST_F(ShellInterfaceFixture, parseFullwriteTest) {
-    EXPECT_EQ(FULLWRITE_COMMAND, shellInterface.parse("fullwrite"));
+TEST_F(ShellExecutorFixture, parseFullwriteTest) {
+    EXPECT_EQ(FULLWRITE_COMMAND, ShellUtil::getUtilObj().parse("fullwrite"));
 }
 
-TEST_F(ShellInterfaceFixture, parseFullreadTest) {
-    EXPECT_EQ(FULLREAD_COMMAND, shellInterface.parse("fullread"));
+TEST_F(ShellExecutorFixture, parseFullreadTest) {
+    EXPECT_EQ(FULLREAD_COMMAND, ShellUtil::getUtilObj().parse("fullread"));
 }
 
-TEST_F(ShellInterfaceFixture, parseArgTest1) {
-    vector<unsigned int> convertedArgs;
+TEST_F(ShellExecutorFixture, readWriteTest1) {
+    MockSsdDriver mockDriver;
+    shellExecutor.setDriverInterface(&mockDriver);
 
-    inputArgs.push_back("01");
-    expectedArgs.push_back(1);
+    EXPECT_CALL(mockDriver, readSSD(1))
+        .WillOnce(testing::Return(0xAAAABBBB));
 
-    convertedArgs = shellInterface.convertCmdArgs(READ_COMMAND, inputArgs);
-
-    EXPECT_EQ(expectedArgs[0], convertedArgs[0]);
-    EXPECT_EQ(expectedArgs.size(), convertedArgs.size());
+    EXPECT_EQ("[Write] Done", shellExecutor.execute("write 01 0xAAAABBBB"));
+    EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellExecutor.execute("read 01"));
 }
 
-TEST_F(ShellInterfaceFixture, readCmdParseArgTest2) {
-    inputArgs.push_back("200");
-    EXPECT_THROW(shellInterface.convertCmdArgs(READ_COMMAND, inputArgs), ShellArgConvertException);
+TEST_F(ShellExecutorFixture, readTest1) {
+    MockSsdDriver mockDriver;
+    shellExecutor.setDriverInterface(&mockDriver);
+
+    EXPECT_THROW(shellExecutor.execute("read 200"), ShellArgConvertException);
 }
 
-TEST_F(ShellInterfaceFixture, readCmdParseArgTest3) {
-    inputArgs.push_back("11");
-    inputArgs.push_back("20");
-    EXPECT_THROW(shellInterface.convertCmdArgs(READ_COMMAND, inputArgs), ShellArgConvertException);
-}
+TEST_F(ShellExecutorFixture, writeTest1) {
+    MockSsdDriver mockDriver;
+    shellExecutor.setDriverInterface(&mockDriver);
 
-TEST_F(ShellInterfaceFixture, writeParseArgTest1) {
-    vector<unsigned int> convertedArgs;
-
-    inputArgs.push_back("1");
-    inputArgs.push_back("0x12345678");
-
-    expectedArgs.push_back(1);
-    expectedArgs.push_back(0x12345678);
-
-    convertedArgs = shellInterface.convertCmdArgs(WRITE_COMMAND, inputArgs);
-
-    EXPECT_EQ(expectedArgs[0], convertedArgs[0]);
-    EXPECT_EQ(expectedArgs[1], convertedArgs[1]);
-    EXPECT_EQ(expectedArgs.size(), convertedArgs.size());
+    EXPECT_THROW(shellExecutor.execute("write 200 200"), ShellArgConvertException);
 }

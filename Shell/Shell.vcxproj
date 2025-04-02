@@ -130,11 +130,12 @@
     <ClCompile Include="mock_ssddriver.h" />
     <ClCompile Include="ShellCommandFactory.cpp" />
     <ClCompile Include="ShellException.cpp" />
+    <ClCompile Include="ShellUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />
     <ClCompile Include="ShellWriteCommand.cpp" />
     <ClCompile Include="ssddriver_interface.h" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ShellInterface.cpp" />
+    <ClCompile Include="ShellExecutor.cpp" />
     <ClCompile Include="ShellInterfaceUt.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>

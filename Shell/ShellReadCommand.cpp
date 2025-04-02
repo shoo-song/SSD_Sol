@@ -1,18 +1,26 @@
 #pragma once
 #include "ShellCommandInterface.h"
 #include "ShellException.cpp"
+#include "ShellUtil.cpp"
+#include "ssddriver_interface.h"
 
 class ShellReadCommand: public ShellCommandInterface {
 public:
-	vector<unsigned int>  convertCmdArgs(vector<string> args) {
+	ShellReadCommand(SsdDriverInterface* pDriverInterface) {
+		mpDriverInterface = pDriverInterface;
+	}
+
+	string execute(vector<string> args) {
 		try {
-			vector<unsigned int> output;
+			vector<unsigned int> convertedArgs = convertCmdArgs(args);
+			string output = "[Read] LBA ";
+			
+			unsigned int result = mpDriverInterface->readSSD((int)convertedArgs[0]);
 
-			if (args.size() != 1) {
-				throw ShellArgConvertException("args parameter size invalid");
-			}
+			output += ShellUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
+			output += " : ";
+			output += ShellUtil::getUtilObj().toHexFormat(result);
 
-			output.push_back(convertDecimalStringForLba(args[0]));
 			return output;
 		}
 		catch (ShellArgConvertException e) {
@@ -23,21 +31,24 @@ public:
 		}
 	}
 private:
-	// LBA 문자열 변환 (10진수, 0~99)
-	unsigned int convertDecimalStringForLba(const std::string& input) {
-		size_t pos;
-		unsigned int value = std::stoi(input, &pos, 10);
+	vector<unsigned int>  convertCmdArgs(vector<string> args) {
+		try {
+			vector<unsigned int> output;
 
-		// 변환된 길이 확인 (예: "12abc" 방지)
-		if (pos != input.length()) {
-			throw ShellArgConvertException("Invalid characters in input: " + input);
+			if (args.size() != 2) {
+				throw ShellArgConvertException("args parameter size invalid");
+			}
+
+			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
+			return output;
 		}
-
-		// 범위 검사
-		if (value < 0 || value > 99) {
-			throw ShellArgConvertException("Value out of range (0-99): " + input);
+		catch (ShellArgConvertException e) {
+			throw e;
 		}
-
-		return value;
+		catch (exception e) {
+			throw ShellArgConvertException("invalid args");
+		}
 	}
+
+	SsdDriverInterface* mpDriverInterface;
 };
