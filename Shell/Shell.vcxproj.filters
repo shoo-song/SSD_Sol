@@ -91,6 +91,14 @@
     </ClCompile>
     <ClCompile Include="config.cpp">
       <Filter>소스 파일</Filter>
+    <ClCompile Include="ShellScript1.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScript2.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScript3.cpp">
+      <Filter>shellcommand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
