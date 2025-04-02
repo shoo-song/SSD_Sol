@@ -15,7 +15,7 @@ public:
 			if (Write_file_.is_open()) {
 				for (int formatLBA = 0; formatLBA < 100; formatLBA++) {
 					Write_file_.seekp(formatLBA* BYTE_PER_LBA);
-					Write_file_ << std::setw(10) << "00000000";
+					Write_file_ << std::setw(10) << "0x00000000";
 					Write_file_.flush();
 				}
 			}
