@@ -16,6 +16,9 @@
     <Filter Include="UT">
       <UniqueIdentifier>{16968c39-7fbc-41b8-9985-0df17c8f2e2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UT\dummy_files">
+      <UniqueIdentifier>{e22d4804-87a1-4955-a66a-08bd1e936636}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,7 +30,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SsdDriverUt.cpp">
+    <ClCompile Include="ssddriver_ut.cpp">
       <Filter>UT</Filter>
     </ClCompile>
     <ClCompile Include="ShellInterfaceUt.cpp">
@@ -48,6 +51,9 @@
     <ClCompile Include="ShellInterface.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -60,5 +66,13 @@
     <ClInclude Include="ssddriver_exception.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="dummy_file1.txt">
+      <Filter>UT\dummy_files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
-#pragma once
 #include "ssddriver.h"
 #include "ssddriver_exception.h"
 #include "mock_ssddriver.h"
+#include "config.h"
 #include <gmock/gmock.h>
 
 class SsdDriverFixture : public testing::Test
@@ -12,6 +12,7 @@ public:
 
 TEST_F(SsdDriverFixture, ssd_readwrite_normal) {
 
+    
     ssdDriver.writeSSD(1, 0x12345678);
     MockSsdDriver mockssdDriver;
     EXPECT_CALL(mockssdDriver, readSSD(1))

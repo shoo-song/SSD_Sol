@@ -7,7 +7,6 @@ public:
 
     uint32_t readSSD(int LBA);
 
-    
     void writeSSD(int LBA, uint32_t data);
         
 };
