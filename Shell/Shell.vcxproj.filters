@@ -108,6 +108,9 @@
     <ClCompile Include="ShellFullWriteCommand.cpp">
       <Filter>shellcommand</Filter>
     </ClCompile>
+    <ClCompile Include="ShellExitCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
