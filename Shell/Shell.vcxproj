@@ -127,9 +127,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="mock_ssddriver.h" />
+    <ClCompile Include="ShellCommandFactory.cpp" />
+    <ClCompile Include="ShellException.cpp" />
+    <ClCompile Include="ShellUtil.cpp" />
+    <ClCompile Include="ShellReadCommand.cpp" />
+    <ClCompile Include="ShellWriteCommand.cpp" />
+    <ClCompile Include="ssddriver_interface.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ShellExecutor.cpp" />
+    <ClCompile Include="ShellInterfaceUt.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ssddriver.cpp" />
+    <ClCompile Include="SsdDriverUt.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ssdexception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MakeFile" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
