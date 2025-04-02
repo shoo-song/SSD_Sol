@@ -16,7 +16,7 @@ public:
 			bIsWrite = false;
 		}
 		else {
-			cout << "INVALID COMMAND";
+			PrintInvalidCommand();
 		}
 		LBA = stoi(LBAstring);
 		if (LBA >= 100) {
