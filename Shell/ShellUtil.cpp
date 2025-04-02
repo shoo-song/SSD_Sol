@@ -1,35 +1,21 @@
+
 #pragma once
-#include <string>
+
+#include "Common.h"
+#include "ShellException.cpp"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <vector>
-#include <stdexcept>
 
-enum ShellCommand {
-	READ_COMMAND,
-	WRITE_COMMAND,
-	HELP_COMMAND,
-	EXIT_COMMAND,
-	FULLWRITE_COMMAND,
-	FULLREAD_COMMAND,
-	UNKOWN
-};
-
-using std::string;
 using std::vector;
-using std::exception;
 
-class ShellArgConvertException : public std::exception {
+class ShellUtil {
 public:
-	explicit ShellArgConvertException(const std::string& msg) : message(msg) {}
-
-	const char* what() const noexcept override {
-		return message.c_str();
+	static ShellUtil& getUtilObj() {
+		static ShellUtil shellInterfaceUtil;
+		return shellInterfaceUtil;
 	}
-private:
-	string message;
-};
-
-class ShellInterface {
-public:
 	ShellCommand parse(string commandArg) {
 		if (commandArg.compare("read") == 0) {
 			return READ_COMMAND;
@@ -51,32 +37,11 @@ public:
 		}
 		return UNKOWN;
 	}
-	vector<int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
 
-		try {
-			vector<int> output;
-
-			switch (cmd) {
-			case READ_COMMAND:
-				if (args.size() != 1) {
-					throw ShellArgConvertException("args parameter size invalid");
-				}
-
-				output.push_back(convertDecimalStringForLba(args[0]));
-			}
-
-			return output;
-		}
-		catch (exception e) {
-			throw ShellArgConvertException("invalid args");
-		}
-	}
-
-private:
 	// LBA 문자열 변환 (10진수, 0~99)
-	int convertDecimalStringForLba(const std::string& input) {
+	unsigned int convertDecimalStringForLba(const std::string& input) {
 		size_t pos;
-		int value = std::stoi(input, &pos, 10);
+		unsigned int value = std::stoi(input, &pos, 10);
 
 		// 변환된 길이 확인 (예: "12abc" 방지)
 		if (pos != input.length()) {
@@ -92,7 +57,7 @@ private:
 	}
 
 	// Data 문자열 변환 (16진수, "0x" + 8자리)
-	 int convertHexStringForData(const std::string& input) {
+	unsigned int convertHexStringForData(const std::string& input) {
 		// 길이 체크
 		if (input.length() != 10 || input.substr(0, 2) != "0x") {
 			throw ShellArgConvertException("Invalid hex format: " + input);
@@ -107,5 +72,33 @@ private:
 		}
 
 		return value;
+	}
+
+	vector<std::string> splitString(const std::string& s) {
+		std::vector<std::string> result;
+		std::istringstream iss(s);
+		std::string word;
+
+		while (iss >> word) { // 공백과 탭을 자동으로 구분
+			result.push_back(word);
+		}
+
+		return result;
+	}
+
+	string toTwoDigitString(unsigned int value) {
+		std::ostringstream oss;
+		oss << std::setw(2) << std::setfill('0') << value;
+		return oss.str();
+	}
+
+	string toHexFormat(unsigned int value) {
+		std::ostringstream oss;
+		oss << "0x" << std::setw(8) << std::setfill('0') << std::hex << std::uppercase << value;
+		return oss.str();
+	}
+private:
+	ShellUtil() {
+
 	}
 };

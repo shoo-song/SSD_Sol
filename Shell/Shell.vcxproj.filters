@@ -30,10 +30,20 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+    <ClCompile Include="ssddriver_ut.cpp">
+    <ClCompile Include="SsdDriverUt.cpp">
+      <Filter>UT</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellInterfaceUt.cpp">
+      <Filter>UT</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssdexception.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver_ut.cpp">
@@ -55,7 +65,28 @@
     <ClCompile Include="mock_ssddriver.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellInterface.cpp">
+    <ClCompile Include="ShellExecutor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellCommandFactory.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellException.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellReadCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellWriteCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellUtil.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="config.cpp">

@@ -24,6 +24,9 @@
     <ClCompile Include="UT\UT.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
+    <ClCompile Include="File_Interface.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
