@@ -99,6 +99,31 @@ TEST_F(SSDTestFixture, FullReadTest) {
 		EXPECT_EQ(SSDRead.DoRead(LBA), data1);
 	}
 }
+TEST_F(SSDTestFixture, ReadAndWriteTest) {
+	std::string data0 = SSDRead.DoRead(19);
+	std::string data1 = "0x1289CDEF";
+	SSDWrite.DoWrite(20, data1);
+	EXPECT_EQ(SSDRead.DoRead(20), data1);
+	EXPECT_EQ(SSDRead.DoRead(19), data0);
+	data1 = "0xFF1100AA";
+	SSDWrite.DoWrite(10, data1);
+	EXPECT_EQ(SSDRead.DoRead(10), data1);
+}
+TEST_F(SSDTestFixture, OutputERROR1) {
+	//invalid lba read
+	std::string ErrorMsg = "ERROR";
+	SSDRead.DoRead(100);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR2) {
+	//invalid lba write
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x1289CDEF";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
