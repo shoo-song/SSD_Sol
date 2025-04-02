@@ -147,6 +147,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="ShellCommandInterface.h" />
     <ClInclude Include="ssddriver.h" />
     <ClInclude Include="ssddriver_exception.h" />
   </ItemGroup>
