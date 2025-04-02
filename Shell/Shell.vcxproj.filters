@@ -33,9 +33,29 @@
     <ClCompile Include="ScriptUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
+    <ClCompile Include="ssddriver.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssdexception.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver_interface.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="mock_ssddriver.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="MakeFile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ssddriver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ssddriver_exception.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
