@@ -9,6 +9,12 @@ public:
     SsdDriver ssdDriver;
 };
 
+class SsdDriverMockFixture : public testing::Test
+{
+public:
+    MockSsdDriver mockssdDriver;
+};
+
 //TEST_F(SsdDriverFixture, ssddrive_read_mock) {
 //
 //    
@@ -35,9 +41,8 @@ TEST_F(SsdDriverFixture, ssddrive_read_normal_2) {
 
 }
 
-TEST_F(SsdDriverFixture, ssddrive_read_cmd) {
+TEST_F(SsdDriverMockFixture, ssddrive_read_cmd) {
     
-    MockSsdDriver mockssdDriver;
     const std::string expected = "SSD.exe R 1";
 
     EXPECT_CALL(mockssdDriver, executeCmd(expected))
@@ -50,9 +55,8 @@ TEST_F(SsdDriverFixture, ssddrive_read_cmd) {
 
 }
 
-TEST_F(SsdDriverFixture, ssddrive_write_cmd) {
+TEST_F(SsdDriverMockFixture, ssddrive_write_cmd) {
 
-    MockSsdDriver mockssdDriver;
     const std::string expected = "SSD.exe W 1 0XFFFFFFFF";
 
     EXPECT_CALL(mockssdDriver, executeCmd(expected))
