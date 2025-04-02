@@ -79,6 +79,16 @@ public:
 		}
 		return data_buf;
 	}
+	void writeInvalidLog() {
+		CheckAndDoFormat();
+		open(filename_output, true, false);
+		if (Write_file_.is_open()) {
+			Write_file_ << "ERROR";
+			Write_file_.flush();
+		}
+		close();
+	}
+
 
 	void close() {
 		if (Write_file_.is_open()) {

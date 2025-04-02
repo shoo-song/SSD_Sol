@@ -8,7 +8,7 @@ class SSDTestFixture : public Test
 {
 public:
 	SSDReadDriver SSDRead;
-	SSDWriteDriver *SSDWrite;
+	SSDWriteDriver SSDWrite;
 	FileInterface* SSDIn;
 };
 
@@ -16,70 +16,6 @@ class MockFile : public FileInterface {
 public:
 	MOCK_METHOD(bool, open, (const std::string& filename), ());
 };
-#if 0
-TEST_F(SSDTestFixture, FileOpen) {
-	MockFile file;
-	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
-
-	FileInterface ssdIO;
-	EXPECT_EQ(true, ssdIO.open("ssd_nand.txt"));
-}
-
-TEST_F(SSDTestFixture, FileOpenCheck) {
-	MockFile file;
-	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
-
-	FileInterface ssdIO;
-	EXPECT_EQ(true, ssdIO.isOpen());
-}
-
-TEST_F(SSDTestFixture, FileClose) {
-	MockFile file;
-    EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(false));
-
-	FileInterface ssdIO;
-	ssdIO.close();
-
-	EXPECT_EQ(false, ssdIO.isOpen());
-}
-
-// (invalide check) Read Wrie 공통부
-TEST_F(SSDTestFixture, invalidecheck1) {
-	// CMD 는 W, R 두개만 존재
-	int value = 0;
-	EXPECT_THAT(value, AnyOf(Eq('W'), Eq('R')));
-}
-
-TEST_F(SSDTestFixture, invalidecheck2) {
-	
-	// LBA 0 ~ 100 범위내 동작
-	int LBA = 0;
-	EXPECT_THAT(LBA, Ge(0));
-	EXPECT_THAT(LBA, Le(99));
-}
-
-TEST_F(SSDTestFixture, invalidecheck3) {
-	// LBA 0 ~ 100 이외는 "ERROR message" 
-}
-
-TEST_F(SSDTestFixture, invalidecheck4) {
-	//Data 는 0x 포함하여 10자
-}
-#endif
-TEST_F(SSDTestFixture, Read1) {
-	//적은적 없으면 0 으로 return
-	
-}
-TEST_F(SSDTestFixture, Read2) {
-	//SSD_output.txt 가 없으면 file 생성
-
-}
-TEST_F(SSDTestFixture, Read3) {
-//Read 요청을 SSD_Output.txt 에 write하고, read 하여 write 내용이 읽혀야함
-}
-TEST_F(SSDTestFixture, Read4) {
-// 임이 LBA (0~99) 수행 시, LBA 검색하여 data read
-}
 
 TEST_F(SSDTestFixture, ReadAfterWrite) {
 	std::string data = "0x12345678";
@@ -116,6 +52,85 @@ TEST_F(SSDTestFixture, CheckReadFile) {
 	FileInterface file;
 	EXPECT_EQ(data1, file.getReadDataFromOutput());
 	}
+
+TEST_F(SSDTestFixture, CheckInvalidCmd) {
+	SSDCommand input;
+	// when : invalid cmd
+	char data[20] = "0x12345678";
+	input.parseArg('s', "0", data);
+
+	FileInterface file;
+	string actual = file.getReadDataFromOutput();
+	EXPECT_THAT(actual, StrEq(string("ERROR")));
+}
+
+TEST_F(SSDTestFixture, CheckInvalidLBALenght) {
+	SSDCommand input;
+	// given : initialize output file
+	char data[20] = "0x12345678";
+	SSDWriteDriver SSDWrite;
+	SSDWrite.DoWrite(0x0, data);
+	SSDRead.DoRead(0x0);
+
+	// when : invalid LBA length
+	input.parseArg('W', "1a", data);
+
+	FileInterface file;
+	string actual = file.getReadDataFromOutput();
+	EXPECT_THAT(actual, StrEq(string("ERROR")));
+}
+
+
+TEST_F(SSDTestFixture, CheckInvalidLBARange) {
+	SSDCommand input;
+	// given : initialize output file
+	char data[20] = "0x12345678";
+	SSDWriteDriver SSDWrite;
+	SSDWrite.DoWrite(0x0, data);
+	SSDRead.DoRead(0x0);
+
+	// when : invalid LBA range
+	input.parseArg('W', "300", data);
+
+	FileInterface file;
+	string actual = file.getReadDataFromOutput();
+	EXPECT_THAT(actual, StrEq(string("ERROR")));
+}
+
+TEST_F(SSDTestFixture, CheckInvalidDataRange1) {
+	SSDCommand input;
+	// given : initialize output file	
+	char data[20] = "0x12345678";
+	SSDWriteDriver SSDWrite;
+	SSDWrite.DoWrite(0x0, data);
+	SSDRead.DoRead(0x0);
+
+	// when : invalid data size
+	char data1[20] = "0x1234";
+	input.parseArg('W', "3", data1);
+
+	FileInterface file;
+	string actual = file.getReadDataFromOutput();
+	EXPECT_THAT(actual, StrEq(string("ERROR")));
+}
+
+TEST_F(SSDTestFixture, CheckInvalidDataRange2) {
+	SSDCommand input;
+	// given : initialize output file	
+	char data[20] = "0x12345678";
+	SSDWriteDriver SSDWrite;
+	SSDWrite.DoWrite(0x0, data);
+	SSDRead.DoRead(0x0);
+
+	// when : invalid data size
+	char data1[20] = "0x1234544444";
+	input.parseArg('W', "3", data1);
+
+	FileInterface file;
+	string actual = file.getReadDataFromOutput();
+	EXPECT_THAT(actual, StrEq(string("ERROR")));
+}
+
 
 #ifdef UNIT_TEST
 int main() {
