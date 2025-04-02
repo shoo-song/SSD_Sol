@@ -1,7 +1,7 @@
 #pragma once
 #include "ShellCommandInterface.h"
 #include "ShellException.cpp"
-#include "ShellInterfaceUtil.cpp"
+#include "ShellUtil.cpp"
 #include "ssddriver_interface.h"
 
 class ShellReadCommand: public ShellCommandInterface {
@@ -17,9 +17,9 @@ public:
 			
 			unsigned int result = mpDriverInterface->readSSD((int)convertedArgs[0]);
 
-			output += ShellInterfaceUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
+			output += ShellUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
 			output += " : ";
-			output += ShellInterfaceUtil::getUtilObj().toHexFormat(result);
+			output += ShellUtil::getUtilObj().toHexFormat(result);
 
 			return output;
 		}
@@ -39,7 +39,7 @@ private:
 				throw ShellArgConvertException("args parameter size invalid");
 			}
 
-			output.push_back(ShellInterfaceUtil::getUtilObj().convertDecimalStringForLba(args[1]));
+			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
 			return output;
 		}
 		catch (ShellArgConvertException e) {

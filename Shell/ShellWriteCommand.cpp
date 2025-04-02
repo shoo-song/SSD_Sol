@@ -1,7 +1,7 @@
 #pragma once
 #include "ShellCommandInterface.h"
 #include "ShellException.cpp"
-#include "ShellInterfaceUtil.cpp"
+#include "ShellUtil.cpp"
 #include "ssddriver_interface.h"
 
 class ShellWriteCommand : public ShellCommandInterface {
@@ -34,8 +34,8 @@ private:
 				throw ShellArgConvertException("args parameter size invalid");
 			}
 
-			output.push_back(ShellInterfaceUtil::getUtilObj().convertDecimalStringForLba(args[1]));
-			output.push_back(ShellInterfaceUtil::getUtilObj().convertHexStringForData(args[2]));
+			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
+			output.push_back(ShellUtil::getUtilObj().convertHexStringForData(args[2]));
 
 			return output;
 		}

@@ -6,11 +6,14 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <vector>
 
-class ShellInterfaceUtil {
+using std::vector;
+
+class ShellUtil {
 public:
-	static ShellInterfaceUtil& getUtilObj() {
-		static ShellInterfaceUtil shellInterfaceUtil;
+	static ShellUtil& getUtilObj() {
+		static ShellUtil shellInterfaceUtil;
 		return shellInterfaceUtil;
 	}
 	ShellCommand parse(string commandArg) {
@@ -71,6 +74,18 @@ public:
 		return value;
 	}
 
+	vector<std::string> splitString(const std::string& s) {
+		std::vector<std::string> result;
+		std::istringstream iss(s);
+		std::string word;
+
+		while (iss >> word) { // 공백과 탭을 자동으로 구분
+			result.push_back(word);
+		}
+
+		return result;
+	}
+
 	string toTwoDigitString(unsigned int value) {
 		std::ostringstream oss;
 		oss << std::setw(2) << std::setfill('0') << value;
@@ -83,7 +98,7 @@ public:
 		return oss.str();
 	}
 private:
-	ShellInterfaceUtil() {
+	ShellUtil() {
 
 	}
 };

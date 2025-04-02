@@ -45,7 +45,7 @@
     <ClCompile Include="mock_ssddriver.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellInterface.cpp">
+    <ClCompile Include="ShellExecutor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ShellCommandFactory.cpp">
@@ -66,7 +66,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellInterfaceUtil.cpp">
+    <ClCompile Include="ShellUtil.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
