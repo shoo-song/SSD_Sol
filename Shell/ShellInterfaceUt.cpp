@@ -9,7 +9,7 @@ class ShellInterfaceFixture : public testing::Test
 {
 public:
     ShellInterface shellInterface;
-    vector<int> expectedArgs;
+    vector<unsigned int> expectedArgs;
     vector<string> inputArgs;
 };
 
@@ -38,7 +38,7 @@ TEST_F(ShellInterfaceFixture, parseFullreadTest) {
 }
 
 TEST_F(ShellInterfaceFixture, parseArgTest1) {
-    vector<int> convertedArgs;
+    vector<unsigned int> convertedArgs;
 
     inputArgs.push_back("01");
     expectedArgs.push_back(1);
@@ -61,7 +61,7 @@ TEST_F(ShellInterfaceFixture, readCmdParseArgTest3) {
 }
 
 TEST_F(ShellInterfaceFixture, writeParseArgTest1) {
-    vector<int> convertedArgs;
+    vector<unsigned int> convertedArgs;
 
     inputArgs.push_back("1");
     inputArgs.push_back("0x12345678");

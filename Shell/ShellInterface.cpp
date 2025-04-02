@@ -51,21 +51,34 @@ public:
 		}
 		return UNKOWN;
 	}
-	vector<int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
+	vector<unsigned int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
 
 		try {
-			vector<int> output;
+			vector<unsigned int> output;
 
 			switch (cmd) {
-			case READ_COMMAND:
-				if (args.size() != 1) {
-					throw ShellArgConvertException("args parameter size invalid");
-				}
+				case READ_COMMAND:
+					if (args.size() != 1) {
+						throw ShellArgConvertException("args parameter size invalid");
+					}
 
-				output.push_back(convertDecimalStringForLba(args[0]));
+					output.push_back(convertDecimalStringForLba(args[0]));
+					break;
+				case WRITE_COMMAND:
+					if (args.size() != 2) {
+						throw ShellArgConvertException("args parameter size invalid");
+					}
+
+					output.push_back(convertDecimalStringForLba(args[0]));
+					output.push_back(convertHexStringForData(args[1]));
+					break;
+
 			}
 
 			return output;
+		}
+		catch (ShellArgConvertException e) {
+			throw e;
 		}
 		catch (exception e) {
 			throw ShellArgConvertException("invalid args");
@@ -74,9 +87,9 @@ public:
 
 private:
 	// LBA 문자열 변환 (10진수, 0~99)
-	int convertDecimalStringForLba(const std::string& input) {
+	unsigned int convertDecimalStringForLba(const std::string& input) {
 		size_t pos;
-		int value = std::stoi(input, &pos, 10);
+		unsigned int value = std::stoi(input, &pos, 10);
 
 		// 변환된 길이 확인 (예: "12abc" 방지)
 		if (pos != input.length()) {
@@ -92,7 +105,7 @@ private:
 	}
 
 	// Data 문자열 변환 (16진수, "0x" + 8자리)
-	 int convertHexStringForData(const std::string& input) {
+	unsigned int convertHexStringForData(const std::string& input) {
 		// 길이 체크
 		if (input.length() != 10 || input.substr(0, 2) != "0x") {
 			throw ShellArgConvertException("Invalid hex format: " + input);
