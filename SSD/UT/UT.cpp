@@ -94,31 +94,28 @@ TEST_F(SSDTestFixture, WriteSameLBA) {
 	SSDWriteDriver SSDWrite;
 	SSDWrite.DoWrite(0x0, data1);
 
-	std::string data2 = "0x15678";
+	std::string data2 = "0x15678000";
 	SSDWrite.DoWrite(0x1, data2);
 
 	data1 = "0x87654321";
 	SSDWrite.DoWrite(0x0, data1);
 
-	data2 = "0x1234321";
+	data2 = "0x12343210";
 	SSDWrite.DoWrite(0x1, data2);
 
-	//EXPECT_EQ(data1, SSDRead.DoRead(0));
-	//EXPECT_EQ(data2, SSDRead.DoRead(1));
-
-
+	EXPECT_EQ(data1, SSDRead.DoRead(0));
+	EXPECT_EQ(data2, SSDRead.DoRead(1));
 }
 
+TEST_F(SSDTestFixture, CheckReadFile) {
+	std::string data1 = "0x12345678";
+	SSDWriteDriver SSDWrite;
+	SSDWrite.DoWrite(0x0, data1);
+	SSDRead.DoRead(0);
 
-TEST_F(SSDTestFixture, Write2) {
-// write data 는 LBA, data 로 SSD_nand.txt 저장
-}
-TEST_F(SSDTestFixture, Write3) {
-// 새로운 write cmd는 마지막 data 이후 write 
-}
-TEST_F(SSDTestFixture, Write4) {
-// 동일 LBA write는 LBA 검색 후, data 변경 (overwrite이나, 위치는 무관)
-}
+	FileInterface file;
+	EXPECT_EQ(data1, file.getReadDataFromOutput());
+	}
 
 #ifdef UNIT_TEST
 int main() {

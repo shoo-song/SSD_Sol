@@ -34,7 +34,7 @@ public:
 				return Write_file_.is_open();
 			}
 			else {
-				Read_file_.open(filename, std::ios::in | std::ios::binary);
+				Read_file_.open(filename, std::ios::in | std::ios::out | std::ios::binary);
 				return Read_file_.is_open();
 			}
 		}
@@ -61,6 +61,7 @@ public:
 			Read_file_.seekg(LBA * BYTE_PER_LBA);
 			Read_file_.read(data_buf, 10);
 		}
+
 		open(filename_output, true, true);
 		if (Write_file_.is_open()) {
 			Write_file_ << std::setw(10) << data_buf;
@@ -70,6 +71,15 @@ public:
 		
 		return data_buf;
 	}
+	string getReadDataFromOutput(){
+		CheckAndDoFormat();
+		open(filename_output, false, false);
+		if (Read_file_.is_open()) {
+			Read_file_.read(data_buf, 10);
+		}
+		return data_buf;
+	}
+
 	void close() {
 		if (Write_file_.is_open()) {
 			Write_file_.close();
