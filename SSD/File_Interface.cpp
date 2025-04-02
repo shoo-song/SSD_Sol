@@ -1,5 +1,6 @@
 #include "iostream"
 #include "fstream"
+#include <io.h>
 #include <iomanip>
 #include <iostream>
 using namespace std;
@@ -8,6 +9,19 @@ class FILEIO {
 };
 class FileInterface : public FILEIO {
 public:
+	void CheckAndDoFormat(void) {
+		if (_access(filename_nand, 0) == -1) {
+			open(filename_nand, true, true);
+			if (Write_file_.is_open()) {
+				for (int formatLBA = 0; formatLBA < 100; formatLBA++) {
+					Write_file_.seekp(formatLBA* BYTE_PER_LBA);
+					Write_file_ << std::setw(10) << "0x00000000";
+					Write_file_.flush();
+				}
+			}
+			Write_file_.close();
+		}
+	}
 	bool open(const std::string& filename, bool IsFormat, bool IsOpenForWrite) override {
 		if (IsFormat == true) {
 			Write_file_.open(filename, std::ios::out | std::ios::binary);
@@ -25,24 +39,34 @@ public:
 		}
 	}
 
-	bool write(char* data, int offset) {
-		bool result = false;
+	bool write(int LBA, char* data) {
+		bool result = true;
+		CheckAndDoFormat();
+		open(filename_nand, false, true);
 		if (Write_file_.is_open()) {
-			Write_file_.seekp(offset); 
-			cout << data;
+			Write_file_.seekp(LBA * BYTE_PER_LBA);
 			Write_file_ << std::setw(10) <<  data;
 			Write_file_.flush();
-			result = true;
 		}
+		close();
 		return result;
 	}
-	bool read(char* buf, int offset) {
-		bool result = false;
+	bool read(int LBA) {
+		bool result = true;
+		CheckAndDoFormat();
+		
+		open(filename_nand, false, false);
 		if (Read_file_.is_open()) {
-			Read_file_.seekg(offset);
-			Read_file_.read(buf, 10);
-			result = true;
+			Read_file_.seekg(LBA * BYTE_PER_LBA);
+			Read_file_.read(data_buf, 10);
 		}
+		open(filename_output, true, true);
+		if (Write_file_.is_open()) {
+			Write_file_ << std::setw(10) << data_buf;
+			Write_file_.flush();
+		}
+		close();
+		
 		return result;
 	}
 	void close() {
@@ -56,4 +80,8 @@ public:
 protected:
 	std::fstream Write_file_;
 	std::fstream Read_file_;
+	char filename_output[100] = "ssd_output.txt";
+	char filename_nand[100] = "ssd_nand.txt";
+	char data_buf[20] = {};
+	int BYTE_PER_LBA = 10;
 };
