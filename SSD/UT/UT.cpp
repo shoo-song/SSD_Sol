@@ -9,12 +9,6 @@ public:
 	SSDInterface* SSDIn;
 };
 
-class MockFile : public SSDInterface {
-public:
-	MOCK_METHOD(bool, open, (const std::string& filename), (override));
-	MOCK_METHOD(void, write, (const int& LBA, const unsigned int& data), (override));
-};
-
 TEST_F(SSDTestFixture, FileOpen) {
 	SSDInterface ssdIO;
 	EXPECT_EQ(true, ssdIO.open("ssd_nand.txt"));
