@@ -33,10 +33,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ssddriver_ut.cpp">
-    <ClCompile Include="SsdDriverUt.cpp">
-      <Filter>UT</Filter>
-    </ClCompile>
     <ClCompile Include="ShellInterfaceUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
@@ -47,7 +43,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver_ut.cpp">
-    <ClCompile Include="SsdDriverUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
     <ClCompile Include="ShellInterfaceUt.cpp">
@@ -91,6 +86,7 @@
     </ClCompile>
     <ClCompile Include="config.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="ShellScript1.cpp">
       <Filter>shellcommand</Filter>
     </ClCompile>
@@ -99,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="ShellScript3.cpp">
       <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
