@@ -16,17 +16,37 @@
     <Filter Include="UT">
       <UniqueIdentifier>{16968c39-7fbc-41b8-9985-0df17c8f2e2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common">
+    <Filter Include="UT\dummy_files">
+      <UniqueIdentifier>{e22d4804-87a1-4955-a66a-08bd1e936636}</UniqueIdentifier>
+    </Filter>
+   <Filter Include="common">
       <UniqueIdentifier>{17cafafb-a41a-4e5d-a146-aae4ef7d299d}</UniqueIdentifier>
     </Filter>
     <Filter Include="shellcommand">
       <UniqueIdentifier>{46237640-09bc-460b-b959-4fd6b6dc941c}</UniqueIdentifier>
-    </Filter>
+     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver_ut.cpp">
+    <ClCompile Include="SsdDriverUt.cpp">
+      <Filter>UT</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellInterfaceUt.cpp">
+      <Filter>UT</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssdexception.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver_ut.cpp">
     <ClCompile Include="SsdDriverUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
@@ -69,6 +89,9 @@
     <ClCompile Include="ShellUtil.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -81,6 +104,14 @@
     <ClInclude Include="ssddriver_exception.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="dummy_file1.txt">
+      <Filter>UT\dummy_files</Filter>
+    </Text>
     <ClInclude Include="Common.h">
       <Filter>common</Filter>
     </ClInclude>
