@@ -25,16 +25,15 @@ public:
 			vector<unsigned int> convertedArgs = convertCmdArgs(args);
 			string output = "PASS";
 
-			if (compareTest(0, 4) == false) {
-				return "FAIL";
-			}
-			if (compareTest(6, 9) == false) {
-				return "FAIL";
-			}
-			if (compareTest(10, 14) == false) {
-				return "FAIL";
-			}
+			int startLba = 0;
 
+			while (startLba < 100) {
+				if (compareTest(startLba, startLba + 4) == false) {
+					return "FAIL";
+				}
+				startLba += 5;
+			}
+			
 			return output;
 		}
 		catch (ShellArgConvertException e) {

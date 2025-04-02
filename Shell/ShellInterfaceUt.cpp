@@ -75,13 +75,13 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
 
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
-        .Times(14)
+        .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
             memory[pos] = data;
            }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
-        .Times(14)
+        .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
         auto it = memory.find(pos);
         if (it != memory.end()) {
@@ -102,13 +102,13 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
 
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
-        .Times(14)
+        .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
         memory[pos] = data;
             }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
-        .Times(14)
+        .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
         auto it = memory.find(pos);
         if (it != memory.end()) {
