@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-
+class InvalidInputException : public std::exception {};
 class SSDCommand {
 public:
 	SSDCommand() : FileObj(std::make_unique<FileInterface>()) {
@@ -11,11 +11,12 @@ public:
 
 	void WriteInvalidLog()	{
 		FileObj->writeInvalidLog();
+		//throw InvalidInputException();
 	}
 
 	bool checkInvalidity(const char& CMD, string LBAstring,  char* data) {
 		if (!((CMD == 'W') || (CMD == 'w') || (CMD == 'R') || (CMD == 'r'))) {
-			FileObj->writeInvalidLog();
+			WriteInvalidLog();
 			return false;
 		}
 
@@ -34,13 +35,11 @@ public:
 			WriteInvalidLog();
 			return false;
 		}
-
 		 value = std::stoul(data, &pos, 16);
 		if (pos != strlen(data)) {
 			WriteInvalidLog();
 			return false;
 		}
-
 		return true;
 	}
 
@@ -52,16 +51,6 @@ public:
 		}
 		else if ((CMD == 'R') || (CMD == 'r')) {
 			bIsWrite = false;
-		}
-		else {
-			std::cout << "INVALID COMMAND";
-		}
-		LBA = stoi(LBAstring);
-		if (LBA >= 100) {
-			cout << "LBA overflow\n";
-		}
-		if (data != NULL) {
-			strcpy_s(input_data, data);
 		}
 	}
 	bool IsWrite(void) {

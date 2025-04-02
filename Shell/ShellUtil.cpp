@@ -1,8 +1,39 @@
-#pragma once
-#include "ShellCommandFactory.cpp"
 
-class ShellInterface {
+#pragma once
+
+#include "Common.h"
+#include "ShellException.cpp"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <vector>
+
+using std::vector;
+
+class ShellUtil {
 public:
+	static ShellUtil& getUtilObj() {
+		static ShellUtil shellInterfaceUtil;
+		return shellInterfaceUtil;
+	}
+
+	ShellCommand parseScript(const string input) {
+		// 1번 조건 검사
+		if (input == "1_FullWriteAndReadCompare" || input.rfind("1_", 0) == 0) {
+			return SCRIPT_1;
+		}
+		// 2번 조건 검사
+		if (input == "2_PartialLBAWrite" || input.rfind("2_", 0) == 0) {
+			return SCRIPT_2;
+		}
+		// 3번 조건 검사
+		if (input == "3_WriteReadAging" || input.rfind("3_", 0) == 0) {
+			return SCRIPT_3;
+		}
+
+		return UNKOWN;  // 매칭되는 조건이 없을 경우
+	}
+
 	ShellCommand parse(string commandArg) {
 		if (commandArg.compare("read") == 0) {
 			return READ_COMMAND;
@@ -24,24 +55,7 @@ public:
 		}
 		return UNKOWN;
 	}
-	vector<unsigned int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
 
-		try {
-			ShellCommandFactory commandFactory;
-
-			shared_ptr<ShellCommandInterface> commandExecuter = commandFactory.getCommand(cmd);
-
-			return commandExecuter->convertCmdArgs(args);
-		}
-		catch (ShellArgConvertException e) {
-			throw e;
-		}
-		catch (exception e) {
-			throw ShellArgConvertException("invalid args");
-		}
-	}
-
-private:
 	// LBA 문자열 변환 (10진수, 0~99)
 	unsigned int convertDecimalStringForLba(const std::string& input) {
 		size_t pos;
@@ -76,5 +90,33 @@ private:
 		}
 
 		return value;
+	}
+
+	vector<std::string> splitString(const std::string& s) {
+		std::vector<std::string> result;
+		std::istringstream iss(s);
+		std::string word;
+
+		while (iss >> word) { // 공백과 탭을 자동으로 구분
+			result.push_back(word);
+		}
+
+		return result;
+	}
+
+	string toTwoDigitString(unsigned int value) {
+		std::ostringstream oss;
+		oss << std::setw(2) << std::setfill('0') << value;
+		return oss.str();
+	}
+
+	string toHexFormat(unsigned int value) {
+		std::ostringstream oss;
+		oss << "0x" << std::setw(8) << std::setfill('0') << std::hex << std::uppercase << value;
+		return oss.str();
+	}
+private:
+	ShellUtil() {
+
 	}
 };
