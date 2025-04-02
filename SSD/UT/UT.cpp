@@ -1,4 +1,3 @@
-
 #include <gmock/gmock.h>
 #include "../File_Interface.cpp"
 #include "../SSD.cpp"
@@ -86,8 +85,83 @@ TEST_F(SSDTestFixture, CheckReadFile) {
 
 	FileInterface file;
 	EXPECT_EQ(data1, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, FullWriteTest) {
+	std::string data1 = "0xABABABAB";
+	for (int LBA = 0; LBA < 100; LBA++) {
+		SSDWrite.DoWrite(LBA, data1);
 	}
-
+	EXPECT_EQ(SSDRead.DoRead(0), data1);
+}
+TEST_F(SSDTestFixture, FullReadTest) {
+	std::string data1 = "0xABABABAB";
+	for (int LBA = 0; LBA < 100; LBA++) {
+		EXPECT_EQ(SSDRead.DoRead(LBA), data1);
+	}
+}
+TEST_F(SSDTestFixture, ReadAndWriteTest) {
+	std::string data0 = SSDRead.DoRead(19);
+	std::string data1 = "0x1289CDEF";
+	SSDWrite.DoWrite(20, data1);
+	EXPECT_EQ(SSDRead.DoRead(20), data1);
+	EXPECT_EQ(SSDRead.DoRead(19), data0);
+	data1 = "0xFF1100AA";
+	SSDWrite.DoWrite(10, data1);
+	EXPECT_EQ(SSDRead.DoRead(10), data1);
+}
+TEST_F(SSDTestFixture, OutputERROR1) {
+	//invalid lba read
+	//given : Invalid LBA range
+	std::string ErrorMsg = "ERROR";
+	SSDRead.DoRead(100);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR2) {
+	//invalid lba write
+	//given : Invalid LBA range
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x1289CDEF";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR3) {
+	//invalid data pattern
+	//given : not hexa data1
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x1289CDEG";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR4) {
+	//invalid data pattern
+	//given : not hexa data2
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x1x89CDEF";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR5) {
+	//invalid data pattern
+	//given : not hexa format
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "12345678";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
+TEST_F(SSDTestFixture, OutputERROR6) {
+	//invalid data pattern
+	//given : not data length
+	std::string ErrorMsg = "ERROR";
+	std::string data1 = "0x123456789";
+	SSDWrite.DoWrite(100, data1);
+	FileInterface file;
+	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
+}
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
