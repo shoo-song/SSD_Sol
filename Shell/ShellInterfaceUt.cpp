@@ -43,6 +43,8 @@ TEST_F(ShellExecutorFixture, readWriteTest1) {
 
     EXPECT_CALL(mockDriver, readSSD(1))
         .WillOnce(testing::Return(0xAAAABBBB));
+    EXPECT_CALL(mockDriver, writeSSD(1, 0xAAAABBBB))
+        .WillOnce(testing::Return());
 
     EXPECT_EQ("[Write] Done", shellExecutor.execute("write 01 0xAAAABBBB"));
     EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellExecutor.execute("read 01"));
