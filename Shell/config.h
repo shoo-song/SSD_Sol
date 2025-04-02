@@ -3,7 +3,11 @@
 #include <iostream>
 #include <string>
 
-extern std::string FILE_PATH;
-extern size_t BUFFER_SIZE;
+namespace config {
+    extern const std::string FILE_PATH;
+    extern const size_t BUFFER_SIZE;
+    extern const bool ENABLE_LOGGING;
+    extern const size_t MAX_LINES;
+}
 
 #endif // !CONFIG_H_
