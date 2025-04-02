@@ -97,6 +97,9 @@
     <ClCompile Include="ShellScript2.cpp">
       <Filter>shellcommand</Filter>
     </ClCompile>
+    <ClCompile Include="ShellScript3.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

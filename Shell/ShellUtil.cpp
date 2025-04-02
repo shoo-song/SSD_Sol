@@ -26,6 +26,10 @@ public:
 		if (input == "2_PartialLBAWrite" || input.rfind("2_", 0) == 0) {
 			return SCRIPT_2;
 		}
+		// 3번 조건 검사
+		if (input == "3_WriteReadAging" || input.rfind("3_", 0) == 0) {
+			return SCRIPT_3;
+		}
 
 		return UNKOWN;  // 매칭되는 조건이 없을 경우
 	}

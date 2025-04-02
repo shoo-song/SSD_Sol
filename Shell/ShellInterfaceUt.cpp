@@ -223,5 +223,5 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("2_"));
+    EXPECT_EQ("PASS", shellExecutor.execute("3_"));
 }

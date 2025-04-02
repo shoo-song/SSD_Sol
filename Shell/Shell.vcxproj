@@ -133,6 +133,7 @@
     <ClCompile Include="ShellException.cpp" />
     <ClCompile Include="ShellScript1.cpp" />
     <ClCompile Include="ShellScript2.cpp" />
+    <ClCompile Include="ShellScript3.cpp" />
     <ClCompile Include="ShellUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />
     <ClCompile Include="ShellWriteCommand.cpp" />

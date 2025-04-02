@@ -10,6 +10,7 @@ enum ShellCommand {
 
 	SCRIPT_1,
 	SCRIPT_2,
+	SCRIPT_3,
 
 	UNKOWN
 };
