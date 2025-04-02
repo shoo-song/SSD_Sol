@@ -38,19 +38,25 @@ private:
 };
 class SSDReadDriver {
 public:
+	SSDReadDriver(FileInterface* file) {
+		FileManager = file;
+	}
 	void DoRead(int LBA) {
-		FileObj.read(LBA);
+		FileManager->read(LBA);
 	}
 private:
-	FileInterface FileObj;
+	FileInterface* FileManager;
 };
 class SSDWriteDriver {
 public:
+	SSDWriteDriver(FileInterface* file) {
+		FileManager = file;
+	}
 	void DoWrite(int LBA, char* data) {
-		FileObj.write(LBA, data);
+		FileManager->write(LBA, data);
 	}
 private:
-	FileInterface FileObj;
+	FileInterface* FileManager;
 };
 
 #ifndef UNIT_TEST
@@ -65,8 +71,9 @@ int main(int argc, char* argv[]) {
 	else {
 		cout << "Invalid argument count\n";
 	}
-	SSDReadDriver Reader;
-	SSDWriteDriver Writer;
+	FileInterface FileManager;
+	SSDReadDriver Reader{ &FileManager };
+	SSDWriteDriver Writer{ &FileManager };
 	if (InputParam.IsWrite() == true) {
 		Writer.DoWrite(InputParam.GetLBA(), InputParam.GetData());
 	}

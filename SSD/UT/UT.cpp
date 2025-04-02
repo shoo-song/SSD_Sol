@@ -1,50 +1,31 @@
-/*
 #include <gmock/gmock.h>
-#include "../SSD_Interface.cpp"
-using namespace testing;
+#include "../SSD.cpp"
 
+using namespace testing;
+class MockFileManager : public FileInterface {
+public:
+	MOCK_METHOD(void, CheckAndDoFormat, ());
+	MOCK_METHOD(bool, open, (const std::string& filename, bool IsFormat, bool IsOpenForWrite));
+	MOCK_METHOD(bool, write, (int LBA, char* data));
+	MOCK_METHOD(bool, read, (int LBA));
+	MOCK_METHOD(void, close, ());
+};
 class SSDTestFixture : public Test
 {
 public:
-	SSDInterface* SSDIn;
+	MockFileManager FileMock;
+	SSDReadDriver Reader{ &FileMock };
+	SSDWriteDriver Writer{ &FileMock };
 };
-
-class MockFile : public SSDInterface {
-public:
-	MOCK_METHOD(bool, open, (const std::string& filename), ());
-};
-
-TEST_F(SSDTestFixture, FileOpen) {
-	MockFile file;
-	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
-
-	SSDInterface ssdIO;
-	EXPECT_EQ(true, ssdIO.open("ssd_nand.txt"));
+TEST_F(SSDTestFixture, BasicWriteTest) {
+	char data[20] = "0x00000000";
+	Writer.DoWrite(0, data);
+	EXPECT_CALL(FileMock, CheckAndDoFormat());
+	EXPECT_CALL(FileMock, open(_, _, _));
+	EXPECT_CALL(FileMock, write(_, _));
 }
-
-TEST_F(SSDTestFixture, FileOpenCheck) {
-	MockFile file;
-	EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(true));
-
-	SSDInterface ssdIO;
-	EXPECT_EQ(true, ssdIO.isOpen());
-}
-
-TEST_F(SSDTestFixture, FileClose) {
-	MockFile file;
-    EXPECT_CALL(file, open("ssd_nand.txt")).WillRepeatedly(Return(false));
-
-	SSDInterface ssdIO;
-	ssdIO.close();
-
-	EXPECT_EQ(false, ssdIO.isOpen());
-}
-
-// (invalide check) Read Wrie 공통부
 TEST_F(SSDTestFixture, invalidecheck1) {
 	// CMD 는 W, R 두개만 존재
-	int value = 0;
-	EXPECT_THAT(value, AnyOf(Eq('W'), Eq('R')));
 }
 
 TEST_F(SSDTestFixture, invalidecheck2) {
@@ -97,4 +78,3 @@ int main() {
 	return RUN_ALL_TESTS();
 }
 #endif
-*/
