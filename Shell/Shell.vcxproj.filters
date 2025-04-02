@@ -16,15 +16,15 @@
     <Filter Include="UT">
       <UniqueIdentifier>{16968c39-7fbc-41b8-9985-0df17c8f2e2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{17cafafb-a41a-4e5d-a146-aae4ef7d299d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shellcommand">
+      <UniqueIdentifier>{46237640-09bc-460b-b959-4fd6b6dc941c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SsdDriverUt.cpp">
@@ -48,6 +48,18 @@
     <ClCompile Include="ShellInterface.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ShellCommandFactory.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellException.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellReadCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellWriteCommand.cpp">
+      <Filter>shellcommand</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -59,6 +71,12 @@
     </ClInclude>
     <ClInclude Include="ssddriver_exception.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShellCommandInterface.h">
+      <Filter>shellcommand</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

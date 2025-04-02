@@ -128,6 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="mock_ssddriver.h" />
+    <ClCompile Include="ShellCommandFactory.cpp" />
+    <ClCompile Include="ShellException.cpp" />
+    <ClCompile Include="ShellReadCommand.cpp" />
+    <ClCompile Include="ShellWriteCommand.cpp" />
     <ClCompile Include="ssddriver_interface.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShellInterface.cpp" />
@@ -145,6 +149,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="ShellCommandInterface.h" />
     <ClInclude Include="ssddriver.h" />
     <ClInclude Include="ssddriver_exception.h" />
   </ItemGroup>

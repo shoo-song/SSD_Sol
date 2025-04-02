@@ -38,9 +38,9 @@ TEST_F(ShellInterfaceFixture, parseFullreadTest) {
 }
 
 TEST_F(ShellInterfaceFixture, parseArgTest1) {
-    vector<int> convertedArgs;
+    vector<unsigned int> convertedArgs;
 
-    inputArgs.push_back("1");
+    inputArgs.push_back("01");
     expectedArgs.push_back(1);
 
     convertedArgs = shellInterface.convertCmdArgs(READ_COMMAND, inputArgs);
@@ -60,11 +60,18 @@ TEST_F(ShellInterfaceFixture, readCmdParseArgTest3) {
     EXPECT_THROW(shellInterface.convertCmdArgs(READ_COMMAND, inputArgs), ShellArgConvertException);
 }
 
-TEST_F(ShellInterfaceFixture, readCmdParseArgTest4) {
-    EXPECT_THROW(shellInterface.convertCmdArgs(READ_COMMAND, inputArgs), ShellArgConvertException);
-}
+TEST_F(ShellInterfaceFixture, writeParseArgTest1) {
+    vector<unsigned int> convertedArgs;
 
-TEST_F(ShellInterfaceFixture, readCmdParseArgTest5) {
-    inputArgs.push_back("aaa");
-    EXPECT_THROW(shellInterface.convertCmdArgs(READ_COMMAND, inputArgs), ShellArgConvertException);
+    inputArgs.push_back("1");
+    inputArgs.push_back("0x12345678");
+
+    expectedArgs.push_back(1);
+    expectedArgs.push_back(0x12345678);
+
+    convertedArgs = shellInterface.convertCmdArgs(WRITE_COMMAND, inputArgs);
+
+    EXPECT_EQ(expectedArgs[0], convertedArgs[0]);
+    EXPECT_EQ(expectedArgs[1], convertedArgs[1]);
+    EXPECT_EQ(expectedArgs.size(), convertedArgs.size());
 }
