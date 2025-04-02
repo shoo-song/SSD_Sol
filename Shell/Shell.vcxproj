@@ -130,6 +130,7 @@
     <ClCompile Include="mock_ssddriver.h" />
     <ClCompile Include="ShellCommandFactory.cpp" />
     <ClCompile Include="ShellException.cpp" />
+    <ClCompile Include="ShellInterfaceUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />
     <ClCompile Include="ShellWriteCommand.cpp" />
     <ClCompile Include="ssddriver_interface.h" />

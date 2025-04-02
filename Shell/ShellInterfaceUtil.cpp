@@ -1,31 +1,38 @@
+
 #pragma once
-#include "ShellCommandFactory.cpp"
-#include "ShellInterfaceUtil.cpp"
 
-class ShellInterface {
+#include "Common.h"
+#include "ShellException.cpp"
+
+
+class ShellInterfaceUtil {
 public:
+	static ShellInterfaceUtil& getUtilObj() {
+		static ShellInterfaceUtil shellInterfaceUtil;
+		return shellInterfaceUtil;
+	}
 	ShellCommand parse(string commandArg) {
-		return ShellInterfaceUtil::getUtilObj().parse(commandArg);
+		if (commandArg.compare("read") == 0) {
+			return READ_COMMAND;
+		}
+		if (commandArg.compare("write") == 0) {
+			return WRITE_COMMAND;
+		}
+		if (commandArg.compare("help") == 0) {
+			return HELP_COMMAND;
+		}
+		if (commandArg.compare("exit") == 0) {
+			return EXIT_COMMAND;
+		}
+		if (commandArg.compare("fullwrite") == 0) {
+			return FULLWRITE_COMMAND;
+		}
+		if (commandArg.compare("fullread") == 0) {
+			return FULLREAD_COMMAND;
+		}
+		return UNKOWN;
 	}
 
-	vector<unsigned int> convertCmdArgs(ShellCommand cmd, vector<string> args) {
-
-		try {
-			ShellCommandFactory commandFactory;
-
-			shared_ptr<ShellCommandInterface> commandExecuter = commandFactory.getCommand(cmd);
-
-			return commandExecuter->convertCmdArgs(args);
-		}
-		catch (ShellArgConvertException e) {
-			throw e;
-		}
-		catch (exception e) {
-			throw ShellArgConvertException("invalid args");
-		}
-	}
-
-private:
 	// LBA 문자열 변환 (10진수, 0~99)
 	unsigned int convertDecimalStringForLba(const std::string& input) {
 		size_t pos;
@@ -60,5 +67,9 @@ private:
 		}
 
 		return value;
+	}
+private:
+	ShellInterfaceUtil() {
+
 	}
 };
