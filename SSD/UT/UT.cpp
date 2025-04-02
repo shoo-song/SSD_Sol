@@ -1,8 +1,11 @@
 
 #include <gmock/gmock.h>
+#include <sstream>
+
 #include "../File_Interface.cpp"
 #include "../SSD.cpp"
 using namespace testing;
+
 
 class SSDTestFixture : public Test
 {
@@ -116,6 +119,23 @@ TEST_F(SSDTestFixture, CheckReadFile) {
 	FileInterface file;
 	EXPECT_EQ(data1, file.getReadDataFromOutput());
 	}
+
+TEST_F(SSDTestFixture, CheckInvalidCmd) {
+	InputData input;
+	char data[20] = "0x87654321";
+
+	input.parseArg('W',"0", data);
+
+	std::stringstream buffer;
+	std::streambuf* oldCout = std::cout.rdbuf(buffer.rdbuf()); 
+
+	input.PrintInvalidCommand(); 
+
+	std::cout.rdbuf(oldCout);
+
+	EXPECT_EQ(buffer.str(), "INVALID COMMAND"); 
+
+}
 
 #ifdef UNIT_TEST
 int main() {

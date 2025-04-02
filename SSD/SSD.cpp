@@ -4,15 +4,19 @@
 using namespace std;
 class InputData {
 public:
-	void ReadInput(char RorW, string LBAstring, char* data = NULL) {
+	void PrintInvalidCommand() {
+		std::cout << "INVALID COMMAND";
+	}
+	void parseArg(char RorW, string LBAstring, char* data = NULL) {
 		if ((RorW == 'W') || (RorW == 'w')) {
 			bIsWrite = true;
+			
 		}
 		else if ((RorW == 'R') || (RorW == 'r')) {
 			bIsWrite = false;
 		}
 		else {
-			cout << "R or W needed\n";
+			cout << "INVALID COMMAND";
 		}
 		LBA = stoi(LBAstring);
 		if (LBA >= 100) {
@@ -63,10 +67,10 @@ private:
 int main(int argc, char* argv[]) {
 	InputData InputParam;
 	if (argc == 3) {
-		InputParam.ReadInput(*argv[1], argv[2]);
+		InputParam.parseArg(*argv[1], argv[2]);
 	}
 	else if (argc == 4) {
-		InputParam.ReadInput(*argv[1], argv[2], argv[3]);
+		InputParam.parseArg(*argv[1], argv[2], argv[3]);
 	}
 	else {
 		cout << "Invalid argument count\n";
