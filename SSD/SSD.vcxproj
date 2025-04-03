@@ -141,10 +141,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="command_parse.h" />
     <ClInclude Include="FileManager.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="BufferCommand.h" />
     <ClInclude Include="command_parse.h" />
     <ClInclude Include="FileSystem.h" />
