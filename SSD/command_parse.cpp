@@ -17,7 +17,6 @@ bool SSDCommand::checkInvalidity(const char& CMD, string LBAstring, char* data) 
 		return false;
 	}
 
-
 	size_t pos;
 	uint32_t value = std::stoi(LBAstring, &pos, 10);
 	if (pos != LBAstring.length()) {
