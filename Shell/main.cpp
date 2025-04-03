@@ -10,8 +10,13 @@ int main(int argc, char** argv) {
 }
 #else
 #include "Shell.cpp"
+#include "logger.h"
 
 int main(int argc, char** argv) {
+
+    logger.setLogFile();
+    logger.print("Main.main()", "∑Œ±Î Ω√¿€");
+
     Shell shell;
     shell.runShell();
     return 0;
