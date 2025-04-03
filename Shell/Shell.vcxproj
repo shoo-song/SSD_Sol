@@ -173,6 +173,7 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="ScriptParameterGenerator.h" />
     <ClInclude Include="ShellCommandInterface.h" />
     <ClInclude Include="ShellScriptCommandInterface.h" />
     <ClInclude Include="ssddriver.h" />

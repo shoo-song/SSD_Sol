@@ -3,48 +3,31 @@
 #include "ShellException.cpp"
 #include "ShellUtil.cpp"
 #include "ssddriver_interface.h"
+#include "ScriptParameterGenerator.h"
+#include <memory>
+
+using std::shared_ptr;
 
 class ShellScriptCompareCommand : public ShellScriptCommandInterface {
 public:
-	ShellScriptCompareCommand(SsdDriverInterface* pDriverInterface, vector<string> args) {
-		try {
-			mpDriverInterface = pDriverInterface;
-			mConvertedVec = convertCmdArgs(args);
-		}
-		catch (exception e) {
-			throw e;
-		}
+	ShellScriptCompareCommand(SsdDriverInterface* pDriverInterface,
+		shared_ptr<ShellScriptParameterGenInterface> lbaParam,
+		shared_ptr<ShellScriptParameterGenInterface> expectedValueParam) {
+		mLbaParam = lbaParam;
+		mExpectedValueParam = expectedValueParam;
 	}
 
 	bool execute() {
 		try {
-			unsigned int readValue = mpDriverInterface->readSSD((int)mConvertedVec[0]);
-			return (readValue == mConvertedVec[1]);
+			unsigned int readValue = mpDriverInterface->readSSD((int)mLbaParam->generateParameter());
+			return (readValue == mExpectedValueParam->generateParameter());
 		}
 		catch (exception e) {
 			return false;
 		}
 	}
 private:
-	vector<unsigned int>  convertCmdArgs(vector<string> args) {
-		try {
-			vector<unsigned int> output;
-
-			if (args.size() != 3) {
-				throw ShellArgConvertException("args parameter size invalid");
-			}
-
-			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
-			return output;
-		}
-		catch (ShellArgConvertException e) {
-			throw e;
-		}
-		catch (exception e) {
-			throw ShellArgConvertException("invalid args");
-		}
-	}
-
 	SsdDriverInterface* mpDriverInterface;
-	vector<unsigned int> mConvertedVec;
+	shared_ptr<ShellScriptParameterGenInterface> mLbaParam;
+	shared_ptr<ShellScriptParameterGenInterface> mExpectedValueParam;
 };

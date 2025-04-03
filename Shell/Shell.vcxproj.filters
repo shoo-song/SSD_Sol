@@ -36,6 +36,9 @@
     <Filter Include="소스 파일\shell\shellscript\script">
       <UniqueIdentifier>{8db56ab0-b2c7-4595-b8b4-8b69eb115e76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\shell\shellscript\parser">
+      <UniqueIdentifier>{796d384a-47e3-4a66-ade7-4511904fe795}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,9 +51,6 @@
       <Filter>UT</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver_ut.cpp">
-      <Filter>UT</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellInterfaceUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver.cpp">
@@ -115,6 +115,7 @@
     </ClCompile>
     <ClCompile Include="logger_exception.cpp">
       <Filter>소스 파일\logger</Filter>
+    </ClCompile>
     <ClCompile Include="ShellScript3.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
@@ -133,11 +134,11 @@
     <ClCompile Include="ShellScriptRunCommand.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptParser.cpp">
-      <Filter>소스 파일\shell\shellscript</Filter>
-    </ClCompile>
     <ClCompile Include="ShellScriptLoopCommand.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptParser.cpp">
+      <Filter>소스 파일\shell\shellscript\parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,8 +166,12 @@
     </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>소스 파일\logger</Filter>
+    </ClInclude>
     <ClInclude Include="ShellScriptCommandInterface.h">
       <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptParameterGenerator.h">
+      <Filter>소스 파일\shell\shellscript\parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

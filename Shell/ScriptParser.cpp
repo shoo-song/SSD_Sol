@@ -13,7 +13,9 @@
 #include "ShellScriptCompareCommand.cpp"
 #include "ShellScriptWriteCommand.cpp"
 #include "ShellUtil.cpp"
+#include "ScriptParameterGenerator.h"
 using std::shared_ptr;
+using std::make_shared;
 
 class ScriptParser {
 public:
@@ -34,7 +36,7 @@ public:
 
         try {
             size_t idx = 0;
-            script = parseStatements(lines, idx);
+            script = parseStatements(nullptr, lines, idx);
         }
         catch (const std::exception& ex) {
             throw std::runtime_error("Error: Unprocessed extra lines remain in the script.");
@@ -56,12 +58,44 @@ private:
         return std::string(start, end + 1);
     }
 
+
+    // 파라미터 토큰을 파싱하는 함수
+    shared_ptr< ShellScriptParameterGenInterface> parseParameter(const std::string& token,
+            shared_ptr< ShellScriptLoopIdxGetter> looper) {
+        // VAL(숫자)
+        std::regex regexVal(R"(VAL\(\s*(\d+)\s*\))");
+        // IND(숫자) 또는 IND() : 숫자 없으면 기본 0
+        std::regex regexInd(R"(IND\(\s*(-?\d+)?\s*\))");
+        // RAND(숫자,숫자)
+        std::regex regexRand(R"(RAND\(\s*(\d+)\s*,\s*(\d+)\s*\))");
+        std::smatch match;
+
+        if (std::regex_match(token, match, regexVal)) {
+            return make_shared<ScriptParamValGen>(std::stoi(match[1]));
+        }
+        else if (std::regex_match(token, match, regexInd)) {
+            if (looper == nullptr) {
+                throw std::runtime_error("looper 0");
+            }
+
+            return make_shared<ScriptParamIdxGen>(looper, std::stoi(match[1]));
+        }
+        else if (std::regex_match(token, match, regexRand)) {
+            return make_shared<ScriptParamRanGen>(std::stoi(match[1]), std::stoi(match[2]));
+        }
+        return nullptr;
+    }
+
+
+   
     // 재귀적으로 스크립트 라인을 파싱하는 함수
     // idx는 현재 라인 인덱스를 가리키며, block 종료('}')를 만나면 반환합니다.
-    std::vector<shared_ptr<ShellScriptCommandInterface>> parseStatements(const std::vector<std::string>& lines, size_t& idx) {
+    std::vector<shared_ptr<ShellScriptCommandInterface>> parseStatements(shared_ptr<ShellScriptLoopIdxGetter> parentLooper, const std::vector<std::string>& lines, size_t& idx) {
         std::vector<shared_ptr<ShellScriptCommandInterface>> commandVec;
-        std::regex loopRegex(R"(^loop\s+(\d+)\s*\{\s*$)");  // loop header 패턴
+        std::regex loopRegex(R"(^loop\s+(\S+)\s+(\S+)\s+(\S+)\s*\{$)");  // loop header 패턴
+        static int callCnt = 0;
 
+        callCnt++;
         for (; idx < lines.size(); ++idx) {
             std::string line = trim(lines[idx]);
             if (line.empty())
@@ -71,18 +105,26 @@ private:
             if (line == "}") {
                 // 블록이 정상 종료되었으므로 idx를 한 칸 증가시키고 반환
                 ++idx;
+                callCnt--;
                 return commandVec;
             }
 
             std::smatch match;
             if (std::regex_match(line, match, loopRegex)) {
                 // loop 블록 시작
-                int loopCnt = std::stoi(match[1]);
+                shared_ptr< ShellScriptParameterGenInterface> loopStart = parseParameter(match[1].str(), parentLooper);
+                shared_ptr< ShellScriptParameterGenInterface> loopEnd = parseParameter(match[2].str(), parentLooper);
+                shared_ptr< ShellScriptParameterGenInterface> loopIncrement = parseParameter(match[3].str(), parentLooper);
+
                 ++idx; // loop 다음 줄부터 블록 내부 파싱 시작
 
                 // 재귀 호출하여 현재 loop의 내부 구문 파싱
-                shared_ptr<ShellScriptLoopCommand> compositCmd = std::make_shared<ShellScriptLoopCommand>(loopCnt);
-                std::vector<shared_ptr<ShellScriptCommandInterface>> childrenCmds = parseStatements(lines, idx);
+                shared_ptr<ShellScriptLoopCommand> compositCmd = std::make_shared<ShellScriptLoopCommand>(
+                    loopStart,
+                    loopEnd,
+                    loopIncrement
+                    );
+                std::vector<shared_ptr<ShellScriptCommandInterface>> childrenCmds = parseStatements(compositCmd, lines, idx);
 
                 for (shared_ptr<ShellScriptCommandInterface> scriptCommand : childrenCmds) {
                     compositCmd->addCommand(scriptCommand);
@@ -104,15 +146,21 @@ private:
                     throw std::runtime_error("unkown cmd");
                 }
                 else if (scriptCmdEnum == COMPARE_SCRIPT_COMMAND) {
-                    scriptCmd = std::make_shared<ShellScriptCompareCommand>(nullptr, separatedStr);
+                    shared_ptr< ShellScriptParameterGenInterface> lba = parseParameter(separatedStr[1], parentLooper);
+                    shared_ptr< ShellScriptParameterGenInterface> expected = parseParameter(separatedStr[2], parentLooper);
+
+                    scriptCmd = std::make_shared<ShellScriptCompareCommand>(nullptr, lba, expected);
                 }
                 else if (scriptCmdEnum == WRITE_SCRIPT_COMMAND) {
-                    scriptCmd = std::make_shared<ShellScriptWriteCommand>(nullptr, separatedStr);
+                    shared_ptr< ShellScriptParameterGenInterface> lba = parseParameter(separatedStr[1], parentLooper);
+                    shared_ptr< ShellScriptParameterGenInterface> val = parseParameter(separatedStr[2], parentLooper);
+
+                    scriptCmd = std::make_shared<ShellScriptWriteCommand>(nullptr, lba, val);
                 }
                 commandVec.push_back(scriptCmd);
             }
         }
-
+        callCnt--;
         return commandVec;
     }
 };
