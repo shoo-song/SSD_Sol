@@ -1,9 +1,9 @@
 #pragma once
-#include "FIle_interface.h"
+#include "FileManager.h"
 
 class SSDCommand {
 public:
-	SSDCommand() : FileObj(std::make_unique<FileInterface>()) {
+	SSDCommand() : FileObj(std::make_unique<FileManager>()) {
 	}
 
 	void WriteInvalidLog();
@@ -25,5 +25,5 @@ private:
 	bool bIsWrite = false;
 	int LBA = 0;
 	char input_data[20] = {};
-	std::unique_ptr<FileInterface> FileObj;
+	std::unique_ptr<FileManager> FileObj;
 };
