@@ -22,15 +22,7 @@ bool SsdDriver::executeCmd(std::string cmdLine) {
     int result = system(newCmd.c_str());
 
     if (result) {
-        try {
-            return false;
-        }
-        catch (exception e) {
-            throw e;
-        }
-        catch (SsdExecuteException e) {
-            throw SsdExecuteException();
-        }
+        throw SsdExecuteException();
     }
     return true;
 }
@@ -45,17 +37,8 @@ uint32_t SsdDriver::readSSD(int LBA) {
 
     std::ifstream file(config::FILE_PATH); 
 
-    if (!file.is_open())
-    {
-        try {
-            return ret;
-        }
-        catch (exception e) {
-            throw e;
-        }
-        catch (FileNotFoundException e) {
-            throw FileNotFoundException();
-        }
+    if (!file.is_open()){
+        throw FileNotFoundException();
     }
 
     std::string outputData;
