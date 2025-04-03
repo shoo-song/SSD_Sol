@@ -11,6 +11,7 @@ public:
 		FileMgr->ReadFile(LBA);
 	}
 	void DoWrite(const int& LBA, const string& data) {
+
 		if (FileMgr == nullptr) return;
 		FileMgr->WriteFile(LBA, data);
 	}
