@@ -23,7 +23,18 @@ Logger::~Logger() {
 }
 
 void Logger::setLogFile(const std::string& filename) {
-    logFileName_ = filename;
+    try {
+        std::filesystem::create_directories(logDirectory_);
+        std::string actualFileName = filename;
+        if (actualFileName.find('.') == std::string::npos) {
+            actualFileName += ".log";
+        }
+    }
+    catch (const std::exception& e) {
+        throw LoggerException("로그 디렉토리 생성 실패: " + std::string(e.what()));
+    }
+
+    logFileName_ = logDirectory_ + "/" + filename;
     openLogFile();
 }
 
@@ -48,7 +59,7 @@ std::string Logger::getTimestampedFilename() {
     localtime_s(&now_tm, &now_c);
 
     std::ostringstream oss;
-    oss << "until_"
+    oss << logDirectory_ << "/until_"
         << std::put_time(&now_tm, "%y%m%d_%Hh_%Mm_%Ss")
         << ".log";
     return oss.str();
@@ -78,7 +89,7 @@ void Logger::rotateIfNeeded() {
     try {
         std::vector<fs::directory_entry> backups;
 
-        for (const auto& entry : fs::directory_iterator(".")) {
+        for (const auto& entry : fs::directory_iterator(logDirectory_)) {
             if (entry.is_regular_file()) {
                 const std::string& name = entry.path().filename().string();
                 if (name.rfind("until_", 0) == 0 && entry.path().extension() == ".log") {

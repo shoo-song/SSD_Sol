@@ -24,6 +24,7 @@ private:
     std::string getTimestampedFilename();
 
     std::ofstream logFile_;
+    std::string logDirectory_ = "log";
     std::string logFileName_ = "latest.log";
 };
 
