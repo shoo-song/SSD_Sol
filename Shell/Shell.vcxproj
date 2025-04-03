@@ -134,6 +134,7 @@
     <ClCompile Include="mock_ssddriver.h" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ShellCommandFactory.cpp" />
+    <ClCompile Include="ShellEraseCommand.cpp" />
     <ClCompile Include="ShellException.cpp" />
     <ClCompile Include="ShellExitCommand.cpp" />
     <ClCompile Include="ShellFullReadCommand.cpp" />

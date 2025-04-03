@@ -53,6 +53,12 @@ public:
 		if (commandArg.compare("fullread") == 0) {
 			return FULLREAD_COMMAND;
 		}
+		if (commandArg.compare("erase") == 0) {
+			return ERASE_COMMAND;
+		}
+		if (commandArg.compare("erase_range") == 0) {
+			return ERASERANGE_COMMAND;
+		}
 		return UNKOWN;
 	}
 
@@ -73,6 +79,26 @@ public:
 
 		return value;
 	}
+
+	// Size 문자열 변환 (10진수, 0~100)
+	unsigned int convertStrForSize(const std::string& size) {
+		size_t pos;
+		unsigned int value = std::stoi(size, &pos, 10);
+
+		// 변환된 길이 확인 (예: "12abc" 방지)
+		if (pos != size.length()) {
+			throw ShellArgConvertException("Invalid characters in input: " + size);
+		}
+
+		// 범위 검사
+		if (value < 0 || value > 100) {
+			throw ShellArgConvertException("Value out of range (0-100): " + size);
+		}
+
+		return value;
+	}
+
+	
 
 	// Data 문자열 변환 (16진수, "0x" + 8자리)
 	unsigned int convertHexStringForData(const std::string& input) {

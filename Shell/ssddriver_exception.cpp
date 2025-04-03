@@ -14,7 +14,7 @@ protected:
 
 class SsdExecuteException : public SsdDriverException {
 public:
-    SsdExecuteException() : SsdDriverException("InvalidInputException") {}
+    SsdExecuteException() : SsdDriverException("SsdExecuteException") {}
 };
 
 class FileNotFoundException : public SsdDriverException {

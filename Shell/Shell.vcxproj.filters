@@ -122,6 +122,9 @@
     <ClCompile Include="logger_exception.cpp">
       <Filter>소스 파일\logger</Filter>
     </ClCompile>
+    <ClCompile Include="ShellEraseCommand.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
