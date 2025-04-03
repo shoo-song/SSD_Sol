@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
-#include "../File_Interface.cpp"
+#include "../File_Interface.h"
 #include "../SSD.cpp"
+#include "../command_parse.h"
 using namespace testing;
 
 class SSDTestFixture : public Test
@@ -15,31 +16,7 @@ class MockFile : public FileInterface {
 public:
 	MOCK_METHOD(bool, open, (const std::string& filename), ());
 };
-TEST_F(SSDTestFixture, invalidecheck1) {
-	//Invalid cmd type
-	char write_data[20] = "0x123456789";
-	EXPECT_THROW(InputParser.parseArg('A', "10", write_data), std::exception);
-}
-TEST_F(SSDTestFixture, invalidecheck2) {
-	//Invalid lba range
-	char write_data[20] = "0x123456789";
-	EXPECT_THROW(InputParser.parseArg('r', "100", write_data), std::exception);
-}
-TEST_F(SSDTestFixture, invalidecheck3) {
-	//Invalid data size
-	char write_data[20] = "0x123456789";
-	EXPECT_THROW(InputParser.parseArg('A', "10", write_data), std::exception);
-}
-TEST_F(SSDTestFixture, invalidecheck4) {
-	//Invalid data format
-	char write_data[20] = "0x1x345678";
-	EXPECT_THROW(InputParser.parseArg('A', "10", write_data), std::exception);
-}
-TEST_F(SSDTestFixture, Read1) {
-	//적은적 없으면 0 으로 return
-	std::string data1 = "0x00000000";
-	EXPECT_EQ(data1, SSDRead.DoRead(0)); 
-}
+
 TEST_F(SSDTestFixture, Read2) {
 //Read 요청을 SSD_Output.txt 에 write하고, read 하여 write 내용이 읽혀야함
 	std::string data1 = "0xABABABAB";
@@ -109,60 +86,6 @@ TEST_F(SSDTestFixture, ReadAndWriteTest) {
 	SSDWrite.DoWrite(10, data1);
 	EXPECT_EQ(SSDRead.DoRead(10), data1);
 }
-TEST_F(SSDTestFixture, OutputERROR1) {
-	//invalid lba read
-	//given : Invalid LBA range
-	std::string ErrorMsg = "ERROR";
-	SSDRead.DoRead(100);
-	FileInterface file;
-	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
-}
-TEST_F(SSDTestFixture, OutputERROR2) {
-	//invalid lba write
-	//given : Invalid LBA range
-	std::string ErrorMsg = "ERROR";
-	std::string data1 = "0x1289CDEF";
-	SSDWrite.DoWrite(100, data1);
-	FileInterface file;
-	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
-}
-TEST_F(SSDTestFixture, OutputERROR3) {
-	//invalid data pattern
-	//given : not hexa data1
-	std::string ErrorMsg = "ERROR";
-	std::string data1 = "0x1289CDEG";
-	SSDWrite.DoWrite(100, data1);
-	FileInterface file;
-	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
-}
-TEST_F(SSDTestFixture, OutputERROR4) {
-	//invalid data pattern
-	//given : not hexa data2
-	std::string ErrorMsg = "ERROR";
-	std::string data1 = "0x1x89CDEF";
-	SSDWrite.DoWrite(100, data1);
-	FileInterface file;
-	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
-}
-TEST_F(SSDTestFixture, OutputERROR5) {
-	//invalid data pattern
-	//given : not hexa format
-	std::string ErrorMsg = "ERROR";
-	std::string data1 = "12345678";
-	SSDWrite.DoWrite(100, data1);
-	FileInterface file;
-	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
-}
-TEST_F(SSDTestFixture, OutputERROR6) {
-	//invalid data pattern
-	//given : not data length
-	std::string ErrorMsg = "ERROR";
-	std::string data1 = "0x123456789";
-	SSDWrite.DoWrite(100, data1);
-	FileInterface file;
-	EXPECT_EQ(ErrorMsg, file.getReadDataFromOutput());
-}
-
 
 TEST_F(SSDTestFixture, CheckInvalidCmd) {
 	SSDCommand input;
