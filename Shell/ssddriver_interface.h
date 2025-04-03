@@ -8,7 +8,7 @@ class SsdDriverInterface {
 public:
     virtual uint32_t readSSD(int LBA) = 0;
     virtual void writeSSD(int LBA, uint32_t data) = 0;
-    //virtual bool executeCmd(std::string cmdLine) = 0;
+    virtual void eraseSSD(int LBA, int size) = 0;
 };
 
 #endif // !

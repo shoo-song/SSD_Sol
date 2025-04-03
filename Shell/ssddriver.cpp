@@ -33,6 +33,7 @@ bool SsdDriver::executeCmd(std::string cmdLine) {
 uint32_t SsdDriver::readSSD(int LBA) {
     std::string cmd = config::READ_MARKER + ShellUtil::getUtilObj().toTwoDigitString(LBA);
     const char* cmdLine= cmd.c_str();
+
     executeCmd(cmdLine);
 
     uint32_t ret = 0xFFFFFFFF;
@@ -53,6 +54,13 @@ uint32_t SsdDriver::readSSD(int LBA) {
 void SsdDriver::writeSSD(int LBA, uint32_t data) {
     std::string cmd = config::WRITE_MARKER + ShellUtil::getUtilObj().toTwoDigitString(LBA) + " "
         + ShellUtil::getUtilObj().toHexFormat(data);
+    const char* cmdLine = cmd.c_str();
+
+    executeCmd(cmdLine);
+}
+
+void SsdDriver::eraseSSD(int LBA, int size) {
+    std::string cmd = config::ERASE_MARKER + ShellUtil::getUtilObj().toTwoDigitString(LBA) + " " + std::to_string(size);
     const char* cmdLine = cmd.c_str();
 
     executeCmd(cmdLine);
