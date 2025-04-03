@@ -8,7 +8,7 @@
 
 #include "../FileManager.h"
 #include "../SSD.cpp"
-#include "../command_parse.h"
+#include "../command_parser.h"
 #include "../BufferCommand.h"
 #include "../FileSystem.h"
 using namespace testing;
@@ -19,7 +19,7 @@ class SSDTestFixture : public Test
 public:
 	SSD MySSD;
 	FileManager FileMgr;
-	SSDCommand InputParser;
+	CommandParser InputParser;
 	FileSystem filesystem;
 };
 
@@ -110,10 +110,9 @@ TEST_F(SSDTestFixture, ReadAndWriteTest) {
 }
 
 TEST_F(SSDTestFixture, CheckInvalidCmd) {
-	SSDCommand input;
 	// when : invalid cmd
 	char data[20] = "0x12345678";
-	input.parseArg('s', "0", data);
+	InputParser.parseArg('s', "0", data);
 
 	FileManager file;
 	string actual = file.getReadDataFromOutput();
@@ -122,14 +121,13 @@ TEST_F(SSDTestFixture, CheckInvalidCmd) {
 }
 
 TEST_F(SSDTestFixture, CheckInvalidLBALenght) {
-	SSDCommand input;
 	// given : initialize output file
 	char data[20] = "0x12345678";
 	MySSD.DoWrite(0x0, data);
 	MySSD.DoRead(0x0);
 
 	// when : invalid LBA length
-	input.parseArg('W', "1a", data);
+	InputParser.parseArg('W', "1a", data);
 
 	FileManager file;
 	string actual = file.getReadDataFromOutput();
@@ -137,14 +135,13 @@ TEST_F(SSDTestFixture, CheckInvalidLBALenght) {
 }
 
 TEST_F(SSDTestFixture, CheckInvalidLBARange) {
-	SSDCommand input;
 	// given : initialize output file
 	char data[20] = "0x12345678";
 	MySSD.DoWrite(0x0, data);
 	MySSD.DoRead(0x0);
 
 	// when : invalid LBA range
-	input.parseArg('W', "300", data);
+	InputParser.parseArg('W', "300", data);
 
 	FileManager file;
 	string actual = file.getReadDataFromOutput();
@@ -152,7 +149,6 @@ TEST_F(SSDTestFixture, CheckInvalidLBARange) {
 }
 
 TEST_F(SSDTestFixture, CheckInvalidDataRange1) {
-	SSDCommand input;
 	// given : initialize output file	
 	char data[20] = "0x12345678";
 	MySSD.DoWrite(0x0, data);
@@ -160,7 +156,7 @@ TEST_F(SSDTestFixture, CheckInvalidDataRange1) {
 
 	// when : invalid data size
 	char data1[20] = "0x1234";
-	input.parseArg('W', "3", data1);
+	InputParser.parseArg('W', "3", data1);
 
 	FileManager file;
 	string actual = file.getReadDataFromOutput();
@@ -168,7 +164,6 @@ TEST_F(SSDTestFixture, CheckInvalidDataRange1) {
 }
 
 TEST_F(SSDTestFixture, CheckInvalidDataRange2) {
-	SSDCommand input;
 	// given : initialize output file	
 	char data[20] = "0x12345678";
 	MySSD.DoWrite(0x0, data);
@@ -176,7 +171,7 @@ TEST_F(SSDTestFixture, CheckInvalidDataRange2) {
 
 	// when : invalid data size
 	char data1[20] = "0x1234544444";
-	input.parseArg('W', "3", data1);
+	InputParser.parseArg('W', "3", data1);
 	FileManager file;
 	string actual = file.getReadDataFromOutput();
 	EXPECT_THAT(actual, StrEq(string("ERROR")));
@@ -189,6 +184,27 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
 }
 
+TEST_F(SSDTestFixture, CMDMergeTest)
+{
+	CMDBuffer temp;
+	SSDCommand cmd;
+	//Erase 10~12
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 10;
+	cmd.EraseEndLBA = 12;
+	temp.AppendCMD(cmd);
+	//Write 14
+	cmd.CMDType = CMD_WRITE;
+	cmd.LBA = 14;
+	strcpy_s(cmd.input_data, "0xABABABAB");
+	temp.AppendCMD(cmd);
+	//Erase 11~15
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 11;
+	cmd.EraseEndLBA = 15;
+	temp.AppendCMD(cmd);
+	EXPECT_EQ(1, temp.CheckValidCmdCount());
+}
 
 TEST_F(SSDTestFixture, CreateBufferFolder) {
 	std::string testDir = "buffer";

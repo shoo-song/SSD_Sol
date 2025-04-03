@@ -128,7 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BufferCommand.cpp" />
-    <ClCompile Include="command_parse.cpp" />
+    <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SSD.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
@@ -143,7 +143,7 @@
   <ItemGroup>
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="BufferCommand.h" />
-    <ClInclude Include="command_parse.h" />
+    <ClInclude Include="command_parser.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="File_Interface.h" />
   </ItemGroup>
