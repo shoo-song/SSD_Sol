@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     //Shell shell;
     //shell.runShell();
     ScriptParser parser;
-    ::vector<shared_ptr<ShellScriptCommandInterface>> scriptCmds = parser.MakingScript("1_FullWriteAndReadCompare");
+    ::vector<shared_ptr<ShellScriptCommandInterface>> scriptCmds = parser.makingScript("1_FullWriteAndReadCompare");
     for (shared_ptr<ShellScriptCommandInterface> cmd : scriptCmds) {
         cmd->execute();
     }

@@ -140,17 +140,23 @@
     <ClCompile Include="ScriptParser.cpp">
       <Filter>소스 파일\shell\shellscript\parser</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptStore.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptLoader.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="MakeFile" />
-    <None Include="1_FullWriteAndReadCompare">
+    <None Include="1_FullWriteAndReadCompare.script">
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
-    <None Include="2_PartialLBAWrite">
+    <None Include="2_PartialLBAWrite.script">
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
-    <None Include="3_WriteReadAging">
+    <None Include="3_WriteReadAging.script">
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
   </ItemGroup>
