@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 #include "SSD.cpp"
-#include "File_Interface.h"
+#include "FileManager.h"
 #include "command_parse.h"
-
+#define UNIT_TEST
 using namespace std;
 bool commandParse(int argc, SSDCommand& InputParam, char* argv[])
 {
@@ -17,13 +17,15 @@ bool commandParse(int argc, SSDCommand& InputParam, char* argv[])
 }
 void executeCMD(SSDCommand& InputParam)
 {
-	SSDReadDriver Reader;
-	SSDWriteDriver Writer;
-	if (InputParam.IsWrite() == true) {
-		Writer.DoWrite(InputParam.GetLBA(), InputParam.GetData());
+	SSD MySSD;
+	if (InputParam.GetCmdType() == CMD_WRITE) {
+		MySSD.DoWrite(InputParam.GetLBA(), InputParam.GetData());
 	}
-	else {
-		Reader.DoRead(InputParam.GetLBA());
+	else if (InputParam.GetCmdType() == CMD_READ) {
+		MySSD.DoRead(InputParam.GetLBA());
+	}
+	else if (InputParam.GetCmdType() == CMD_ERASE) {
+		MySSD.DoErase(InputParam.GetLBA(), InputParam.GetEraseCount());
 	}
 }
 #ifndef UNIT_TEST
