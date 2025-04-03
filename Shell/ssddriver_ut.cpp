@@ -52,6 +52,21 @@ TEST_F(SsdDriverMockFixture, ssddrive_write_cmd) {
 
 }
 
+TEST_F(SsdDriverMockFixture, ssddrive_erase_cmd) {
+
+    const std::string expected = "SSD.exe E 0 100";
+
+    EXPECT_CALL(mockssdDriver, executeCmd(expected))
+        .Times(1)
+        .WillOnce(::testing::Return(true));
+
+    const std::string commandStr = "SSD.exe E 0 100";
+    bool result = mockssdDriver.executeCmd(commandStr);
+    EXPECT_TRUE(result);
+
+}
+
+
 TEST_F(SsdDriverFixture, ssd_read_excpetion) {
     EXPECT_THROW(ssdDriver.readSSD(200), SsdDriverException);
 } 
