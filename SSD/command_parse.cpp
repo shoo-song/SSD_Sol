@@ -12,19 +12,17 @@ void SSDCommand::WriteInvalidLog() {
 }
 
 bool SSDCommand::checkInvalidity(const char& CMD, string LBAstring, char* data) {
-	if (!((CMD == 'W') || (CMD == 'w') || (CMD == 'R') || (CMD == 'r'))) {
+	if (!((CMD == 'W') || (CMD == 'w') || (CMD == 'R') || (CMD == 'r') || (CMD == 'e') || (CMD == 'E'))) {
 		WriteInvalidLog();
 		return false;
 	}
-
-
 	size_t pos;
-	uint32_t value = std::stoi(LBAstring, &pos, 10);
+	uint32_t LBA = std::stoi(LBAstring, &pos, 10);
 	if (pos != LBAstring.length()) {
 		WriteInvalidLog();
 		return false;
 	}
-	if (value < 0 || value > 99) {
+	if (LBA < 0 || LBA > MAX_LBA) {
 		WriteInvalidLog();
 		return false;
 	}
@@ -34,8 +32,19 @@ bool SSDCommand::checkInvalidity(const char& CMD, string LBAstring, char* data) 
 			WriteInvalidLog();
 			return false;
 		}
-		value = std::stoul(data, &pos, 16);
+		LBA = std::stoul(data, &pos, 16);
 		if (pos != strlen(data)) {
+			WriteInvalidLog();
+			return false;
+		}
+	}
+	else if ((CMD == 'E') || (CMD == 'e')) {
+		int EraseCount = stoi(data);
+		if ((EraseCount < 0) || (EraseCount > MAX_ERASE_SIZE)) {
+			WriteInvalidLog();
+			return false;
+		}
+		else if ((LBA + EraseCount) > MAX_LBA) {
 			WriteInvalidLog();
 			return false;
 		}
@@ -48,11 +57,14 @@ bool SSDCommand::parseArg(char CMD, string LBAstring, char* data) {
 
 	if ((CMD == 'W') || (CMD == 'w')) {
 		strcpy_s(input_data, data);
-		bIsWrite = true;
+		CMDType = CMD_WRITE;
 	}
 	else if ((CMD == 'R') || (CMD == 'r')) {
-		bIsWrite = false;
+		CMDType = CMD_READ;
 	}
-	LBA = std::stoi(LBAstring);	
+	else {
+		EraseCount = stoi(data);
+		CMDType = CMD_ERASE;
+	}
 	return true;
 }

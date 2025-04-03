@@ -26,12 +26,16 @@ bool FileManager::NandFileOpen(void) {
 	Nand_file_.open(filename_nand, std::ios::in | std::ios::out | std::ios::binary);
 	return Nand_file_.is_open();
 }
-bool FileManager::OutputFileOpen(void) {
+bool FileManager::OutputFileOpenForWrite(void) {
 	char filename_output[100] = "ssd_output.txt";
 	Output_file_.open(filename_output, std::ios::out | std::ios::binary);
 	return Output_file_.is_open();
 }
-
+bool FileManager::OutputFileOpenForRead(void) {
+	char filename_output[100] = "ssd_output.txt";
+	Output_file_.open(filename_output, std::ios::in | std::ios::binary);
+	return Output_file_.is_open();
+}
 
 bool FileManager::WriteFile(int LBA, string data) {
 	if (NandFileOpen()) {
@@ -58,7 +62,7 @@ bool FileManager::ReadFile(int LBA) {
 	}
 	CloseFiles();
 
-	if (OutputFileOpen()) {
+	if (OutputFileOpenForWrite()) {
 		Output_file_ << std::setw(10) << data_buf;
 		Output_file_.flush();
 	}
@@ -71,7 +75,7 @@ bool FileManager::ReadFile(int LBA) {
 
 string FileManager::getReadDataFromOutput() {
 	char data_buf[20] = {};
-	if (OutputFileOpen()) {
+	if (OutputFileOpenForRead()) {
 		Output_file_.read(data_buf, 10);
 		CloseFiles();
 	}
@@ -79,7 +83,7 @@ string FileManager::getReadDataFromOutput() {
 }
 
 void FileManager::writeInvalidLog() {
-	if (OutputFileOpen()) {
+	if (OutputFileOpenForWrite()) {
 		Output_file_ << "ERROR";
 		Output_file_.flush();
 		CloseFiles();

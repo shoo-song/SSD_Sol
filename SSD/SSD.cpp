@@ -14,12 +14,7 @@ public:
 		if (FileMgr == nullptr) return;
 		FileMgr->WriteFile(LBA, data);
 	}
-	void DoErase(const int& LBA) {
-		if (FileMgr == nullptr) return;
-		char ErasePattern[20] = "0x00000000";
-		FileMgr->WriteFile(LBA, ErasePattern);
-	}
-	void DoEraseRange(const int& StartLBA, int LBACount) {
+	void DoErase(const int& StartLBA, int LBACount) {
 		if (FileMgr == nullptr) return;
 		char ErasePattern[20] = "0x00000000";
 		for (int offset = 0; offset < LBACount; offset++) {

@@ -11,7 +11,8 @@ using namespace std;
 class FileManager {
 public:
 	bool NandFileOpen(void);
-	bool OutputFileOpen(void);
+	bool OutputFileOpenForRead(void);
+	bool OutputFileOpenForWrite(void);
 	bool WriteFile(int LBA, string data);
 	bool ReadFile(int LBA);
 	string getReadDataFromOutput();

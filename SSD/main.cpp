@@ -3,7 +3,7 @@
 #include "SSD.cpp"
 #include "FileManager.h"
 #include "command_parse.h"
-
+#define UNIT_TEST
 using namespace std;
 bool commandParse(int argc, SSDCommand& InputParam, char* argv[])
 {
@@ -18,11 +18,14 @@ bool commandParse(int argc, SSDCommand& InputParam, char* argv[])
 void executeCMD(SSDCommand& InputParam)
 {
 	SSD MySSD;
-	if (InputParam.IsWrite() == true) {
+	if (InputParam.GetCmdType() == CMD_WRITE) {
 		MySSD.DoWrite(InputParam.GetLBA(), InputParam.GetData());
 	}
-	else {
+	else if (InputParam.GetCmdType() == CMD_READ) {
 		MySSD.DoRead(InputParam.GetLBA());
+	}
+	else if (InputParam.GetCmdType() == CMD_ERASE) {
+		MySSD.DoErase(InputParam.GetLBA(), InputParam.GetEraseCount());
 	}
 }
 #ifndef UNIT_TEST

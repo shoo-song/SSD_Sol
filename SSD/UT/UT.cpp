@@ -3,7 +3,7 @@
 #include "../SSD.cpp"
 #include "../command_parse.h"
 using namespace testing;
-
+#define UNIT_TEST
 class SSDTestFixture : public Test
 {
 public:
@@ -171,7 +171,13 @@ TEST_F(SSDTestFixture, CheckInvalidDataRange2) {
 	string actual = file.getReadDataFromOutput();
 	EXPECT_THAT(actual, StrEq(string("ERROR")));
 }
-
+TEST_F(SSDTestFixture, EraseAndRead) {
+	std::string data1 = "0x12345678";
+	MySSD.DoWrite(0x0, data1);
+	MySSD.DoErase(0, 1);
+	MySSD.DoRead(0x0);
+	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
+}
 
 #ifdef UNIT_TEST
 int main() {
