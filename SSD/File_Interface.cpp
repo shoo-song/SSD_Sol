@@ -72,7 +72,6 @@ string FileInterface::read(int LBA) {
 }
 
 string FileInterface::getReadDataFromOutput() {
-	CheckAndDoFormat();
 	open(filename_output, false, false);
 	if (Read_file_.is_open()) {
 		Read_file_.read(data_buf, 10);
@@ -81,8 +80,8 @@ string FileInterface::getReadDataFromOutput() {
 }
 
 void FileInterface::writeInvalidLog() {
-	CheckAndDoFormat();
 	open(filename_output, true, false);
+	cout << "teststat " << Write_file_.is_open();
 	if (Write_file_.is_open()) {
 		Write_file_ << "ERROR";
 		Write_file_.flush();

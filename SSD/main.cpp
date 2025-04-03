@@ -5,15 +5,15 @@
 #include "command_parse.h"
 
 using namespace std;
-
-void commandParse(int argc, SSDCommand& InputParam, char* argv[])
+bool commandParse(int argc, SSDCommand& InputParam, char* argv[])
 {
 	if (argc == 3) {
-		InputParam.parseArg(*argv[1], argv[2]);
+		return InputParam.parseArg(*argv[1], argv[2]);
 	}
 	else if (argc == 4) {
-		InputParam.parseArg(*argv[1], argv[2], argv[3]);
+		return InputParam.parseArg(*argv[1], argv[2], argv[3]);
 	}
+	return false;
 }
 void executeCMD(SSDCommand& InputParam)
 {
@@ -26,12 +26,14 @@ void executeCMD(SSDCommand& InputParam)
 		Reader.DoRead(InputParam.GetLBA());
 	}
 }
-int flag = 0;
+#ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
 	SSDCommand InputParam;
-
-	commandParse(argc, InputParam, argv);
+	bool invalid = false;
+	invalid = commandParse(argc, InputParam, argv);
+	if (invalid == false) return 0;
 	executeCMD(InputParam);
 
 	return 0;
 }
+#endif

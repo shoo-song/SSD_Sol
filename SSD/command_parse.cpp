@@ -7,6 +7,7 @@
 using namespace std;
 
 void SSDCommand::WriteInvalidLog() {
+	if (FileObj == nullptr) return;
 	FileObj->writeInvalidLog();
 }
 
@@ -15,6 +16,7 @@ bool SSDCommand::checkInvalidity(const char& CMD, string LBAstring, char* data) 
 		WriteInvalidLog();
 		return false;
 	}
+
 
 	size_t pos;
 	uint32_t value = std::stoi(LBAstring, &pos, 10);
@@ -41,8 +43,8 @@ bool SSDCommand::checkInvalidity(const char& CMD, string LBAstring, char* data) 
 	return true;
 }
 
-void SSDCommand::parseArg(char CMD, string LBAstring, char* data) {
-	if (checkInvalidity(CMD, LBAstring, data) != true) return;
+bool SSDCommand::parseArg(char CMD, string LBAstring, char* data) {
+	if (checkInvalidity(CMD, LBAstring, data) != true) return false;
 
 	if ((CMD == 'W') || (CMD == 'w')) {
 		strcpy_s(input_data, data);
@@ -52,4 +54,5 @@ void SSDCommand::parseArg(char CMD, string LBAstring, char* data) {
 		bIsWrite = false;
 	}
 	LBA = std::stoi(LBAstring);	
+	return true;
 }

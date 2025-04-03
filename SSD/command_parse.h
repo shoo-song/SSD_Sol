@@ -10,7 +10,7 @@ public:
 
 	bool checkInvalidity(const char& CMD, string LBAstring, char* data);
 
-	void parseArg(char CMD, string LBAstring, char* data = NULL);
+	bool parseArg(char CMD, string LBAstring, char* data = NULL);
 
 	bool IsWrite(void) {
 		return bIsWrite;
