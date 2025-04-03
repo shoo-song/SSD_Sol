@@ -131,6 +131,7 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_exception.cpp" />
+    <ClCompile Include="ScriptParser.cpp" />
     <ClCompile Include="mock_ssddriver.h" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ShellCommandFactory.cpp" />
@@ -142,6 +143,10 @@
     <ClCompile Include="ShellScript1.cpp" />
     <ClCompile Include="ShellScript2.cpp" />
     <ClCompile Include="ShellScript3.cpp" />
+    <ClCompile Include="ShellScriptCompareCommand.cpp" />
+    <ClCompile Include="ShellScriptLoopCommand.cpp" />
+    <ClCompile Include="ShellScriptRunCommand.cpp" />
+    <ClCompile Include="ShellScriptWriteCommand.cpp" />
     <ClCompile Include="ShellUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />
     <ClCompile Include="ShellWriteCommand.cpp" />
@@ -158,6 +163,9 @@
     <ClCompile Include="ssddriver_exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="1_FullWriteAndReadCompare" />
+    <None Include="2_PartialLBAWrite" />
+    <None Include="3_WriteReadAging" />
     <None Include="MakeFile" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -166,6 +174,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="ShellCommandInterface.h" />
+    <ClInclude Include="ShellScriptCommandInterface.h" />
     <ClInclude Include="ssddriver.h" />
     <ClInclude Include="ssddriver_exception.h" />
   </ItemGroup>

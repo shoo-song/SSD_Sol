@@ -8,7 +8,7 @@
 #include "ShellFullWriteCommand.cpp"
 #include "ShellHelpCommand.cpp"
 #include "ShellExitCommand.cpp"
-#include "ShellScript1.cpp"
+#include "ShellScriptRunCommand.cpp"
 #include "ShellScript2.cpp"
 #include "ShellScript3.cpp"
 #include <memory>
@@ -35,12 +35,8 @@ public:
 				return std::make_shared<ShellHelpCommand>();
 			case EXIT_COMMAND:
 				return std::make_shared<ShellExitCommand>();
-			case SCRIPT_1:
-				return std::make_shared<ShellScript1>(mpDriverInterface);
-			case SCRIPT_2:
-				return std::make_shared<ShellScript2>(mpDriverInterface);
-			case SCRIPT_3:
-				return std::make_shared<ShellScript3>(mpDriverInterface);
+		//	case SCRIPT_RUN_COMMAND:
+		//		return std::make_shared<ShellScriptRunnerCommand>();
 		}
 		return nullptr;
 	}

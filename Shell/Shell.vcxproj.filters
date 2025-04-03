@@ -33,6 +33,9 @@
     <Filter Include="소스 파일\shell\shellscript">
       <UniqueIdentifier>{3e25fa99-8fac-4a4f-abb2-457f52598670}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\shell\shellscript\script">
+      <UniqueIdentifier>{8db56ab0-b2c7-4595-b8b4-8b69eb115e76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,15 +73,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScript1.cpp">
-      <Filter>소스 파일\shell\shellcommand</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScript2.cpp">
-      <Filter>소스 파일\shell\shellcommand</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScript3.cpp">
-      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellHelpCommand.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
@@ -121,11 +115,43 @@
     </ClCompile>
     <ClCompile Include="logger_exception.cpp">
       <Filter>소스 파일\logger</Filter>
+    <ClCompile Include="ShellScript3.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScript1.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScript2.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScriptCompareCommand.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScriptWriteCommand.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScriptRunCommand.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptParser.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScriptLoopCommand.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="MakeFile" />
+    <None Include="1_FullWriteAndReadCompare">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
+    <None Include="2_PartialLBAWrite">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
+    <None Include="3_WriteReadAging">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -139,6 +165,8 @@
     </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>소스 파일\logger</Filter>
+    <ClInclude Include="ShellScriptCommandInterface.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
