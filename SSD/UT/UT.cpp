@@ -300,9 +300,13 @@ TEST_F(SSDTestFixture, bufferFlush)
 	cmdList.push_back(cmd);
 	buffer.updateCmdList(cmd);
 
+	// NAND에서 확인
 	std::string data1 = "0x43211234";	
 	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
+
+	// empty file 확인
+	EXPECT_TRUE(true, filesystem.fileExists("0_empty"));
 }
 TEST_F(SSDTestFixture, extractCMDfromFile)
 {

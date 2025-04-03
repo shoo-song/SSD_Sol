@@ -64,6 +64,13 @@ public:
         // full
         if (idx == 5) {
             doFlush(fileList);
+            for (int i = 0; i < 5; i++) {
+                string newFileName = to_string(i) + "_" + "empty";
+
+                fs.updateFileName(fileList[i], newFileName);
+            }
+
+
         }
     }
 private:
