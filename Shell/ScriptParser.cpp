@@ -20,7 +20,10 @@ using std::make_shared;
 class ScriptParser {
 public:
 
-    std::vector<shared_ptr<ShellScriptCommandInterface>> MakingScript(string scriptName) {
+    void setSsdDriver(SsdDriverInterface* pdriverInterface) {
+        mpDriverInterface = pdriverInterface;
+    }
+    std::vector<shared_ptr<ShellScriptCommandInterface>> makingScript(string scriptName) {
         std::vector<shared_ptr<ShellScriptCommandInterface>> script;
 
         std::ifstream file(scriptName);
@@ -66,8 +69,11 @@ private:
         std::regex regexVal(R"(VAL\(\s*(\d+)\s*\))");
         // IND(숫자) 또는 IND() : 숫자 없으면 기본 0
         std::regex regexInd(R"(IND\(\s*(-?\d+)?\s*\))");
-        // RAND(숫자,숫자)
-        std::regex regexRand(R"(RAND\(\s*(\d+)\s*,\s*(\d+)\s*\))");
+        // RAND(숫자,숫자,숫자)
+        std::regex regexRand(R"(RAND\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\))");
+        // RAND_REF(숫자,숫자,숫자)
+        std::regex regexRandRef(R"(RAND_REF\(\s*(\d+)\s*\))");
+
         std::smatch match;
 
         if (std::regex_match(token, match, regexVal)) {
@@ -81,7 +87,10 @@ private:
             return make_shared<ScriptParamIdxGen>(looper, std::stoi(match[1]));
         }
         else if (std::regex_match(token, match, regexRand)) {
-            return make_shared<ScriptParamRanGen>(std::stoi(match[1]), std::stoi(match[2]));
+            return make_shared<ScriptParamRanGen>(std::stoi(match[1]), std::stoi(match[2]), std::stoi(match[3]));
+        }
+        else if (std::regex_match(token, match, regexRandRef)) {
+            return make_shared<ShellScriptRandGetGen>(std::stoi(match[1]));
         }
         return nullptr;
     }
@@ -93,9 +102,7 @@ private:
     std::vector<shared_ptr<ShellScriptCommandInterface>> parseStatements(shared_ptr<ShellScriptLoopIdxGetter> parentLooper, const std::vector<std::string>& lines, size_t& idx) {
         std::vector<shared_ptr<ShellScriptCommandInterface>> commandVec;
         std::regex loopRegex(R"(^loop\s+(\S+)\s+(\S+)\s+(\S+)\s*\{$)");  // loop header 패턴
-        static int callCnt = 0;
 
-        callCnt++;
         for (; idx < lines.size(); ++idx) {
             std::string line = trim(lines[idx]);
             if (line.empty())
@@ -104,8 +111,6 @@ private:
             // 블록 종료를 알리는 '}'를 만나면 이 블록의 파싱 종료
             if (line == "}") {
                 // 블록이 정상 종료되었으므로 idx를 한 칸 증가시키고 반환
-                ++idx;
-                callCnt--;
                 return commandVec;
             }
 
@@ -149,20 +154,21 @@ private:
                     shared_ptr< ShellScriptParameterGenInterface> lba = parseParameter(separatedStr[1], parentLooper);
                     shared_ptr< ShellScriptParameterGenInterface> expected = parseParameter(separatedStr[2], parentLooper);
 
-                    scriptCmd = std::make_shared<ShellScriptCompareCommand>(nullptr, lba, expected);
+                    scriptCmd = std::make_shared<ShellScriptCompareCommand>(mpDriverInterface, lba, expected);
                 }
                 else if (scriptCmdEnum == WRITE_SCRIPT_COMMAND) {
                     shared_ptr< ShellScriptParameterGenInterface> lba = parseParameter(separatedStr[1], parentLooper);
                     shared_ptr< ShellScriptParameterGenInterface> val = parseParameter(separatedStr[2], parentLooper);
 
-                    scriptCmd = std::make_shared<ShellScriptWriteCommand>(nullptr, lba, val);
+                    scriptCmd = std::make_shared<ShellScriptWriteCommand>(mpDriverInterface, lba, val);
                 }
                 commandVec.push_back(scriptCmd);
             }
         }
-        callCnt--;
         return commandVec;
     }
+
+    SsdDriverInterface* mpDriverInterface;
 };
 
 //이중루프, GenerateLBA, GenerateData 클래스 고려

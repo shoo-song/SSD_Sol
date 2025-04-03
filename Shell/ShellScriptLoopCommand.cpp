@@ -30,14 +30,16 @@ public:
 	bool execute() {
 		try {
 			mCurLoopCnt = mpStartLoop->generateParameter();
+			int endLoopCnt = mpEndLoop->generateParameter();
+			int cntPerLoop = mpCntPerLoop->generateParameter();
 
-			while (mCurLoopCnt < mpEndLoop->generateParameter()) {
+			while (mCurLoopCnt < endLoopCnt) {
 				for (shared_ptr<ShellScriptCommandInterface> cmd : mpCommandVec) {
 					if (cmd->execute() == false)
 						return false;
 				}
 
-				mCurLoopCnt += mpCntPerLoop->generateParameter();
+				mCurLoopCnt += cntPerLoop;
 			}
 			return true;
 		}

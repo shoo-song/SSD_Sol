@@ -2,9 +2,7 @@ loop VAL(0) VAL(100) VAL(5) {
 	loop IND(0) IND(5) VAL(1) {
 		WRITE IND(0) IND(0)
 	}
-
 	loop IND(0) IND(5) VAL(1) {
 		COMPARE IND(0) IND(0)
 	}
-
 }

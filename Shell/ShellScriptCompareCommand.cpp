@@ -15,12 +15,15 @@ public:
 		shared_ptr<ShellScriptParameterGenInterface> expectedValueParam) {
 		mLbaParam = lbaParam;
 		mExpectedValueParam = expectedValueParam;
+		mpDriverInterface = pDriverInterface;
 	}
 
 	bool execute() {
 		try {
-			unsigned int readValue = mpDriverInterface->readSSD((int)mLbaParam->generateParameter());
-			return (readValue == mExpectedValueParam->generateParameter());
+			unsigned int lba = mLbaParam->generateParameter();
+			unsigned int expectedValue = mExpectedValueParam->generateParameter();
+			unsigned int readValue = mpDriverInterface->readSSD(lba);
+			return (readValue == expectedValue);
 		}
 		catch (exception e) {
 			return false;

@@ -14,12 +14,14 @@ public:
 		shared_ptr<ShellScriptParameterGenInterface> writeValueParam) {
 		mLbaParam = lbaParam;
 		mWriteValueParam = writeValueParam;
+		mpDriverInterface = pDriverInterface;
 	}
 
 	bool execute() {
 		try {
-			mpDriverInterface->writeSSD((int)mLbaParam->generateParameter(),
-				(int)mWriteValueParam->generateParameter());
+			unsigned int lba = mLbaParam->generateParameter();
+			unsigned int value = mWriteValueParam->generateParameter();
+			mpDriverInterface->writeSSD((int)lba, (int)value);
 			return true;
 		}
 		catch (exception e) {
