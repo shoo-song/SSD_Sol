@@ -13,7 +13,7 @@ bool SsdDriver::executeCmd(std::string cmdLine) {
     char path[MAX_PATH];  // 실행 파일 전체 경로를 저장할 버퍼
     GetModuleFileNameA(NULL, path, MAX_PATH);  // 현재 실행 파일의 전체 경로 가져오기
 
-    logger.print("SsdDriver.executeCmd()", "execute " + cmdLine);
+    // logger.print("SsdDriver.executeCmd()", "execute " + cmdLine);
 
     std::string exePath = path;  // std::string으로 변환
     size_t pos = exePath.find_last_of("\\");  // 마지막 '\'의 위치 찾기
@@ -31,7 +31,7 @@ bool SsdDriver::executeCmd(std::string cmdLine) {
 }
 
 uint32_t SsdDriver::readSSD(int LBA) {
-    std::string cmd = "SSD.exe R " + ShellUtil::getUtilObj().toTwoDigitString(LBA);
+    std::string cmd = config::READ_MARKER + ShellUtil::getUtilObj().toTwoDigitString(LBA);
     const char* cmdLine= cmd.c_str();
     executeCmd(cmdLine);
 
@@ -51,7 +51,7 @@ uint32_t SsdDriver::readSSD(int LBA) {
 }
 
 void SsdDriver::writeSSD(int LBA, uint32_t data) {
-    std::string cmd = "SSD.exe W " + ShellUtil::getUtilObj().toTwoDigitString(LBA) + " "
+    std::string cmd = config::WRITE_MARKER + ShellUtil::getUtilObj().toTwoDigitString(LBA) + " "
         + ShellUtil::getUtilObj().toHexFormat(data);
     const char* cmdLine = cmd.c_str();
 

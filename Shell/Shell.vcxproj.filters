@@ -134,9 +134,6 @@
     <ClInclude Include="ssddriver.h">
       <Filter>소스 파일\driver</Filter>
     </ClInclude>
-    <ClInclude Include="ssddriver_exception.h">
-      <Filter>소스 파일\driver</Filter>
-    </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>소스 파일\logger</Filter>
     </ClInclude>
