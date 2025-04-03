@@ -39,7 +39,7 @@
     <ClCompile Include="ssddriver.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ssdexception.cpp">
+    <ClCompile Include="ssddriver_exception.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver_ut.cpp">

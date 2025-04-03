@@ -1,6 +1,7 @@
 #include "ssddriver.h"
 #include "config.h"
 #include "ShellUtil.cpp"
+#include "ssddriver_exception.cpp"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -21,7 +22,15 @@ bool SsdDriver::executeCmd(std::string cmdLine) {
     int result = system(newCmd.c_str());
 
     if (result) {
-        return false;
+        try {
+            return false;
+        }
+        catch (exception e) {
+            throw e;
+        }
+        catch (SsdExecuteException e) {
+            throw SsdExecuteException();
+        }
     }
     return true;
 }
@@ -35,10 +44,18 @@ uint32_t SsdDriver::readSSD(int LBA) {
     uint32_t ret = 0xFFFFFFFF;
 
     std::ifstream file(config::FILE_PATH); 
+
     if (!file.is_open())
     {
-        //throw
-        return ret;
+        try {
+            return ret;
+        }
+        catch (exception e) {
+            throw e;
+        }
+        catch (FileNotFoundException e) {
+            throw FileNotFoundException();
+        }
     }
 
     std::string outputData;
@@ -54,26 +71,4 @@ void SsdDriver::writeSSD(int LBA, uint32_t data) {
     const char* cmdLine = cmd.c_str();
 
     executeCmd(cmdLine);
-}
-
-
-std::string SsdDriver::TrimData(const std::string& str) {
-    auto start = str.find_first_not_of(" \t\r\n");
-    auto end = str.find_last_not_of(" \t\r\n");
-    return (start == std::string::npos) ? "" : str.substr(start, end - start + 1);
-}
-
-uint32_t SsdDriver::ConvertStrToUint32(const std::string& hexStr) {
-    std::string str = TrimData(hexStr);
-
-    // 0x 또는 0X 제거
-    if (str.substr(0, 2) == "0x" || str.substr(0, 2) == "0X") {
-        str = str.substr(2);
-    }
-
-    uint32_t value = 0;
-    std::stringstream ss;
-    ss << std::hex << str;
-    ss >> value;
-    return value;
 }
