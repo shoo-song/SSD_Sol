@@ -225,3 +225,38 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
 
     EXPECT_EQ("PASS", shellExecutor.execute("3_"));
 }
+
+TEST_F(ShellExecutorFixture, helpCmd) {
+
+    EXPECT_EQ("Team:Alpha Devs(이원철/송승호/신동재/전봉수)\n"
+              "READ command: read [LBA]\n"
+              "Write command: write [LBA] [DATA:(ex)0x123456]\n"
+              "Full Read command: fullread\n"
+              "Full Write command: fullwrite\n"
+              "Exit command: exit\n", shellExecutor.execute("help"));
+}
+
+TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
+    MockSsdDriver mockDriver;
+    shellExecutor.setDriverInterface(&mockDriver);
+    unsigned int writeData = 0x123456;
+    string hexString = ShellUtil::getUtilObj().toHexFormat(writeData);
+    string fullreadResult = "";
+    
+    for (int i = 0; i < 100; i++) {
+        fullreadResult += "[Full Read] LBA " + ShellUtil::getUtilObj().toTwoDigitString(i) + " " + hexString + " \n";
+    }
+    
+    // write 호출 시 해당 위치에 데이터를 저장
+    EXPECT_CALL(mockDriver, writeSSD(::testing::_, writeData))
+        .Times(100)
+        .WillRepeatedly(testing::Return());
+
+    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+        .Times(100)
+        .WillRepeatedly(testing::Return(writeData));
+     
+    EXPECT_EQ("[Full Write] Done", shellExecutor.execute("fullwrite " + hexString));
+    EXPECT_EQ(fullreadResult, shellExecutor.execute("fullread")); 
+}
+
