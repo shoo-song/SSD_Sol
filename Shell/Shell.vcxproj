@@ -129,8 +129,13 @@
   <ItemGroup>
     <ClCompile Include="config.cpp" />
     <ClCompile Include="mock_ssddriver.h" />
+    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ShellCommandFactory.cpp" />
     <ClCompile Include="ShellException.cpp" />
+    <ClCompile Include="ShellExitCommand.cpp" />
+    <ClCompile Include="ShellFullReadCommand.cpp" />
+    <ClCompile Include="ShellFullWriteCommand.cpp" />
+    <ClCompile Include="ShellHelpCommand.cpp" />
     <ClCompile Include="ShellScript1.cpp" />
     <ClCompile Include="ShellScript2.cpp" />
     <ClCompile Include="ShellScript3.cpp" />

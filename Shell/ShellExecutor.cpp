@@ -21,6 +21,9 @@ public:
 				cmd = ShellUtil::getUtilObj().parseScript(separatedStr[0]);
 			}
 			shared_ptr<ShellCommandInterface> commandExecutor = mCommandFactory.getCommand(cmd);
+			if (commandExecutor == nullptr) {
+				throw ShellArgConvertException("invalid command");
+			}
 
 			return commandExecutor->execute(separatedStr);
 		}
