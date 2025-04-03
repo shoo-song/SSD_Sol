@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -19,11 +15,23 @@
     <Filter Include="UT\dummy_files">
       <UniqueIdentifier>{e22d4804-87a1-4955-a66a-08bd1e936636}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common">
+    <Filter Include="소스 파일\common">
       <UniqueIdentifier>{17cafafb-a41a-4e5d-a146-aae4ef7d299d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shellcommand">
+    <Filter Include="소스 파일\logger">
+      <UniqueIdentifier>{ff32b2cd-1ba0-4385-a5a7-54323798b9b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\driver">
+      <UniqueIdentifier>{5542fc88-7eae-46a4-ac57-d96a995f4c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\shell">
+      <UniqueIdentifier>{1447cfa4-c304-4a0f-917e-bb371d9d1b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\shell\shellcommand">
       <UniqueIdentifier>{46237640-09bc-460b-b959-4fd6b6dc941c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\shell\shellscript">
+      <UniqueIdentifier>{3e25fa99-8fac-4a4f-abb2-457f52598670}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,12 +44,6 @@
     <ClCompile Include="ShellInterfaceUt.cpp">
       <Filter>UT</Filter>
     </ClCompile>
-    <ClCompile Include="ssddriver.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ssddriver_exception.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ssddriver_ut.cpp">
       <Filter>UT</Filter>
     </ClCompile>
@@ -51,29 +53,17 @@
     <ClCompile Include="ssddriver.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ssdexception.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ssddriver_interface.h">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="mock_ssddriver.h">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellExecutor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ShellCommandFactory.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellException.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellReadCommand.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellWriteCommand.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
@@ -81,35 +71,50 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellUtil.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="config.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ShellScript1.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellScript2.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellScript3.cpp">
-      <Filter>shellcommand</Filter>
-    </ClCompile>
-    <ClCompile Include="Shell.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellHelpCommand.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellFullReadCommand.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellFullWriteCommand.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="ShellExitCommand.cpp">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>소스 파일\shell</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellExecutor.cpp">
+      <Filter>소스 파일\shell</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellUtil.cpp">
+      <Filter>소스 파일\common</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver_exception.cpp">
+      <Filter>소스 파일\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver.cpp">
+      <Filter>소스 파일\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>소스 파일\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="mock_ssddriver.h">
+      <Filter>UT</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver_interface.h">
+      <Filter>소스 파일\driver</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,14 +122,14 @@
     <None Include="MakeFile" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h">
+      <Filter>소스 파일\driver</Filter>
+    </ClInclude>
     <ClInclude Include="ssddriver.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\driver</Filter>
     </ClInclude>
     <ClInclude Include="ssddriver_exception.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="config.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\driver</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -132,10 +137,10 @@
       <Filter>UT\dummy_files</Filter>
     </Text>
     <ClInclude Include="Common.h">
-      <Filter>common</Filter>
+      <Filter>소스 파일\common</Filter>
     </ClInclude>
     <ClInclude Include="ShellCommandInterface.h">
-      <Filter>shellcommand</Filter>
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
