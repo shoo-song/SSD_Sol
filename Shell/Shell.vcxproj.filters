@@ -116,6 +116,12 @@
     <ClCompile Include="ssddriver_interface.h">
       <Filter>소스 파일\driver</Filter>
     </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>소스 파일\logger</Filter>
+    </ClCompile>
+    <ClCompile Include="logger_exception.cpp">
+      <Filter>소스 파일\logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -130,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="ssddriver_exception.h">
       <Filter>소스 파일\driver</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>소스 파일\logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
