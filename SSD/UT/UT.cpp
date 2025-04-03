@@ -1,7 +1,15 @@
 #include <gmock/gmock.h>
+#include <filesystem>
+#include <cstdlib>   // system()
+#include <cstdio>    // remove()
+#include <memory>    // std::unique_ptr
+#include <sys/stat.h> // mkdir(), stat()
+
 #include "../FileManager.h"
 #include "../SSD.cpp"
 #include "../command_parse.h"
+#include "../BufferCommand.h"
+#include "../FileSystem.h"
 using namespace testing;
 #define UNIT_TEST
 class SSDTestFixture : public Test
@@ -10,6 +18,7 @@ public:
 	SSD MySSD;
 	FileManager FileMgr;
 	SSDCommand InputParser;
+	FileSystem filesystem;
 };
 
 class MockFile : public FileManager {
@@ -18,13 +27,13 @@ public:
 };
 
 TEST_F(SSDTestFixture, Read2) {
-//Read ¿äÃ»À» SSD_Output.txt ¿¡ writeÇÏ°í, read ÇÏ¿© write ³»¿ëÀÌ ÀĞÇô¾ßÇÔ
+//Read ìš”ì²­ì„ SSD_Output.txt ì— writeí•˜ê³ , read í•˜ì—¬ write ë‚´ìš©ì´ ì½í˜€ì•¼í•¨
 	std::string data1 = "0xABABABAB";
 	MySSD.DoWrite(0, data1);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
 TEST_F(SSDTestFixture, Read3) {
-// ÀÓÀÌ LBA (0~99) ¼öÇà ½Ã, LBA °Ë»öÇÏ¿© data read
+// ì„ì´ LBA (0~99) ìˆ˜í–‰ ì‹œ, LBA ê²€ìƒ‰í•˜ì—¬ data read
 	std::string data1 = "0xABABABAB";
 	int LBA = 10;
 	MySSD.DoWrite(LBA, data1);
@@ -166,7 +175,6 @@ TEST_F(SSDTestFixture, CheckInvalidDataRange2) {
 	// when : invalid data size
 	char data1[20] = "0x1234544444";
 	input.parseArg('W', "3", data1);
-
 	FileManager file;
 	string actual = file.getReadDataFromOutput();
 	EXPECT_THAT(actual, StrEq(string("ERROR")));
@@ -177,6 +185,41 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	MySSD.DoErase(0, 1);
 	MySSD.DoRead(0x0);
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
+}
+
+
+TEST_F(SSDTestFixture, CreateBufferFolder) {
+	std::string testDir = "buffer";
+	// 1ï¸. í´ë” ìƒì„±
+	filesystem.createDirectory();
+	EXPECT_TRUE(filesystem.directoryExists(testDir)) << "í´ë” ìƒì„± ì‹¤íŒ¨";
+
+	// 2ï¸. í´ë” ì‚­ì œ
+	filesystem.removeDirectory(testDir);
+	EXPECT_FALSE(filesystem.directoryExists(testDir)) << "í´ë” ì‚­ì œ ì‹¤íŒ¨";
+}
+
+TEST_F(SSDTestFixture, CreateEmptyFiles) {
+	// given : create buffer directory
+	filesystem.createDirectory();
+
+	std:string testFile = "empty";
+	EXPECT_TRUE(filesystem.fileExists(testFile)) << "empty.txt íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŒ";
+
+	filesystem.createFile(true);
+	EXPECT_TRUE("0_empty", filesystem.fileExists("0_empty"));
+	EXPECT_TRUE("1_empty", filesystem.fileExists("1_empty"));
+	EXPECT_TRUE("2_empty", filesystem.fileExists("2_empty"));
+	EXPECT_TRUE("3_empty", filesystem.fileExists("3_empty"));
+	EXPECT_TRUE("4_empty", filesystem.fileExists("4_empty"));
+}
+
+TEST_F(SSDTestFixture, UpdateFileName)
+{
+	// given : initialize output file	
+
+
+
 }
 
 #ifdef UNIT_TEST
