@@ -146,7 +146,6 @@
     <ClCompile Include="ShellScriptCompareCommand.cpp" />
     <ClCompile Include="ShellScriptLoopCommand.cpp" />
     <ClCompile Include="ShellScriptRunCommand.cpp" />
-    <ClCompile Include="ShellScriptRunnerMode.cpp" />
     <ClCompile Include="ShellScriptWriteCommand.cpp" />
     <ClCompile Include="ShellUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />

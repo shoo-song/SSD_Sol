@@ -140,9 +140,6 @@
     <ClCompile Include="ScriptLoader.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
-    <ClCompile Include="ShellScriptRunnerMode.cpp">
-      <Filter>소스 파일\shell</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
