@@ -5,10 +5,11 @@
 #include "ssddriver_interface.h"
 
 class ShellEraseCommand : public ShellCommandInterface {
-public:
-	ShellEraseCommand(SsdDriverInterface* pDriverInterface);
-	string execute(vector<string> args);
-private:
-	vector<unsigned int>  convertCmdArgs(vector<string> args);
-	SsdDriverInterface* mpDriverInterface;
+   public:
+    ShellEraseCommand(SsdDriverInterface* pDriverInterface);
+    string execute(vector<string> args);
+
+   private:
+    vector<unsigned int> convertCmdArgs(vector<string> args);
+    SsdDriverInterface* mpDriverInterface;
 };

@@ -1,28 +1,14 @@
-#include <string>
+#include "ssddriver_exception.h"
+
 #include <exception>
+#include <string>
 
-class SsdDriverException : public std::exception {
-public:
+SsdDriverException::SsdDriverException(const std::string& msg) : message(msg) {}
 
-    SsdDriverException(const std::string& msg) : message(msg) {}
-    const char* what() const noexcept override {
-        return message.c_str();
-    }
-protected:
-    std::string message;
-};
+const char* SsdDriverException::what() const noexcept { return message.c_str(); }
 
-class SsdExecuteException : public SsdDriverException {
-public:
-    SsdExecuteException() : SsdDriverException("SsdExecuteException") {}
-};
+SsdExecuteException::SsdExecuteException() : SsdDriverException("SsdExecuteException") {}
 
-class FileNotFoundException : public SsdDriverException {
-public:
-    FileNotFoundException() : SsdDriverException("FileNotFoundException") {}
-};
+FileNotFoundException::FileNotFoundException() : SsdDriverException("SsdExecuteException") {}
 
-class InvalidInputException : public SsdDriverException {
-public:
-    InvalidInputException() : SsdDriverException("InvalidInputException") {}
-};
+InvalidInputException::InvalidInputException() : SsdDriverException("SsdExecuteException") {}

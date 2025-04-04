@@ -175,6 +175,7 @@
     <ClCompile Include="shell_util.cpp" />
     <ClCompile Include="shell_write_command.cpp" />
     <ClInclude Include="shell_write_command.h" />
+    <ClInclude Include="ssddriver_exception.h" />
     <ClInclude Include="ssddriver_interface.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shell_interface_ut.cpp">
@@ -187,6 +188,7 @@
     <ClCompile Include="ssddriver_exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".clang-format" />
     <None Include="1_FullWriteAndReadCompare.script" />
     <None Include="2_PartialLBAWrite.script" />
     <None Include="3_WriteReadAging.script" />

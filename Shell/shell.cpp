@@ -7,11 +7,9 @@ Shell::Shell() {
 void Shell::runShell(int argc, char** argv) {
     if (argc == 1) {
         runShellMode();
-    }
-    else if (argc == 2) {
+    } else if (argc == 2) {
         runRunnerMode(argv[1]);
-    }
-    else {
+    } else {
         // err
         cout << "Invalid parameter \n";
     }
@@ -25,8 +23,7 @@ void Shell::runShellMode() {
             std::getline(std::cin, input);
 
             cout << mExcutor.execute(input, false) << "\n";
-        }
-        catch (exception e) {
+        } catch (exception e) {
             std::cout << "INVALID COMMAND\n";
         }
     }
@@ -43,14 +40,12 @@ void Shell::runRunnerMode(string runnerScriptName) {
             cout << line << " ______ Run ...";
             if (mExcutor.execute(line, true).compare("PASS") == 0) {
                 cout << "PASS\n";
-            }
-            else {
+            } else {
                 cout << "FAIL\n";
                 return;
             }
         }
-    }
-    catch (exception e) {
+    } catch (exception e) {
         cout << "FAIL\n";
     }
 }
