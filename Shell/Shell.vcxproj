@@ -158,6 +158,7 @@
     <ClCompile Include="shell_flush_command.h" />
     <ClCompile Include="shell_full_read_command.cpp" />
     <ClCompile Include="shell_full_read_command.h" />
+    <ClCompile Include="shell_full_write_command.cpp" />
     <ClCompile Include="shell_full_write_command.h" />
     <ClCompile Include="shell_help_command.cpp" />
     <ClCompile Include="shell_help_command.h" />
