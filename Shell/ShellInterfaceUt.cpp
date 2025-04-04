@@ -49,22 +49,22 @@ TEST_F(ShellExecutorFixture, readWriteTest1) {
     EXPECT_CALL(mockDriver, writeSSD(1, 0xAAAABBBB))
         .WillOnce(testing::Return());
 
-    EXPECT_EQ("[Write] Done", shellExecutor.execute("write 01 0xAAAABBBB"));
-    EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellExecutor.execute("read 01"));
+    EXPECT_EQ("[Write] Done", shellExecutor.execute("write 01 0xAAAABBBB", false));
+    EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellExecutor.execute("read 01", false));
 }
 
 TEST_F(ShellExecutorFixture, readTest1) {
     MockSsdDriver mockDriver;
     shellExecutor.setDriverInterface(&mockDriver);
 
-    EXPECT_THROW(shellExecutor.execute("read 200"), ShellArgConvertException);
+    EXPECT_THROW(shellExecutor.execute("read 200", false), ShellArgConvertException);
 }
 
 TEST_F(ShellExecutorFixture, writeTest1) {
     MockSsdDriver mockDriver;
     shellExecutor.setDriverInterface(&mockDriver);
 
-    EXPECT_THROW(shellExecutor.execute("write 200 200"), ShellArgConvertException);
+    EXPECT_THROW(shellExecutor.execute("write 200 200", false), ShellArgConvertException);
 }
 
 TEST_F(ShellExecutorFixture, script1_fullmatching) {
@@ -90,7 +90,7 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("1_FullWriteAndReadCompare"));
+    EXPECT_EQ("PASS", shellExecutor.execute("1_FullWriteAndReadCompare", false));
 
 }
 
@@ -117,7 +117,7 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("1_"));
+    EXPECT_EQ("PASS", shellExecutor.execute("1_", false));
 }
 
 TEST_F(ShellExecutorFixture, script2_fullmatching) {
@@ -143,7 +143,7 @@ TEST_F(ShellExecutorFixture, script2_fullmatching) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("2_PartialLBAWrite"));
+    EXPECT_EQ("PASS", shellExecutor.execute("2_PartialLBAWrite", false));
 
 }
 
@@ -170,7 +170,7 @@ TEST_F(ShellExecutorFixture, script2_wildcard) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("2_"));
+    EXPECT_EQ("PASS", shellExecutor.execute("2_", false));
 }
 
 TEST_F(ShellExecutorFixture, script3_fullmatching) {
@@ -196,7 +196,7 @@ TEST_F(ShellExecutorFixture, script3_fullmatching) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("3_WriteReadAging"));
+    EXPECT_EQ("PASS", shellExecutor.execute("3_WriteReadAging", false));
 
 }
 
@@ -223,7 +223,7 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
         return -1; // 해당 위치에 데이터가 없을 경우
             }));
 
-    EXPECT_EQ("PASS", shellExecutor.execute("3_"));
+    EXPECT_EQ("PASS", shellExecutor.execute("3_", false));
 }
 
 TEST_F(ShellExecutorFixture, helpCmd) {
@@ -233,7 +233,7 @@ TEST_F(ShellExecutorFixture, helpCmd) {
               "Write command: write [LBA] [DATA:(ex)0x123456]\n"
               "Full Read command: fullread\n"
               "Full Write command: fullwrite\n"
-              "Exit command: exit\n", shellExecutor.execute("help"));
+              "Exit command: exit\n", shellExecutor.execute("help", false));
 }
 
 TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
@@ -256,7 +256,7 @@ TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
         .Times(100)
         .WillRepeatedly(testing::Return(writeData));
      
-    EXPECT_EQ("[Full Write] Done", shellExecutor.execute("fullwrite " + hexString));
-    EXPECT_EQ(fullreadResult, shellExecutor.execute("fullread")); 
+    EXPECT_EQ("[Full Write] Done", shellExecutor.execute("fullwrite " + hexString, false));
+    EXPECT_EQ(fullreadResult, shellExecutor.execute("fullread", false)); 
 }
 

@@ -20,7 +20,7 @@ public:
             runShellMode();
         }
         else if(argc == 2) {
-            mRunnerMode.runRunnerMode(argv[1], &mExcutor);
+            runRunnerMode(argv[1]);
         }
         else {
             // err
@@ -35,7 +35,7 @@ private:
                 cout << "Shell > ";
                 std::getline(std::cin, input);
 
-                cout << mExcutor.execute(input) << "\n";
+                cout << mExcutor.execute(input, false) << "\n";
             }
             catch (exception e) {
                 std::cout << "INVALID COMMAND\n";
@@ -43,7 +43,29 @@ private:
         }
     }
 
-    ShellScriptRunnerMode mRunnerMode;
+    void runRunnerMode(string runnerScriptName) {
+        try {
+            std::ifstream file(runnerScriptName);
+            if (!file) {
+                throw std::runtime_error("Error: .");
+            }
+            string line;
+            while (std::getline(file, line)) {
+                cout << line << " ______ Run ...";
+                if (mExcutor.execute(line, true).compare("PASS") == 0) {
+                    cout << "PASS\n";
+                }
+                else {
+                    cout << "FAIL\n";
+                    return;
+                }
+            }
+        }
+        catch (exception e) {
+            cout << "FAIL\n";
+        }
+    }
+
     ShellExecutor mExcutor;
     SsdDriver mSsdDriver; 
     ScriptLoader mScriptLoader;

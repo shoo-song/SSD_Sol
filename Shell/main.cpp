@@ -17,10 +17,8 @@ int main(int argc, char** argv) {
     logger.setLogFile();
     logger.print("Main.main()", "∑Œ±Î Ω√¿€");
 
-    int test_argc = 2;
-    char* test_argv[] = { (char*)"shell.exe", (char*)"runner_script1.txt" };
     Shell shell;
-    shell.runShell(test_argc, test_argv);
+    shell.runShell(argc, argv);
     return 0;
 }
 #endif
