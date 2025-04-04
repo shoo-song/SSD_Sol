@@ -1,6 +1,6 @@
 #include "ssddriver.h"
 #include "config.h"
-#include "ShellUtil.cpp"
+#include "shell_util.h"
 #include "ssddriver_exception.cpp"
 #include <fstream>
 #include <sstream>
