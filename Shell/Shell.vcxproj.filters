@@ -39,6 +39,9 @@
     <Filter Include="소스 파일\shell\shellscript\parser">
       <UniqueIdentifier>{796d384a-47e3-4a66-ade7-4511904fe795}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\shell\shellrunnerscript">
+      <UniqueIdentifier>{7718e0d0-3aca-4d20-a107-b70e591ae1e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,15 +119,6 @@
     <ClCompile Include="logger_exception.cpp">
       <Filter>소스 파일\logger</Filter>
     </ClCompile>
-    <ClCompile Include="ShellScript3.cpp">
-      <Filter>소스 파일\shell\shellscript</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScript1.cpp">
-      <Filter>소스 파일\shell\shellscript</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScript2.cpp">
-      <Filter>소스 파일\shell\shellscript</Filter>
-    </ClCompile>
     <ClCompile Include="ShellScriptCompareCommand.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
@@ -145,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="ScriptLoader.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellScriptRunnerMode.cpp">
+      <Filter>소스 파일\shell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,5 +187,8 @@
     <ClInclude Include="ShellCommandInterface.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClInclude>
+    <Text Include="runner_script1.txt">
+      <Filter>소스 파일\shell\shellrunnerscript</Filter>
+    </Text>
   </ItemGroup>
 </Project>

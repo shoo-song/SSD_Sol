@@ -1,10 +1,10 @@
 #pragma once
 #include "ShellExecutor.cpp"
 #include "ScriptLoader.cpp"
+#include "ShellScriptRunnerMode.cpp"
 #include "ssddriver.h"
 #include <iostream>
 #include <string>
-
 using std::string;
 using std::cin;
 using std::cout;
@@ -15,7 +15,20 @@ public:
         mExcutor.setDriverInterface(&mSsdDriver);
         mScriptLoader.loadScript(&mSsdDriver);
     }
-    void runShell() {
+    void runShell(int argc, char** argv) {
+        if (argc == 1) {
+            runShellMode();
+        }
+        else if(argc == 2) {
+            mRunnerMode.runRunnerMode(argv[1], &mExcutor);
+        }
+        else {
+            // err
+            cout << "Invalid parameter \n";
+        }
+    }
+private:
+    void runShellMode() {
         while (true) {
             try {
                 string input;
@@ -29,7 +42,8 @@ public:
             }
         }
     }
-private:
+
+    ShellScriptRunnerMode mRunnerMode;
     ShellExecutor mExcutor;
     SsdDriver mSsdDriver; 
     ScriptLoader mScriptLoader;

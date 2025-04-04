@@ -146,6 +146,7 @@
     <ClCompile Include="ShellScriptCompareCommand.cpp" />
     <ClCompile Include="ShellScriptLoopCommand.cpp" />
     <ClCompile Include="ShellScriptRunCommand.cpp" />
+    <ClCompile Include="ShellScriptRunnerMode.cpp" />
     <ClCompile Include="ShellScriptWriteCommand.cpp" />
     <ClCompile Include="ShellUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />
@@ -181,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="dummy_file1.txt" />
+    <Text Include="runner_script1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
