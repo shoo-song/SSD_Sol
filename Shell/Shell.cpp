@@ -1,5 +1,6 @@
 #pragma once
 #include "ShellExecutor.cpp"
+#include "ScriptLoader.cpp"
 #include "ssddriver.h"
 #include <iostream>
 #include <string>
@@ -12,6 +13,7 @@ class Shell {
 public:
     Shell() {
         mExcutor.setDriverInterface(&mSsdDriver);
+        mScriptLoader.loadScript(&mSsdDriver);
     }
     void runShell() {
         while (true) {
@@ -29,7 +31,8 @@ public:
     }
 private:
     ShellExecutor mExcutor;
-    SsdDriver mSsdDriver;
+    SsdDriver mSsdDriver; 
+    ScriptLoader mScriptLoader;
 
 
 };
