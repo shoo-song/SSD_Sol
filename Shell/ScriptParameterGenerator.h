@@ -26,7 +26,7 @@ public:
 	}
 	int getRandVal(int randIdx) {
 		/// 있는지 체크 필요.
-		if (mRandValStore.find(randIdx) != mRandValStore.end())
+		if (mRandValStore.find(randIdx) == mRandValStore.end())
 			throw std::runtime_error("rand val error");
 		return mRandValStore[randIdx];
 	}

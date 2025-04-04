@@ -11,20 +11,14 @@ int main(int argc, char** argv) {
 #else
 #include "Shell.cpp"
 #include "logger.h"
-#include "ScriptParser.cpp"
 
 int main(int argc, char** argv) {
 
     logger.setLogFile();
     logger.print("Main.main()", "∑Œ±Î Ω√¿€");
 
-    //Shell shell;
-    //shell.runShell();
-    ScriptParser parser;
-    ::vector<shared_ptr<ShellScriptCommandInterface>> scriptCmds = parser.makingScript("1_FullWriteAndReadCompare");
-    for (shared_ptr<ShellScriptCommandInterface> cmd : scriptCmds) {
-        cmd->execute();
-    }
+    Shell shell;
+    shell.runShell();
     return 0;
 }
 #endif

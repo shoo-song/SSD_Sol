@@ -9,8 +9,6 @@
 #include "ShellHelpCommand.cpp"
 #include "ShellExitCommand.cpp"
 #include "ShellScriptRunCommand.cpp"
-#include "ShellScript2.cpp"
-#include "ShellScript3.cpp"
 #include <memory>
 
 using std::shared_ptr;
@@ -35,10 +33,8 @@ public:
 				return std::make_shared<ShellHelpCommand>();
 			case EXIT_COMMAND:
 				return std::make_shared<ShellExitCommand>();
-		//	case SCRIPT_RUN_COMMAND:
-		//		return std::make_shared<ShellScriptRunnerCommand>();
 		}
-		return nullptr;
+		return std::make_shared<ShellScriptRunnerCommand>();
 	}
 private:
 	SsdDriverInterface* mpDriverInterface;

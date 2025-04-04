@@ -143,9 +143,6 @@
     <ClCompile Include="ShellFullReadCommand.cpp" />
     <ClCompile Include="ShellFullWriteCommand.cpp" />
     <ClCompile Include="ShellHelpCommand.cpp" />
-    <ClCompile Include="ShellScript1.cpp" />
-    <ClCompile Include="ShellScript2.cpp" />
-    <ClCompile Include="ShellScript3.cpp" />
     <ClCompile Include="ShellScriptCompareCommand.cpp" />
     <ClCompile Include="ShellScriptLoopCommand.cpp" />
     <ClCompile Include="ShellScriptRunCommand.cpp" />

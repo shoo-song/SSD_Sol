@@ -43,7 +43,7 @@ public:
             script = parseStatements(nullptr, lines, idx);
         }
         catch (const std::exception& ex) {
-            throw std::runtime_error("Error: Unprocessed extra lines remain in the script.");
+            throw ex;
         }
         return script;
     }

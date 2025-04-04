@@ -3,21 +3,31 @@
 #include "ShellUtil.cpp"
 #include "ShellCommandInterface.h"
 #include "ShellScriptCommandInterface.h"
+#include "ScriptStore.cpp"
+#include "ScriptParameterGenerator.h"
 #include <memory>
 
 using std::shared_ptr;
 
 class ShellScriptRunnerCommand : public ShellCommandInterface {
 public:
-	ShellScriptRunnerCommand(vector<shared_ptr< ShellScriptCommandInterface>> ptr) {
-		mpScriptCmd = ptr;
+	ShellScriptRunnerCommand() {
 	}
 
 	string execute(vector<string> args) {
 		try {
+			if (args.size() != 1) {
+				throw ShellArgConvertException("invalid args");
+			}
+			if (ScriptStore::getScriptStore().isThereScript(args[0]) == false) {
+				throw ShellArgConvertException("invalid args");
+			}
 
-			for (shared_ptr< ShellScriptCommandInterface> scriptCmd: mpScriptCmd) {
-				if (scriptCmd->execute() != false) {
+			ShellScriptRandValStore::getShellScriptRandValStore().clear();
+
+			vector<shared_ptr<ShellScriptCommandInterface>> scriptCmds = ScriptStore::getScriptStore().getScriptCommand(args[0]);
+			for (shared_ptr< ShellScriptCommandInterface> scriptCmd: scriptCmds) {
+				if (scriptCmd->execute() == false) {
 					return "FAIL";
 				}
 			}
@@ -32,5 +42,4 @@ public:
 		}
 	}
 private:
-	vector<shared_ptr< ShellScriptCommandInterface>> mpScriptCmd;
 };

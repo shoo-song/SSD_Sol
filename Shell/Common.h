@@ -7,10 +7,7 @@ enum ShellCommand {
 	EXIT_COMMAND,
 	FULLWRITE_COMMAND,
 	FULLREAD_COMMAND,
-
-	SCRIPT_RUN_COMMAND,
-
-	UNKOWN
+	SCRIPT_RUN_COMMAND
 };
 
 enum ShellScriptApiCommand {

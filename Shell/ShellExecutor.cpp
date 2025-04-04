@@ -17,9 +17,6 @@ public:
 			vector<string> separatedStr = ShellUtil::getUtilObj().splitString(input);
 
 			ShellCommand cmd = ShellUtil::getUtilObj().parse(separatedStr[0]);
-			if (cmd == UNKOWN) {
-				cmd = ShellUtil::getUtilObj().parseScript(separatedStr[0]);
-			}
 			shared_ptr<ShellCommandInterface> commandExecutor = mCommandFactory.getCommand(cmd);
 			if (commandExecutor == nullptr) {
 				throw ShellArgConvertException("invalid command");
