@@ -23,7 +23,7 @@ public:
 	void PrintError();
 
 	bool checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data);
-
+	string toTwoDigitString(unsigned int value);
 	CmdInfo parseArg(int argCount, char CMD, string LBAstring, char* data = NULL);
 private:
 	std::unique_ptr<DataFileSystem> FileObj;

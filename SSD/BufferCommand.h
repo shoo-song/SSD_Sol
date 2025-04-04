@@ -24,11 +24,10 @@ private:
 			prevCMD->IsValid = false;
 		}
 	}
-	void MergeCMD(int cmd_index) {
+	void MergeCMD(int cmd_index, std::vector<string> fileList) {
 		for (int cmd_offset = cmd_index-1; cmd_offset >= 0; cmd_offset--) {
 			CmdInfo* prevCMD = &cmdList[cmd_offset];
 			CmdInfo* curCMD = &cmdList[cmd_index];
-
 			//check merge
 			if (curCMD->CMDType == CMD_WRITE) {
 				if (prevCMD->CMDType == CMD_WRITE) {
@@ -70,6 +69,20 @@ private:
 					}
 				}
 			}
+		}
+		int fileoffset = 0;
+		for (auto cmd : cmdList) {
+			if (cmd.IsValid == true) {
+				string newFileName = to_string(fileoffset) + "_" +
+					std::string(1, cmd.CMDType) + "_" +
+					cmd.LBAString + "_" +
+					cmd.input_data;
+				CommandFileMgr->updateFileName(fileList[fileoffset++], newFileName);
+			}
+		}
+		for (int nIter = fileoffset; nIter < 5; nIter++) {
+			string newFileName = to_string(nIter) + "_" + "empty";
+			CommandFileMgr->updateFileName(fileList[nIter], newFileName);
 		}
 	}
     std::vector<CmdInfo> cmdList;

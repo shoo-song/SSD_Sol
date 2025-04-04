@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "command_parser.h"
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -59,11 +60,15 @@ bool CommandParser::checkInvalidity(int argCount, const char& CMD, string LBAstr
 	}
 	return true;
 }
-
+string CommandParser::toTwoDigitString(unsigned int value) {
+	ostringstream oss;
+	oss << std::setw(2) << std::setfill('0') << value;
+	return oss.str();
+}
 CmdInfo CommandParser::parseArg(int argCount, char CMD, string LBAstring, char* data) {
 	CmdInfo Command;
 	Command.IsValid = false;
-	Command.LBAString = LBAstring;
+	Command.LBAString = toTwoDigitString(stoi(LBAstring));
 	if (checkInvalidity(argCount, CMD, LBAstring, data) != true) {
 		return Command;
 	}

@@ -31,7 +31,6 @@ int main(int argc, char* argv[]) {
 	if (!Command.IsValid) {
 		return 0;
 	}
-	cout << Command.CMDType;
 	executeCMD(Command);
 	return 0;
 }
