@@ -1,11 +1,11 @@
 #pragma once
-#include <vector>
 #include <string>
+#include <vector>
 
 using std::string;
 using std::vector;
 
 class ShellCommandInterface {
-public:
-	virtual string execute(vector<string> args) = 0;
+   public:
+    virtual string execute(vector<string> args) = 0;
 };

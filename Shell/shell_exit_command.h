@@ -3,8 +3,9 @@
 #include "shell_exception.h"
 
 class ShellExitCommand : public ShellCommandInterface {
-public:
-	ShellExitCommand();
-	string execute(vector<string> args);
-private:
+   public:
+    ShellExitCommand();
+    string execute(vector<string> args);
+
+   private:
 };
