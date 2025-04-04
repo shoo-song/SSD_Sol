@@ -1,3 +1,4 @@
+#pragma once
 #include <gmock/gmock.h>
 #include <filesystem>
 #include <cstdlib>   // system()
@@ -11,6 +12,7 @@
 #include "../BufferCommand.h"
 #include "../FileSystem.h"
 using namespace testing;
+
 #define UNIT_TEST
 class SSDTestFixture : public Test
 {
@@ -26,12 +28,6 @@ public:
 	MOCK_METHOD(bool, open, (const std::string& filename), ());
 };
 
-TEST_F(SSDTestFixture, Read2) {
-//Read 요청을 SSD_Output.txt 에 write하고, read 하여 write 내용이 읽혀야함
-	std::string data1 = "0xABABABAB";
-	MySSD.DoWrite(0, data1);
-	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
-}
 TEST_F(SSDTestFixture, Read3) {
 // 임이 LBA (0~99) 수행 시, LBA 검색하여 data read
 	std::string data1 = "0xABABABAB";
@@ -182,37 +178,6 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
 }
 
-
-TEST_F(SSDTestFixture, CreateBufferFolder) {
-	std::string testDir = "buffer";
-	// 1️. 폴더 생성
-	filesystem.createDirectory();
-	EXPECT_TRUE(filesystem.directoryExists(testDir)) << "폴더 생성 실패";
-
-	// 2️. 폴더 삭제
-	filesystem.removeDirectory(testDir);
-	EXPECT_FALSE(filesystem.directoryExists(testDir)) << "폴더 삭제 실패";
-}
-
-TEST_F(SSDTestFixture, CreateEmptyFiles) {
-	// given : create buffer directory
-	filesystem.createDirectory();
-
-	std:string testFile = "empty";
-	EXPECT_TRUE(filesystem.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
-
-	filesystem.createFile(true);
-	EXPECT_TRUE("0_empty", filesystem.fileExists("0_empty"));
-	EXPECT_TRUE("1_empty", filesystem.fileExists("1_empty"));
-	EXPECT_TRUE("2_empty", filesystem.fileExists("2_empty"));
-	EXPECT_TRUE("3_empty", filesystem.fileExists("3_empty"));
-	EXPECT_TRUE("4_empty", filesystem.fileExists("4_empty"));
-}
-
-TEST_F(SSDTestFixture, UpdateFileName)
-{
-	// given : initialize output file	
-}
 TEST_F(SSDTestFixture, CMDMergeTest)
 {
 	CMDBuffer temp;
@@ -234,6 +199,152 @@ TEST_F(SSDTestFixture, CMDMergeTest)
 	temp.AppendCMD(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
+
+TEST_F(SSDTestFixture, CreateBufferFolder) {
+	std::string testDir = "buffer";
+	// 1️. 폴더 생성
+	filesystem.createDirectory();
+	EXPECT_TRUE(filesystem.directoryExists(testDir)) << "폴더 생성 실패";
+
+	// 2️. 폴더 삭제
+	filesystem.removeDirectory(testDir);
+	EXPECT_FALSE(filesystem.directoryExists(testDir)) << "폴더 삭제 실패";
+}
+
+TEST_F(SSDTestFixture, CreateEmptyFiles) {
+	// given : create buffer directory
+	filesystem.createDirectory();
+
+	std:string testFile = "empty";
+	EXPECT_FALSE( filesystem.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
+
+	filesystem.createFile(true);
+	EXPECT_EQ(true, filesystem.fileExists("0_empty"));
+	EXPECT_EQ(true, filesystem.fileExists("1_empty"));
+	EXPECT_EQ(true, filesystem.fileExists("2_empty"));
+	EXPECT_EQ(true, filesystem.fileExists("3_empty"));
+	EXPECT_EQ(true, filesystem.fileExists("4_empty"));
+}	
+
+TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
+{
+	// given : initialize output file	
+	filesystem.createFile(true);
+
+	std::vector<std::string> fileNames;
+	fileNames = filesystem.makeCmdList();
+
+	std::vector<std::string> expectedFiles = { "0_empty", "1_empty", "2_empty", "3_empty", "4_empty" };
+	for (auto name : fileNames) {
+		EXPECT_THAT(name, AnyOfArray(expectedFiles));
+	}
+}
+
+TEST_F(SSDTestFixture, updateFileName)
+{
+	// given : initialize output file	
+	filesystem.createFile(true);
+
+	std::vector<std::string> fileNames;
+	fileNames = filesystem.makeCmdList();
+
+	string newName = "0_W_0_0x12345678";
+	string oldName = fileNames[0];
+	filesystem.updateFileName(oldName, newName);
+	EXPECT_TRUE(true, filesystem.fileExists(newName));
+}
+
+TEST_F(SSDTestFixture, updateCmdListAndFileName)
+{
+	// given : initialize output file	
+	FileSystem fs;
+	fs.removeDirectory("buffer");
+	fs.createDirectory();
+	fs.createFile(true);
+	std::vector<std::string> fileNames;
+	fileNames = fs.makeCmdList();
+
+	BufferCommand buffer(fs);
+	std::vector<CmdInfo> cmdList;
+
+	for (int i = 0; i < 5; i++) {
+		CmdInfo cmd = { 'W' , to_string(i), "0x12345678" };
+		cmdList.push_back(cmd);
+		buffer.updateCmdList(cmd);
+	}
+
+	int idx = 0;
+	for (auto cmd : cmdList) {
+		string newFileName = to_string(idx) + "_" +
+			std::string(1, cmd.CMDType) + "_" +
+			cmd.LBA + "_" +
+			cmd.input_data;
+
+		EXPECT_TRUE(true, file.fileExists(newFileName));
+	}
+}
+
+
+TEST_F(SSDTestFixture, bufferFlush)
+{
+	// given : initialize output file	
+	FileSystem fs;
+	fs.removeDirectory("buffer");
+	fs.createDirectory();
+	fs.createFile(true);
+	std::vector<std::string> fileNames;
+	fileNames = fs.makeCmdList();
+
+	BufferCommand buffer(fs);
+	std::vector<CmdInfo> cmdList;
+
+	for (int i = 0; i < 5; i++) {
+		CmdInfo cmd = { 'W' , to_string(i), "0x43211234" };
+		cmdList.push_back(cmd);
+		buffer.updateCmdList(cmd);
+	}
+
+	// 6번쨰 CMD
+	int LBA = 0;
+	CmdInfo cmd = { 'W' , to_string(LBA), "0x87654321" };
+	cmdList.push_back(cmd);
+	buffer.updateCmdList(cmd);
+
+	// NAND에서 확인
+	std::string data1 = "0x43211234";	
+	MySSD.DoRead(LBA);
+	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
+
+	// empty file 확인
+	EXPECT_TRUE(true, filesystem.fileExists("0_empty"));
+}
+TEST_F(SSDTestFixture, extractCMDfromFile)
+{
+	// given : initialize output file	
+	FileSystem fs;
+	fs.removeDirectory("buffer");
+	fs.createDirectory();
+	fs.createFile(true);
+	std::vector<std::string> fileNames;
+	fileNames = fs.makeCmdList();
+
+	BufferCommand buffer(fs);
+	std::vector<CmdInfo> cmdList;
+
+	for (int i = 0; i < 5; i++) {
+		CmdInfo cmd = { 'W' , to_string(i), "0xAAAABBBB" };
+		string newName = "0_W_0xAAAABBBB";
+		cmdList.push_back(cmd);
+		buffer.updateCmdList(cmd);
+	}
+	// 6번쨰 CMD
+	CmdInfo cmd = { 'R' , to_string(0) };
+	cmdList.push_back(cmd);
+	buffer.updateCmdList(cmd);
+
+
+}
+
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();

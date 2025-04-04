@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+//#include "FIleSystem.h"
 using namespace std;
 
 
@@ -18,6 +19,7 @@ public:
 	string getReadDataFromOutput();
 	void writeInvalidLog();
 	void CloseFiles();
+
 protected:
 	std::fstream Nand_file_;
 	std::fstream Output_file_;
