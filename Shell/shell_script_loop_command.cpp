@@ -1,9 +1,9 @@
 #pragma once
-#include "ShellScriptCommandInterface.h"
-#include "ShellException.cpp"
-#include "ShellUtil.cpp"
+#include "shell_script_command_interface.h"
+#include "shell_exception.cpp"
+#include "shell_util.cpp"
 #include "ssddriver_interface.h"
-#include "ScriptParameterGenerator.h"
+#include "script_parameter_generator.h"
 #include <memory>
 
 using std::shared_ptr;

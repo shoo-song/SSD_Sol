@@ -132,31 +132,31 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_exception.cpp" />
-    <ClCompile Include="ScriptLoader.cpp" />
-    <ClCompile Include="ScriptParser.cpp" />
+    <ClCompile Include="script_loader.cpp" />
+    <ClCompile Include="script_parser.cpp" />
     <ClCompile Include="mock_ssddriver.h" />
-    <ClCompile Include="ScriptStore.cpp" />
-    <ClCompile Include="Shell.cpp" />
-    <ClCompile Include="ShellCommandFactory.cpp" />
-    <ClCompile Include="ShellEraseCommand.cpp" />
-    <ClCompile Include="ShellEraseRangeCommand.cpp" />
-    <ClCompile Include="ShellException.cpp" />
-    <ClCompile Include="ShellExitCommand.cpp" />
-    <ClCompile Include="ShellFlushCommand.cpp" />
-    <ClCompile Include="ShellFullReadCommand.cpp" />
-    <ClCompile Include="ShellFullWriteCommand.cpp" />
-    <ClCompile Include="ShellHelpCommand.cpp" />
-    <ClCompile Include="ShellScriptCompareCommand.cpp" />
-    <ClCompile Include="ShellScriptLoopCommand.cpp" />
-    <ClCompile Include="ShellScriptRunCommand.cpp" />
-    <ClCompile Include="ShellScriptWriteCommand.cpp" />
-    <ClCompile Include="ShellUtil.cpp" />
-    <ClCompile Include="ShellReadCommand.cpp" />
-    <ClCompile Include="ShellWriteCommand.cpp" />
+    <ClCompile Include="script_store.cpp" />
+    <ClCompile Include="shell.cpp" />
+    <ClCompile Include="shell_command_factory.cpp" />
+    <ClCompile Include="shell_erase_command.cpp" />
+    <ClCompile Include="shell_erase_range_command.cpp" />
+    <ClCompile Include="shell_exception.cpp" />
+    <ClCompile Include="shell_exit_command.cpp" />
+    <ClCompile Include="shell_flush_command.cpp" />
+    <ClCompile Include="shell_full_read_command.cpp" />
+    <ClCompile Include="shell_full_write_command.cpp" />
+    <ClCompile Include="shell_help_command.cpp" />
+    <ClCompile Include="shell_script_compare_command.cpp" />
+    <ClCompile Include="shell_script_loop_command.cpp" />
+    <ClCompile Include="shell_script_run_command.cpp" />
+    <ClCompile Include="shell_script_write_command.cpp" />
+    <ClCompile Include="shell_util.cpp" />
+    <ClCompile Include="shell_read_command.cpp" />
+    <ClCompile Include="shell_write_command.cpp" />
     <ClCompile Include="ssddriver_interface.h" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ShellExecutor.cpp" />
-    <ClCompile Include="ShellInterfaceUt.cpp">
+    <ClCompile Include="shell_executor.cpp" />
+    <ClCompile Include="shell_interface_ut.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="ssddriver.cpp" />
@@ -174,11 +174,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
-    <ClInclude Include="Common.h" />
+    <ClInclude Include="common.h" />
     <ClInclude Include="logger.h" />
-    <ClInclude Include="ScriptParameterGenerator.h" />
-    <ClInclude Include="ShellCommandInterface.h" />
-    <ClInclude Include="ShellScriptCommandInterface.h" />
+    <ClInclude Include="script_parameter_generator.h" />
+    <ClInclude Include="shell_command_interface.h" />
+    <ClInclude Include="shell_script_command_interface.h" />
     <ClInclude Include="ssddriver.h" />
   </ItemGroup>
   <ItemGroup>

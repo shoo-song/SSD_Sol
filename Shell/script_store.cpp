@@ -1,8 +1,8 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include "ShellException.cpp"
-#include "ShellScriptCommandInterface.h"
+#include "shell_exception.cpp"
+#include "shell_script_command_interface.h"
 
 using std::unordered_map;
 using std::shared_ptr;

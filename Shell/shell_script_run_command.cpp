@@ -1,10 +1,10 @@
 #pragma once
-#include "ShellException.cpp"
-#include "ShellUtil.cpp"
-#include "ShellCommandInterface.h"
-#include "ShellScriptCommandInterface.h"
-#include "ScriptStore.cpp"
-#include "ScriptParameterGenerator.h"
+#include "shell_exception.cpp"
+#include "shell_util.cpp"
+#include "shell_command_interface.h"
+#include "shell_script_command_interface.h"
+#include "script_store.cpp"
+#include "script_parameter_generator.h"
 #include <memory>
 
 using std::shared_ptr;

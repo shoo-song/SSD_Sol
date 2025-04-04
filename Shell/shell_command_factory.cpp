@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Common.h"
-#include "ShellCommandInterface.h"
-#include "ShellReadCommand.cpp"
-#include "ShellWriteCommand.cpp"
-#include "ShellFullReadCommand.cpp"
-#include "ShellFullWriteCommand.cpp"
-#include "ShellHelpCommand.cpp"
-#include "ShellExitCommand.cpp"
-#include "ShellEraseCommand.cpp"
-#include "ShellEraseRangeCommand.cpp"
-#include "ShellFlushCommand.cpp"
-#include "ShellScriptRunCommand.cpp"
+#include "common.h"
+#include "shell_command_interface.h"
+#include "shell_read_command.cpp"
+#include "shell_write_command.cpp"
+#include "shell_full_read_command.cpp"
+#include "shell_full_write_command.cpp"
+#include "shell_help_command.cpp"
+#include "shell_exit_command.cpp"
+#include "shell_erase_command.cpp"
+#include "shell_erase_range_command.cpp"
+#include "shell_flush_command.cpp"
+#include "shell_script_run_command.cpp"
 #include <memory>
 
 using std::shared_ptr;

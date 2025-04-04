@@ -9,12 +9,12 @@
 #include <stdexcept>
 #include <algorithm>
 #include <memory>
-#include "ShellScriptCommandInterface.h"
-#include "ShellScriptLoopCommand.cpp"
-#include "ShellScriptCompareCommand.cpp"
-#include "ShellScriptWriteCommand.cpp"
-#include "ShellUtil.cpp"
-#include "ScriptParameterGenerator.h"
+#include "shell_script_command_interface.h"
+#include "shell_script_loop_command.cpp"
+#include "shell_script_compare_command.cpp"
+#include "shell_script_write_command.cpp"
+#include "shell_util.cpp"
+#include "script_parameter_generator.h"
 using std::shared_ptr;
 using std::make_shared;
 

@@ -1,21 +1,25 @@
 #pragma once
-#include "ShellCommandInterface.h"
-#include "ShellException.cpp"
-#include "ShellUtil.cpp"
+#include "shell_command_interface.h"
+#include "shell_exception.cpp"
+#include "shell_util.cpp"
 #include "ssddriver_interface.h"
 
-class ShellEraseRangeCommand : public ShellCommandInterface {
+class ShellReadCommand: public ShellCommandInterface {
 public:
-	ShellEraseRangeCommand(SsdDriverInterface* pDriverInterface) {
+	ShellReadCommand(SsdDriverInterface* pDriverInterface) {
 		mpDriverInterface = pDriverInterface;
 	}
 
 	string execute(vector<string> args) {
 		try {
 			vector<unsigned int> convertedArgs = convertCmdArgs(args);
-			string output = "[Full Erase] Done";
+			string output = "[Read] LBA ";
+			
+			unsigned int result = mpDriverInterface->readSSD((int)convertedArgs[0]);
 
-			mpDriverInterface->eraseSSD((int)convertedArgs[0], (int)convertedArgs[1]);
+			output += ShellUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
+			output += " : ";
+			output += ShellUtil::getUtilObj().toHexFormat(result);
 
 			return output;
 		}
@@ -31,14 +35,11 @@ private:
 		try {
 			vector<unsigned int> output;
 
-			if (args.size() != 3) {
+			if (args.size() != 2) {
 				throw ShellArgConvertException("args parameter size invalid");
 			}
 
-			// LBA String으로 변환.
 			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
-			output.push_back(ShellUtil::getUtilObj().convertLBAtoSize(args[1], args[2]));
-
 			return output;
 		}
 		catch (ShellArgConvertException e) {

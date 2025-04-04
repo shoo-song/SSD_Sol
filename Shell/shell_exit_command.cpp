@@ -1,6 +1,6 @@
 #pragma once
-#include "ShellCommandInterface.h"
-#include "ShellException.cpp"
+#include "shell_command_interface.h"
+#include "shell_exception.cpp"
 
 class ShellExitCommand : public ShellCommandInterface {
 public:

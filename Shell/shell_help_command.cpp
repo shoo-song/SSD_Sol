@@ -1,7 +1,7 @@
 #pragma once
-#include "ShellCommandInterface.h"
-#include "ShellException.cpp"
-#include "ScriptStore.cpp"
+#include "shell_command_interface.h"
+#include "shell_exception.cpp"
+#include "script_store.cpp"
 
 class ShellHelpCommand : public ShellCommandInterface {
 public:

@@ -1,7 +1,7 @@
 #pragma once
-#include "ShellCommandInterface.h"
-#include "ShellException.cpp"
-#include "ShellUtil.cpp"
+#include "shell_command_interface.h"
+#include "shell_exception.cpp"
+#include "shell_util.cpp"
 #include "ssddriver_interface.h"
 
 class ShellEraseCommand : public ShellCommandInterface {

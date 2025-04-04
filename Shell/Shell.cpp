@@ -1,6 +1,6 @@
 #pragma once
-#include "ShellExecutor.cpp"
-#include "ScriptLoader.cpp"
+#include "shell_executor.cpp"
+#include "script_loader.cpp"
 #include "ssddriver.h"
 #include <iostream>
 #include <string>

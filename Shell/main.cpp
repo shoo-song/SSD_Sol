@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     return RUN_ALL_TESTS();
 }
 #else
-#include "Shell.cpp"
+#include "shell.cpp"
 #include "logger.h"
 
 int main(int argc, char** argv) {
