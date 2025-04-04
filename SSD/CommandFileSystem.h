@@ -10,7 +10,7 @@
 #include <windows.h> 
 using namespace std;
 
-class FileSystem {
+class CommandFileSystem {
 public:  
 
     bool directoryExists(const std::string& path) {
@@ -32,13 +32,11 @@ public:
         return (stat(name.c_str(), &info) == 0);    // 존재하면 0
     }
 
-    void createFile(bool isEmpty) {
-        if (isEmpty) {
-            for (int i = 0; i < 5; i++) {
-                std::string name = "/" + std::to_string(i) + "_" + emptyFile;
-                std::string cmd = bufferDir + name;
-                std::ofstream file(cmd);
-            }
+    void createFiles(void) {
+        for (int i = 0; i < 5; i++) {
+            std::string name = "/" + std::to_string(i) + "_" + emptyFile;
+            std::string cmd = bufferDir + name;
+            std::ofstream file(cmd);
         }
     }
 
@@ -53,7 +51,11 @@ public:
 
     }
     std::vector<string> getCmdList() {
-        
+        // check and create dir
+        if (!directoryExists("buffer")) {
+            createDirectory();
+            createFiles();
+        }
         return  makeCmdList();
     }
 

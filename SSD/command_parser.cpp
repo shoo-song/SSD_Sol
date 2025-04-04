@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "command_parser.h"
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ void CommandParser::PrintError() {
 	FileObj->writeInvalidLog();
 }
 
-bool CommandParser::checkInvalidity(const char& CMD, string LBAstring, char* data) {
+bool CommandParser::checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data) {
 	if (!((CMD == 'W') || (CMD == 'w') || (CMD == 'R') || (CMD == 'r') || (CMD == 'e') || (CMD == 'E'))) {
 		PrintError();
 		return false;
@@ -27,6 +28,10 @@ bool CommandParser::checkInvalidity(const char& CMD, string LBAstring, char* dat
 		return false;
 	}
 	if ((CMD == 'W') || (CMD == 'w')) {
+		if (argCount != 4) {
+			PrintError();
+			return false;
+		}
 		std::string firstTwo(data, 2);
 		if (strlen(data) != 10 || firstTwo != "0x") {
 			PrintError();
@@ -39,6 +44,10 @@ bool CommandParser::checkInvalidity(const char& CMD, string LBAstring, char* dat
 		}
 	}
 	else if ((CMD == 'E') || (CMD == 'e')) {
+		if (argCount != 4) {
+			PrintError();
+			return false;
+		}
 		int EraseCount = stoi(data);
 		if ((EraseCount < 0) || (EraseCount > MAX_ERASE_SIZE)) {
 			PrintError();
@@ -51,21 +60,34 @@ bool CommandParser::checkInvalidity(const char& CMD, string LBAstring, char* dat
 	}
 	return true;
 }
-
-bool CommandParser::parseArg(char CMD, string LBAstring, char* data) {
-	if (checkInvalidity(CMD, LBAstring, data) != true) return false;
-	InputCMD.LBA = stoi(LBAstring);
+string CommandParser::toTwoDigitString(unsigned int value) {
+	ostringstream oss;
+	oss << std::setw(2) << std::setfill('0') << value;
+	return oss.str();
+}
+CmdInfo CommandParser::parseArg(int argCount, char CMD, string LBAstring, char* data) {
+	CmdInfo Command;
+	Command.IsValid = false;
+	Command.LBAString = toTwoDigitString(stoi(LBAstring));
+	if (checkInvalidity(argCount, CMD, LBAstring, data) != true) {
+		return Command;
+	}
+	Command.LBA = stoi(LBAstring);
 	if ((CMD == 'W') || (CMD == 'w')) {
-		strcpy_s(InputCMD.input_data, data);
-		InputCMD.CMDType = CMD_WRITE;
+		strcpy_s(Command.input_data, data);
+		Command.CMDType = CMD_WRITE;
 	}
 	else if ((CMD == 'R') || (CMD == 'r')) {
-		InputCMD.CMDType = CMD_READ;
+		Command.CMDType = CMD_READ;
+	}
+	else if ((CMD == 'E') || (CMD == 'e')) {
+		Command.EraseEndLBA = Command.LBA + stoi(data)-1;
+		strcpy_s(Command.input_data, data);
+		Command.CMDType = CMD_ERASE;
 	}
 	else {
-		InputCMD.EraseEndLBA = InputCMD.LBA + stoi(data)-1;
-		strcpy_s(InputCMD.input_data, data);
-		InputCMD.CMDType = CMD_ERASE;
+		return Command;
 	}
-	return true;
+	Command.IsValid = true;
+	return Command;
 }
