@@ -128,7 +128,7 @@
     <ClCompile Include="ShellFlushCommand.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-        <ClCompile Include="ShellScriptCompareCommand.cpp">
+    <ClCompile Include="ShellScriptCompareCommand.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
     <ClCompile Include="ShellScriptWriteCommand.cpp">
@@ -149,7 +149,6 @@
     <ClCompile Include="ScriptLoader.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
-
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -163,6 +162,7 @@
     <None Include="3_WriteReadAging.script">
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
+    <None Include=".clang-format" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
