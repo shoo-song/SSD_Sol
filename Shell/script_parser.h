@@ -13,6 +13,7 @@
 #include "shell_script_loop_command.h"
 #include "shell_script_compare_command.h"
 #include "shell_script_write_command.h"
+#include "shell_script_erase_command.h"
 #include "shell_util.h"
 #include "script_parameter_generator.h"
 using std::shared_ptr;

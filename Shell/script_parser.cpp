@@ -140,6 +140,12 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
 
                 scriptCmd = std::make_shared<ShellScriptWriteCommand>(mpDriverInterface, lba, val);
             }
+            else if (scriptCmdEnum == ERASE_SCRIPT_COMMAND) {
+                shared_ptr< ShellScriptParameterGenInterface> startLba = parseParameter(separatedStr[1], parentLooper);
+                shared_ptr< ShellScriptParameterGenInterface> endLba = parseParameter(separatedStr[2], parentLooper);
+
+                scriptCmd = std::make_shared<ShellScriptEraseCommand>(mpDriverInterface, startLba, endLba);
+            }
             commandVec.push_back(scriptCmd);
         }
     }

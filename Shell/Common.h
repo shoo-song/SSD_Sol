@@ -15,5 +15,6 @@ enum ShellCommand {
 enum ShellScriptApiCommand {
 	WRITE_SCRIPT_COMMAND,
 	COMPARE_SCRIPT_COMMAND,
+	ERASE_SCRIPT_COMMAND,
 	SCRIPT_UNKOWN
 };
