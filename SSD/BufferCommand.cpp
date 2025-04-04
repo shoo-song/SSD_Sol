@@ -16,7 +16,9 @@ CmdInfo BufferCommand::extractCMDfromFileName(std::string& file)
     cmd.IsValid = true;
     string temp = file.substr(7);
     strcpy_s(cmd.input_data, temp.c_str());
-    cmd.EraseEndLBA = cmd.LBA + stoi(cmd.input_data) - 1;
+    if (cmd.CMDType == CMD_ERASE) {
+        cmd.EraseEndLBA = cmd.LBA + stoi(cmd.input_data) - 1;
+    }
     return cmd;
 }
 int BufferCommand::CheckValidCmdCount(void) {
