@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     logger.print("Main.main()", "∑Œ±Î Ω√¿€");
 
     Shell shell;
-    shell.runShell();
+    shell.runShell(argc, argv);
     return 0;
 }
 #endif

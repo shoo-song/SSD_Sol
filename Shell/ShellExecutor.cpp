@@ -11,12 +11,15 @@ public:
 		mCommandFactory.setDriverInterface(pDriverInterface);
 	}
 
-	string execute(string input) {
+	string execute(string input, bool isRunnerMode) {
 
 		try {
 			vector<string> separatedStr = ShellUtil::getUtilObj().splitString(input);
 
 			ShellCommand cmd = ShellUtil::getUtilObj().parse(separatedStr[0]);
+			if (isRunnerMode && (cmd != SCRIPT_RUN_COMMAND)) {
+				throw ShellArgConvertException("invalid command");
+			}
 			shared_ptr<ShellCommandInterface> commandExecutor = mCommandFactory.getCommand(cmd);
 			if (commandExecutor == nullptr) {
 				throw ShellArgConvertException("invalid command");

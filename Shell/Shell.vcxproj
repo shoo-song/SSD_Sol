@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="dummy_file1.txt" />
+    <Text Include="runner_script1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
