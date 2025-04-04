@@ -5,9 +5,10 @@
 #include "ssddriver_interface.h"
 
 class ShellFullReadCommand : public ShellCommandInterface {
-public:
-	ShellFullReadCommand(SsdDriverInterface* pDriverInterface);
-	string execute(vector<string> args);
-private:
-	SsdDriverInterface* mpDriverInterface;
+   public:
+    ShellFullReadCommand(SsdDriverInterface* pDriverInterface);
+    string execute(vector<string> args);
+
+   private:
+    SsdDriverInterface* mpDriverInterface;
 };

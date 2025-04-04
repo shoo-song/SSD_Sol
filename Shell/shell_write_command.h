@@ -5,11 +5,12 @@
 #include "ssddriver_interface.h"
 
 class ShellWriteCommand : public ShellCommandInterface {
-public:
-	ShellWriteCommand(SsdDriverInterface* pDriverInterface);
-	string execute(vector<string> args);
-private:
-	vector<unsigned int>  convertCmdArgs(vector<string> args);
+   public:
+    ShellWriteCommand(SsdDriverInterface* pDriverInterface);
+    string execute(vector<string> args);
 
-	SsdDriverInterface* mpDriverInterface;
+   private:
+    vector<unsigned int> convertCmdArgs(vector<string> args);
+
+    SsdDriverInterface* mpDriverInterface;
 };

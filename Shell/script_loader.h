@@ -1,23 +1,25 @@
 #pragma once
-#include <iostream>
-#include <filesystem>
-#include <vector>
-#include <string>
-#include <regex>
 #include <exception>
+#include <filesystem>
+#include <iostream>
+#include <regex>
+#include <string>
+#include <vector>
+
 #include "script_parser.h"
-#include "ssddriver_interface.h"
 #include "script_store.h"
+#include "ssddriver_interface.h"
 
 namespace fs = std::filesystem;
 
-using std::vector;
-using std::string;
 using std::exception;
+using std::string;
+using std::vector;
 
 class ScriptLoader {
-public:
+   public:
     void loadScript(SsdDriverInterface* pDriverInterface);
-private:
+
+   private:
     vector<string> getScriptFileName();
 };

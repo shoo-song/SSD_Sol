@@ -5,9 +5,10 @@
 #include "ssddriver_interface.h"
 
 class ShellFlushCommand : public ShellCommandInterface {
-public:
-	ShellFlushCommand(SsdDriverInterface* pDriverInterface);
-	string execute(vector<string> args);
-private:
-	SsdDriverInterface* mpDriverInterface;
+   public:
+    ShellFlushCommand(SsdDriverInterface* pDriverInterface);
+    string execute(vector<string> args);
+
+   private:
+    SsdDriverInterface* mpDriverInterface;
 };

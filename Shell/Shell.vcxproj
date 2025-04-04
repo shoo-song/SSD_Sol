@@ -187,6 +187,7 @@
     <ClCompile Include="ssddriver_exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".clang-format" />
     <None Include="1_FullWriteAndReadCompare.script" />
     <None Include="2_PartialLBAWrite.script" />
     <None Include="3_WriteReadAging.script" />
