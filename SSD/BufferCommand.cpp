@@ -2,7 +2,7 @@
 #include "BufferCommand.h"
 #include "CommandFileSystem.h"
 void BufferCommand::InitDir(void) {
-    CommandFileMgr->removeDirectory("buffer");
+    CommandFileMgr.removeDirectory("buffer");
 }
 void BufferCommand::InitCmdList(void) {
     cmdList.clear();
@@ -44,7 +44,7 @@ void BufferCommand::DoBufferRead(char* data) {
     MySSD.DoCachedRead(0, data);
 }
 void BufferCommand::PushCommand(CmdInfo cmdInfo) {
-    std::vector<string> fileList = CommandFileMgr->getCmdList();
+    std::vector<string> fileList = CommandFileMgr.getCmdList();
     if ((cmdInfo.CMDType == CMD_WRITE) || (cmdInfo.CMDType == CMD_ERASE)) {
         // file 이름으로 부터 cmd parsing
         int cmd_idx = 0;
@@ -56,7 +56,7 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
                     cmdInfo.LBAString + "_" +
                     cmdInfo.input_data;
                 
-                CommandFileMgr->updateFileName(fileList[cmd_idx], newFileName);
+                CommandFileMgr.updateFileName(fileList[cmd_idx], newFileName);
                 fileList[cmd_idx] = newFileName;
                 cmdList.push_back(cmdInfo);
                 break;
@@ -72,7 +72,7 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
             doFlush();
             for (int i = 0; i < 5; i++) {
                 string newFileName = to_string(i) + "_" + "empty";
-                CommandFileMgr->updateFileName(fileList[i], newFileName);
+                CommandFileMgr.updateFileName(fileList[i], newFileName);
                 fileList[i] = newFileName;
                 cmdList[i].IsValid = false;
             }
@@ -108,7 +108,7 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
         doFlush();
         for (int i = 0; i < 5; i++) {
             string newFileName = to_string(i) + "_" + "empty";
-            CommandFileMgr->updateFileName(fileList[i], newFileName);
+            CommandFileMgr.updateFileName(fileList[i], newFileName);
             fileList[i] = newFileName;
             cmdList[i].IsValid = false;
         }
@@ -178,11 +178,11 @@ void BufferCommand::MergeCMD(int cmd_index, std::vector<string> fileList) {
                 std::string(1, cmd.CMDType) + "_" +
                 cmd.LBAString + "_" +
                 cmd.input_data;
-            CommandFileMgr->updateFileName(fileList[fileoffset++], newFileName);
+            CommandFileMgr.updateFileName(fileList[fileoffset++], newFileName);
         }
     }
     for (int nIter = fileoffset; nIter < 5; nIter++) {
         string newFileName = to_string(nIter) + "_" + "empty";
-        CommandFileMgr->updateFileName(fileList[nIter], newFileName);
+        CommandFileMgr.updateFileName(fileList[nIter], newFileName);
     }
 }

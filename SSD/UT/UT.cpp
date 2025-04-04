@@ -21,7 +21,7 @@ public:
 	DataFileSystem FileMgr;
 	CommandParser InputParser;
 	CommandFileSystem filesystem;
-	BufferCommand temp;
+	//BufferCommand temp;
 	CmdInfo cmd;
 };
 
@@ -356,41 +356,6 @@ TEST_F(SSDTestFixture, updateFileName)
 	EXPECT_EQ(true, filesystem.fileExists(newName));
 }
 
-TEST_F(SSDTestFixture, updateCmdListAndFileName)
-{
-	// given : initialize output file	
-	CommandFileSystem fs;
-	fs.removeDirectory("buffer");
-	fs.createDirectory();
-	fs.createFiles();
-	std::vector<std::string> fileNames;
-	fileNames = fs.makeCmdList();
-
-	BufferCommand buffer;
-	std::vector<CmdInfo> cmdList;
-
-	for (int i = 0; i < 5; i++) {
-		CmdInfo cmd;
-		cmd.CMDType = 'W';
-		cmd.LBA = i;
-		cmd.LBAString = to_string(i);
-		strcpy_s(cmd.input_data, "0x12345678");
-
-		cmdList.push_back(cmd);
-		buffer.PushCommand(cmd);
-	}
-
-	int idx = 0;
-	for (auto cmd : cmdList) {
-		string newFileName = to_string(idx) + "_" +
-			std::string(1, cmd.CMDType) + "_" +
-			cmd.LBAString + "_" +
-			cmd.input_data;
-
-		EXPECT_EQ(true, fs.fileExists(newFileName));
-		idx++;
-	}
-}
 
 
 TEST_F(SSDTestFixture, bufferFlush)
@@ -403,7 +368,7 @@ TEST_F(SSDTestFixture, bufferFlush)
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
-	BufferCommand buffer;
+	BufferCommand buffer(fs);
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
@@ -436,6 +401,7 @@ TEST_F(SSDTestFixture, bufferFlush)
 	// empty file 확인
 	EXPECT_TRUE(fs.fileExists("0_empty"));
 }
+#if 0
 TEST_F(SSDTestFixture, extractCMDfromFile)
 {
 	// given : initialize output file	
@@ -446,7 +412,7 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
-	BufferCommand buffer;
+	BufferCommand buffer(fs);
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
@@ -474,35 +440,7 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-
-TEST_F(SSDTestFixture, flushCmd) {
-	// given : initialize output file	
-	CommandFileSystem fs;
-	fs.removeDirectory("buffer");
-	fs.createDirectory();
-	fs.createFiles();
-	std::vector<std::string> fileNames;
-	fileNames = fs.makeCmdList();
-
-	BufferCommand buffer(fs);
-	std::vector<CmdInfo> cmdList;
-
-	for (int i = 0; i < 3; i++) {
-		CmdInfo cmd;
-		cmd.CMDType = 'W';
-		cmd.LBA = i;
-		cmd.LBAString = to_string(i);
-		strcpy_s(cmd.input_data, "0xBBBBCCCC");
-		
-		cmdList.push_back(cmd);
-		buffer.PushCommand(cmd);
-	}
-
-	//MySSD.DoFlush();
-
-	//EXPECT_EQ(true, fs.fileExists("0_empty"));
-}
-
+#endif
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();

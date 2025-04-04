@@ -7,9 +7,7 @@
 
 class BufferCommand {
 public:
-	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(std::make_unique<CommandFileSystem>())
-	{
-	
+	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(filesystem) {     
       cmdList.clear();
     }
     void InitDir(void);
@@ -24,7 +22,7 @@ private:
     void MergeEraseRange(CmdInfo* prevCMD, CmdInfo* curCMD);
     void MergeCMD(int cmd_index, std::vector<string> fileList);
     std::vector<CmdInfo> cmdList;
-    std::unique_ptr<CommandFileSystem> CommandFileMgr;
+    CommandFileSystem& CommandFileMgr;
     std::unique_ptr<DataFileSystem> DataFileMgr;
 	SSD MySSD;
 };

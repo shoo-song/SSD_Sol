@@ -8,54 +8,65 @@
 using namespace std;
 
 bool CommandParser::PrintError() {
-	if (FileObj == nullptr) return false;
 	FileObj->writeInvalidLog();
+	return false;
+}
+
+bool CommandParser::checkCmdTypeInvalidity(const char& CMD){
+	if (!((CMD == 'w') || (CMD == 'W') ||
+		(CMD == 'r') || (CMD == 'R') ||
+		(CMD == 'e') || (CMD == 'E') ||
+		(CMD == 'f') || (CMD == 'F'))) {
+		return PrintError();
+	}
+	return true;
+}
+
+bool CommandParser::checkLBAInvalidity(size_t pos, std::string& LBAstring, uint32_t LBA){
+	if (pos != LBAstring.length()) {
+		return PrintError();
+	}
+	if (LBA < 0 || LBA >= MAX_LBA_COUNT) {
+		return PrintError();
+	}
+	return true;
 }
 
 bool CommandParser::checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data) {
-	if (!((CMD == 'W') || (CMD == 'w') || (CMD == 'R') || (CMD == 'r') || (CMD == 'e') || (CMD == 'E'))) {
-		PrintError();
-		return false;
-	}
+	bool retVal = checkCmdTypeInvalidity(CMD);
+	if (retVal != true) return false;
+
+	if ((CMD == 'f') || (CMD == 'F')) return true;
+
 	size_t pos;
 	uint32_t LBA = std::stoi(LBAstring, &pos, 10);
-	if (pos != LBAstring.length()) {
-		PrintError();
-		return false;
-	}
-	if (LBA < 0 || LBA >= MAX_LBA_COUNT) {
-		PrintError();
-		return false;
-	}
+	
+	retVal = checkLBAInvalidity(pos, LBAstring, LBA);
+	if (retVal != true) return false;
+
 	if ((CMD == 'W') || (CMD == 'w')) {
 		if (argCount != 4) {
-			PrintError();
-			return false;
+			return PrintError();
 		}
 		std::string firstTwo(data, 2);
 		if (strlen(data) != 10 || firstTwo != "0x") {
-			PrintError();
-			return false;
+			return PrintError();
 		}
-		LBA = std::stoul(data, &pos, 16);
+		uint32_t LBA = std::stoul(data, &pos, 16);
 		if (pos != strlen(data)) {
-			PrintError();
-			return false;
+			return PrintError();
 		}
 	}
 	else if ((CMD == 'E') || (CMD == 'e')) {
 		if (argCount != 4) {
-			PrintError();
-			return false;
+			return PrintError();
 		}
 		int EraseCount = stoi(data);
 		if ((EraseCount < 0) || (EraseCount > MAX_ERASE_SIZE)) {
-			PrintError();
-			return false;
+			return PrintError();
 		}
 		else if ((LBA + EraseCount) > MAX_LBA_COUNT) {
-			PrintError();
-			return false;
+			return PrintError();
 		}
 	}
 	return true;

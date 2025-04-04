@@ -7,17 +7,7 @@
 #define MAX_LBA_COUNT (100)
 #define MAX_ERASE_SIZE (10)
 using namespace std;
-#if 0
-struct CmdInfo {
-	char CMDType;
-	int LBA;
-	string LBAString;
-	char input_data[20];
-	int EraseEndLBA = 0;
-	bool IsValid = false;
-	char input_data[20] = {};
-};
-#endif
+
 struct CmdInfo {
 	char CMDType;
 	int LBA;
@@ -39,6 +29,8 @@ public:
 	bool checkLBAInvalidity(size_t pos, std::string& LBAstring, uint32_t LBA);
 
 	bool checkCmdTypeInvalidity(const char& CMD);
+
+	bool NewFunction(size_t pos, std::string& LBAstring, uint32_t LBA, bool& retFlag);
 
 	bool checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data);
 	string toTwoDigitString(unsigned int value);
