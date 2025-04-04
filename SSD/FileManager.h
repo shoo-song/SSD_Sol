@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+//#include "FIleSystem.h"
 using namespace std;
 
 
@@ -14,10 +15,11 @@ public:
 	bool OutputFileOpenForRead(void);
 	bool OutputFileOpenForWrite(void);
 	bool WriteFile(int LBA, string data);
-	bool ReadFile(int LBA);
+	bool ReadFile(int LBA, bool bCached, char* data);
 	string getReadDataFromOutput();
 	void writeInvalidLog();
 	void CloseFiles();
+
 protected:
 	std::fstream Nand_file_;
 	std::fstream Output_file_;

@@ -8,9 +8,15 @@ public:
 	}
 	void DoRead(int LBA) {
 		if (FileMgr == nullptr) return;
-		FileMgr->ReadFile(LBA);
+		FileMgr->ReadFile(LBA, false, nullptr);
+	}
+
+	void DoCachedRead(int LBA, char* data) {
+		if (FileMgr == nullptr) return;
+		FileMgr->ReadFile(LBA, true, data);
 	}
 	void DoWrite(const int& LBA, const string& data) {
+
 		if (FileMgr == nullptr) return;
 		FileMgr->WriteFile(LBA, data);
 	}

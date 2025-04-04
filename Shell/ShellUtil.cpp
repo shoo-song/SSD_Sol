@@ -17,21 +17,15 @@ public:
 		return shellInterfaceUtil;
 	}
 
-	ShellCommand parseScript(const string input) {
-		// 1번 조건 검사
-		if (input == "1_FullWriteAndReadCompare" || input.rfind("1_", 0) == 0) {
-			return SCRIPT_1;
+	ShellScriptApiCommand parseScriptApiCmd(const string input) {
+		if (input.compare("WRITE") == 0) {
+		return WRITE_SCRIPT_COMMAND;
+	}
+		if (input.compare("COMPARE") == 0) {
+			return COMPARE_SCRIPT_COMMAND;
 		}
-		// 2번 조건 검사
-		if (input == "2_PartialLBAWrite" || input.rfind("2_", 0) == 0) {
-			return SCRIPT_2;
-		}
-		// 3번 조건 검사
-		if (input == "3_WriteReadAging" || input.rfind("3_", 0) == 0) {
-			return SCRIPT_3;
-		}
-
-		return UNKOWN;  // 매칭되는 조건이 없을 경우
+		
+		return SCRIPT_UNKOWN;
 	}
 
 	ShellCommand parse(string commandArg) {
@@ -62,7 +56,7 @@ public:
 		if (commandArg.compare("flush") == 0) {
 			return FLUSH_COMMAND;
 		}
-		return UNKOWN;
+		return SCRIPT_RUN_COMMAND;
 	}
 
 	// LBA 문자열 변환 (10진수, 0~99)

@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +132,10 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_exception.cpp" />
+    <ClCompile Include="ScriptLoader.cpp" />
+    <ClCompile Include="ScriptParser.cpp" />
     <ClCompile Include="mock_ssddriver.h" />
+    <ClCompile Include="ScriptStore.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ShellCommandFactory.cpp" />
     <ClCompile Include="ShellEraseCommand.cpp" />
@@ -142,9 +146,10 @@
     <ClCompile Include="ShellFullReadCommand.cpp" />
     <ClCompile Include="ShellFullWriteCommand.cpp" />
     <ClCompile Include="ShellHelpCommand.cpp" />
-    <ClCompile Include="ShellScript1.cpp" />
-    <ClCompile Include="ShellScript2.cpp" />
-    <ClCompile Include="ShellScript3.cpp" />
+    <ClCompile Include="ShellScriptCompareCommand.cpp" />
+    <ClCompile Include="ShellScriptLoopCommand.cpp" />
+    <ClCompile Include="ShellScriptRunCommand.cpp" />
+    <ClCompile Include="ShellScriptWriteCommand.cpp" />
     <ClCompile Include="ShellUtil.cpp" />
     <ClCompile Include="ShellReadCommand.cpp" />
     <ClCompile Include="ShellWriteCommand.cpp" />
@@ -161,6 +166,9 @@
     <ClCompile Include="ssddriver_exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="1_FullWriteAndReadCompare.script" />
+    <None Include="2_PartialLBAWrite.script" />
+    <None Include="3_WriteReadAging.script" />
     <None Include="MakeFile" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -168,11 +176,14 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="ScriptParameterGenerator.h" />
     <ClInclude Include="ShellCommandInterface.h" />
+    <ClInclude Include="ShellScriptCommandInterface.h" />
     <ClInclude Include="ssddriver.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dummy_file1.txt" />
+    <Text Include="runner_script1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
