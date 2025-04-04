@@ -83,6 +83,7 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
         MergeCMD(cmd_idx, fileList);
     }
     else if (cmdInfo.CMDType == CMD_READ) {
+        MySSD.DoRead(cmdInfo.LBA);
         for (auto file : fileList) {
             string name = file.substr(2);
             if (name == "empty") {
