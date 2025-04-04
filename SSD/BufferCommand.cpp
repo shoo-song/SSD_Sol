@@ -26,7 +26,7 @@ int BufferCommand::CheckValidCmdCount(void) {
     }
     return result;
 }
-void BufferCommand::doFlush(std::vector<string>& fileList)
+void BufferCommand::doFlush(void)
 {
     for (auto CurCmd : cmdList) {
         if (CurCmd.CMDType == CMD_WRITE) {
@@ -69,7 +69,7 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
         }
         // full
         if (cmd_idx == 5) {
-            doFlush(fileList);
+            doFlush();
             for (int i = 0; i < 5; i++) {
                 string newFileName = to_string(i) + "_" + "empty";
                 CommandFileMgr->updateFileName(fileList[i], newFileName);
@@ -95,6 +95,22 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
                     DoBufferRead((char*)"0x00000000");
                 }
             }
+        }
+    }
+    else if (cmdInfo.CMDType == CMD_FLUSH) {
+        for (auto file : fileList) {
+            string name = file.substr(2);
+            if (name != "empty") {
+                CmdInfo command = extractCMDfromFileName(file);
+                cmdList.push_back(command);
+            }
+        }
+        doFlush();
+        for (int i = 0; i < 5; i++) {
+            string newFileName = to_string(i) + "_" + "empty";
+            CommandFileMgr->updateFileName(fileList[i], newFileName);
+            fileList[i] = newFileName;
+            cmdList[i].IsValid = false;
         }
     }
  
