@@ -1,17 +1,18 @@
 #pragma once
-#include "shell_executor.h"
-#include "mock_ssddriver.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <vector>
+
 #include <unordered_map>
+#include <vector>
+
+#include "mock_ssddriver.h"
+#include "shell_executor.h"
 
 using namespace testing;
 using namespace std;
 
-class ShellExecutorFixture : public testing::Test
-{
-public:
+class ShellExecutorFixture : public testing::Test {
+   public:
     ShellExecutor shellExecutor;
     string result;
 };
@@ -44,10 +45,8 @@ TEST_F(ShellExecutorFixture, readWriteTest1) {
     MockSsdDriver mockDriver;
     shellExecutor.setDriverInterface(&mockDriver);
 
-    EXPECT_CALL(mockDriver, readSSD(1))
-        .WillOnce(testing::Return(0xAAAABBBB));
-    EXPECT_CALL(mockDriver, writeSSD(1, 0xAAAABBBB))
-        .WillOnce(testing::Return());
+    EXPECT_CALL(mockDriver, readSSD(1)).WillOnce(testing::Return(0xAAAABBBB));
+    EXPECT_CALL(mockDriver, writeSSD(1, 0xAAAABBBB)).WillOnce(testing::Return());
 
     EXPECT_EQ("[Write] Done", shellExecutor.execute("write 01 0xAAAABBBB", false));
     EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellExecutor.execute("read 01", false));
@@ -76,22 +75,19 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(100)
-        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
-            memory[pos] = data;
-           }));
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
-        auto it = memory.find(pos);
-        if (it != memory.end()) {
-            return it->second;
-        }
-        return -1; // 해당 위치에 데이터가 없을 경우
-            }));
+            auto it = memory.find(pos);
+            if (it != memory.end()) {
+                return it->second;
+            }
+            return -1;  // 해당 위치에 데이터가 없을 경우
+        }));
 
     EXPECT_EQ("PASS", shellExecutor.execute("1_FullWriteAndReadCompare", false));
-
 }
 
 TEST_F(ShellExecutorFixture, script1_wildcard) {
@@ -103,19 +99,17 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(100)
-        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
-        memory[pos] = data;
-            }));
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
-        auto it = memory.find(pos);
-        if (it != memory.end()) {
-            return it->second;
-        }
-        return -1; // 해당 위치에 데이터가 없을 경우
-            }));
+            auto it = memory.find(pos);
+            if (it != memory.end()) {
+                return it->second;
+            }
+            return -1;  // 해당 위치에 데이터가 없을 경우
+        }));
 
     EXPECT_EQ("PASS", shellExecutor.execute("1_", false));
 }
@@ -129,22 +123,19 @@ TEST_F(ShellExecutorFixture, script2_fullmatching) {
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(120)
-        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
-        memory[pos] = data;
-            }));
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(120)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
-        auto it = memory.find(pos);
-        if (it != memory.end()) {
-            return it->second;
-        }
-        return -1; // 해당 위치에 데이터가 없을 경우
-            }));
+            auto it = memory.find(pos);
+            if (it != memory.end()) {
+                return it->second;
+            }
+            return -1;  // 해당 위치에 데이터가 없을 경우
+        }));
 
     EXPECT_EQ("PASS", shellExecutor.execute("2_PartialLBAWrite", false));
-
 }
 
 TEST_F(ShellExecutorFixture, script2_wildcard) {
@@ -156,19 +147,17 @@ TEST_F(ShellExecutorFixture, script2_wildcard) {
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(120)
-        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
-        memory[pos] = data;
-            }));
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(120)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
-        auto it = memory.find(pos);
-        if (it != memory.end()) {
-            return it->second;
-        }
-        return -1; // 해당 위치에 데이터가 없을 경우
-            }));
+            auto it = memory.find(pos);
+            if (it != memory.end()) {
+                return it->second;
+            }
+            return -1;  // 해당 위치에 데이터가 없을 경우
+        }));
 
     EXPECT_EQ("PASS", shellExecutor.execute("2_", false));
 }
@@ -182,22 +171,19 @@ TEST_F(ShellExecutorFixture, script3_fullmatching) {
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(400)
-        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
-        memory[pos] = data;
-            }));
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(400)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
-        auto it = memory.find(pos);
-        if (it != memory.end()) {
-            return it->second;
-        }
-        return -1; // 해당 위치에 데이터가 없을 경우
-            }));
+            auto it = memory.find(pos);
+            if (it != memory.end()) {
+                return it->second;
+            }
+            return -1;  // 해당 위치에 데이터가 없을 경우
+        }));
 
     EXPECT_EQ("PASS", shellExecutor.execute("3_WriteReadAging", false));
-
 }
 
 TEST_F(ShellExecutorFixture, script3_wildcard) {
@@ -209,31 +195,30 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(400)
-        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) {
-        memory[pos] = data;
-            }));
+        .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(400)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
-        auto it = memory.find(pos);
-        if (it != memory.end()) {
-            return it->second;
-        }
-        return -1; // 해당 위치에 데이터가 없을 경우
-            }));
+            auto it = memory.find(pos);
+            if (it != memory.end()) {
+                return it->second;
+            }
+            return -1;  // 해당 위치에 데이터가 없을 경우
+        }));
 
     EXPECT_EQ("PASS", shellExecutor.execute("3_", false));
 }
 
 TEST_F(ShellExecutorFixture, helpCmd) {
-
-    EXPECT_EQ("Team:Alpha Devs(이원철/송승호/신동재/전봉수)\n"
-              "READ command: read [LBA]\n"
-              "Write command: write [LBA] [DATA:(ex)0x123456]\n"
-              "Full Read command: fullread\n"
-              "Full Write command: fullwrite\n"
-              "Exit command: exit\n", shellExecutor.execute("help", false));
+    EXPECT_EQ(
+        "Team:Alpha Devs(이원철/송승호/신동재/전봉수)\n"
+        "READ command: read [LBA]\n"
+        "Write command: write [LBA] [DATA:(ex)0x123456]\n"
+        "Full Read command: fullread\n"
+        "Full Write command: fullwrite\n"
+        "Exit command: exit\n",
+        shellExecutor.execute("help", false));
 }
 
 TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
@@ -242,11 +227,12 @@ TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
     unsigned int writeData = 0x123456;
     string hexString = ShellUtil::getUtilObj().toHexFormat(writeData);
     string fullreadResult = "";
-    
+
     for (int i = 0; i < 100; i++) {
-        fullreadResult += "[Full Read] LBA " + ShellUtil::getUtilObj().toTwoDigitString(i) + " " + hexString + " \n";
+        fullreadResult += "[Full Read] LBA " + ShellUtil::getUtilObj().toTwoDigitString(i) + " " +
+                          hexString + " \n";
     }
-    
+
     // write 호출 시 해당 위치에 데이터를 저장
     EXPECT_CALL(mockDriver, writeSSD(::testing::_, writeData))
         .Times(100)
@@ -255,8 +241,7 @@ TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
     EXPECT_CALL(mockDriver, readSSD(::testing::_))
         .Times(100)
         .WillRepeatedly(testing::Return(writeData));
-     
-    EXPECT_EQ("[Full Write] Done", shellExecutor.execute("fullwrite " + hexString, false));
-    EXPECT_EQ(fullreadResult, shellExecutor.execute("fullread", false)); 
-}
 
+    EXPECT_EQ("[Full Write] Done", shellExecutor.execute("fullwrite " + hexString, false));
+    EXPECT_EQ(fullreadResult, shellExecutor.execute("fullread", false));
+}

@@ -1,11 +1,11 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 class Logger {
-public:
+   public:
     static Logger& getInstance();
 
     void setLogFile(const std::string& filename = "latest.log");
@@ -15,7 +15,7 @@ public:
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
-private:
+   private:
     Logger() = default;
     ~Logger();
 

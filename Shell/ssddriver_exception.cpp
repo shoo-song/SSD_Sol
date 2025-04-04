@@ -1,28 +1,26 @@
-#include <string>
 #include <exception>
+#include <string>
 
 class SsdDriverException : public std::exception {
-public:
-
+   public:
     SsdDriverException(const std::string& msg) : message(msg) {}
-    const char* what() const noexcept override {
-        return message.c_str();
-    }
-protected:
+    const char* what() const noexcept override { return message.c_str(); }
+
+   protected:
     std::string message;
 };
 
 class SsdExecuteException : public SsdDriverException {
-public:
+   public:
     SsdExecuteException() : SsdDriverException("SsdExecuteException") {}
 };
 
 class FileNotFoundException : public SsdDriverException {
-public:
+   public:
     FileNotFoundException() : SsdDriverException("FileNotFoundException") {}
 };
 
 class InvalidInputException : public SsdDriverException {
-public:
+   public:
     InvalidInputException() : SsdDriverException("InvalidInputException") {}
 };

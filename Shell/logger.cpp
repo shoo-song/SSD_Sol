@@ -1,11 +1,13 @@
 #include "logger.h"
-#include "logger_exception.cpp"
-#include <sstream>
-#include <iomanip>
+
+#include <algorithm>
 #include <chrono>
 #include <ctime>
+#include <iomanip>
+#include <sstream>
 #include <vector>
-#include <algorithm>
+
+#include "logger_exception.cpp"
 
 namespace fs = std::filesystem;
 
@@ -18,9 +20,7 @@ Logger& Logger::getInstance() {
 // 전역 참조 객체 정의
 Logger& logger = Logger::getInstance();
 
-Logger::~Logger() {
-    closeLogFile();
-}
+Logger::~Logger() { closeLogFile(); }
 
 void Logger::setLogFile(const std::string& filename) {
     try {
@@ -29,8 +29,7 @@ void Logger::setLogFile(const std::string& filename) {
         if (actualFileName.find('.') == std::string::npos) {
             actualFileName += ".log";
         }
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
         throw LoggerException("로그 디렉토리 생성 실패: " + std::string(e.what()));
     }
 
@@ -59,18 +58,18 @@ std::string Logger::getTimestampedFilename() {
     localtime_s(&now_tm, &now_c);
 
     std::ostringstream oss;
-    oss << logDirectory_ << "/until_"
-        << std::put_time(&now_tm, "%y%m%d_%Hh_%Mm_%Ss")
-        << ".log";
+    oss << logDirectory_ << "/until_" << std::put_time(&now_tm, "%y%m%d_%Hh_%Mm_%Ss") << ".log";
     return oss.str();
 }
 
 void Logger::rotateIfNeeded() {
-    if (!fs::exists(logFileName_)) return;
+    if (!fs::exists(logFileName_))
+        return;
 
     constexpr std::uintmax_t MAX_SIZE = 10 * 1024;  // 10KB
     std::uintmax_t size = fs::file_size(logFileName_);
-    if (size < MAX_SIZE) return;
+    if (size < MAX_SIZE)
+        return;
 
     // 1. 닫고 → 이름 변경 → 다시 열기
     closeLogFile();
@@ -78,8 +77,7 @@ void Logger::rotateIfNeeded() {
     std::string backupName = getTimestampedFilename();
     try {
         fs::rename(logFileName_, backupName);
-    }
-    catch (const fs::filesystem_error& e) {
+    } catch (const fs::filesystem_error& e) {
         throw LoggerException("로그 파일 이름 변경 실패: " + std::string(e.what()));
     }
 
@@ -101,7 +99,7 @@ void Logger::rotateIfNeeded() {
         if (backups.size() >= 2) {
             std::sort(backups.begin(), backups.end(), [](const auto& a, const auto& b) {
                 return fs::last_write_time(a) < fs::last_write_time(b);
-                });
+            });
 
             fs::path oldest = backups.front().path();
             fs::path zipped = oldest;
@@ -109,13 +107,12 @@ void Logger::rotateIfNeeded() {
 
             try {
                 fs::rename(oldest, zipped);
-            }
-            catch (const std::exception& e) {
-                throw LoggerException("오래된 로그 파일 압축 이름 변경 실패: " + std::string(e.what()));
+            } catch (const std::exception& e) {
+                throw LoggerException("오래된 로그 파일 압축 이름 변경 실패: " +
+                                      std::string(e.what()));
             }
         }
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
         throw LoggerException("백업 로그 파일 처리 중 오류: " + std::string(e.what()));
     }
 }
@@ -130,8 +127,7 @@ void Logger::print(const std::string& location, const std::string& message) {
         localtime_s(&now_tm, &now_c);
 
         std::ostringstream oss;
-        oss << std::put_time(&now_tm, "[%y.%m.%d %H:%M] ")
-            << std::left << std::setw(30) << location
+        oss << std::put_time(&now_tm, "[%y.%m.%d %H:%M] ") << std::left << std::setw(30) << location
             << " : " << message;
 
         std::string output = oss.str();
@@ -139,8 +135,7 @@ void Logger::print(const std::string& location, const std::string& message) {
 
         if (logFile_.is_open()) {
             logFile_ << output << std::endl;
-        }
-        else {
+        } else {
             throw LoggerException("로그 파일이 열려 있지 않습니다.");
         }
     } catch (const std::exception& e) {

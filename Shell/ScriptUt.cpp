@@ -1,46 +1,46 @@
-//#pragma once
+// #pragma once
 //
-//#include <gmock/gmock.h>
+// #include <gmock/gmock.h>
 //
-//TEST(TestScript, readTest) {
+// TEST(TestScript, readTest) {
 //
-//    TestScript ts;
+//     TestScript ts;
 //
-//    EXPECT_EQ("read", ts.read(argv[0]));
-//};
+//     EXPECT_EQ("read", ts.read(argv[0]));
+// };
 //
-//TEST(TestScript, writeTest) {
+// TEST(TestScript, writeTest) {
 //
-//    TestScript ts;
+//     TestScript ts;
 //
-//    EXPECT_EQ("write", ts.read(argv[0]));
-//};
+//     EXPECT_EQ("write", ts.read(argv[0]));
+// };
 //
 //
-//TEST(TestScript, exitTest) {
+// TEST(TestScript, exitTest) {
 //
-//    TestScript ts;
+//     TestScript ts;
 //
-//    EXPECT_EQ("exit", ts.read(argv[0]));
-//};
+//     EXPECT_EQ("exit", ts.read(argv[0]));
+// };
 //
-//TEST(TestScript, helpTest) {
+// TEST(TestScript, helpTest) {
 //
-//    TestScript ts;
+//     TestScript ts;
 //
-//    EXPECT_EQ("help", ts.read(argv[0]));
-//};
+//     EXPECT_EQ("help", ts.read(argv[0]));
+// };
 //
-//TEST(TestScript, fullwriteTest) {
+// TEST(TestScript, fullwriteTest) {
 //
-//    TestScript ts;
+//     TestScript ts;
 //
-//    EXPECT_EQ("fullwrite", ts.read(argv[0]));
-//};
+//     EXPECT_EQ("fullwrite", ts.read(argv[0]));
+// };
 //
-//TEST(TestScript, fullreadTest) {
+// TEST(TestScript, fullreadTest) {
 //
-//    TestScript ts;
+//     TestScript ts;
 //
-//    EXPECT_EQ("fullread", ts.read(argv[0]));
-//};
+//     EXPECT_EQ("fullread", ts.read(argv[0]));
+// };

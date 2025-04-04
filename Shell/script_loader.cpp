@@ -7,10 +7,10 @@ void ScriptLoader::loadScript(SsdDriverInterface* pDriverInterface) {
 
     for (string fileName : fileNames) {
         try {
-            std::vector<shared_ptr<ShellScriptCommandInterface>> scriptCmds = scriptParser.makingScript(fileName + ".script");
+            std::vector<shared_ptr<ShellScriptCommandInterface>> scriptCmds =
+                scriptParser.makingScript(fileName + ".script");
             ScriptStore::getScriptStore().addScript(fileName, scriptCmds);
-        }
-        catch (exception e) {
+        } catch (exception e) {
             // skip
         }
     }
