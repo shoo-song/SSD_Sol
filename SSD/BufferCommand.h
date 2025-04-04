@@ -2,11 +2,14 @@
 
 #include "CommandFileSystem.h"
 #include "Command_parser.h"
+#include "CommandFileSystem.h"
 #include "SSD.cpp"
 
 class BufferCommand {
 public:
-    BufferCommand() : CommandFileMgr(std::make_unique<CommandFileSystem>()){
+	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(std::make_unique<CommandFileSystem>()),
+		fs(filesystem) {
+	
       cmdList.clear();
     }
     void InitDir(void);
@@ -15,7 +18,8 @@ public:
 	int CheckValidCmdCount(void);
     void doFlush(std::vector<string>& fileList);
 	void DoBufferRead(char* data);
-    void PushCommand(CmdInfo cmdInfo);
+	void PushCommand(CmdInfo cmdInfo);
+   	
 private:
     void MergeEraseRange(CmdInfo* prevCMD, CmdInfo* curCMD);
     void MergeCMD(int cmd_index, std::vector<string> fileList);

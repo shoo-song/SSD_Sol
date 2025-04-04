@@ -1,14 +1,14 @@
 #include <iostream>
 #include <io.h>
 #include <iomanip>
-#include "command_parser.h"
+#include "Command_parser.h"
 #include <string>
 #include <sstream>
 
 using namespace std;
 
-void CommandParser::PrintError() {
-	if (FileObj == nullptr) return;
+bool CommandParser::PrintError() {
+	if (FileObj == nullptr) return false;
 	FileObj->writeInvalidLog();
 }
 
