@@ -1,25 +1,21 @@
 #pragma once
 #include "shell_command_interface.h"
-#include "shell_exception.cpp"
-#include "shell_util.cpp"
+#include "shell_exception.h"
+#include "shell_util.h"
 #include "ssddriver_interface.h"
 
-class ShellReadCommand: public ShellCommandInterface {
+class ShellWriteCommand : public ShellCommandInterface {
 public:
-	ShellReadCommand(SsdDriverInterface* pDriverInterface) {
+	ShellWriteCommand(SsdDriverInterface* pDriverInterface) {
 		mpDriverInterface = pDriverInterface;
 	}
 
 	string execute(vector<string> args) {
 		try {
 			vector<unsigned int> convertedArgs = convertCmdArgs(args);
-			string output = "[Read] LBA ";
-			
-			unsigned int result = mpDriverInterface->readSSD((int)convertedArgs[0]);
+			string output = "[Write] Done";
 
-			output += ShellUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
-			output += " : ";
-			output += ShellUtil::getUtilObj().toHexFormat(result);
+			mpDriverInterface->writeSSD((int)convertedArgs[0], convertedArgs[1]);
 
 			return output;
 		}
@@ -34,12 +30,13 @@ private:
 	vector<unsigned int>  convertCmdArgs(vector<string> args) {
 		try {
 			vector<unsigned int> output;
-
-			if (args.size() != 2) {
+			if (args.size() != 3) {
 				throw ShellArgConvertException("args parameter size invalid");
 			}
 
 			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
+			output.push_back(ShellUtil::getUtilObj().convertHexStringForData(args[2]));
+
 			return output;
 		}
 		catch (ShellArgConvertException e) {

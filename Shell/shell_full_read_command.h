@@ -1,7 +1,7 @@
 #pragma once
 #include "shell_command_interface.h"
-#include "shell_exception.cpp"
-#include "shell_util.cpp"
+#include "shell_exception.h"
+#include "shell_util.h"
 #include "ssddriver_interface.h"
 
 class ShellFullReadCommand : public ShellCommandInterface {

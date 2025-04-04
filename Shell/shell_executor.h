@@ -1,6 +1,6 @@
 #pragma once
-#include "shell_util.cpp"
-#include "shell_command_factory.cpp"
+#include "shell_util.h"
+#include "shell_command_factory.h"
 #include "ssddriver_interface.h"
 #include <sstream>
 

@@ -10,10 +10,10 @@
 #include <algorithm>
 #include <memory>
 #include "shell_script_command_interface.h"
-#include "shell_script_loop_command.cpp"
-#include "shell_script_compare_command.cpp"
-#include "shell_script_write_command.cpp"
-#include "shell_util.cpp"
+#include "shell_script_loop_command.h"
+#include "shell_script_compare_command.h"
+#include "shell_script_write_command.h"
+#include "shell_util.h"
 #include "script_parameter_generator.h"
 using std::shared_ptr;
 using std::make_shared;

@@ -5,9 +5,9 @@
 #include <string>
 #include <regex>
 #include <exception>
-#include "script_parser.cpp"
+#include "script_parser.h"
 #include "ssddriver_interface.h"
-#include "script_store.cpp"
+#include "script_store.h"
 
 namespace fs = std::filesystem;
 

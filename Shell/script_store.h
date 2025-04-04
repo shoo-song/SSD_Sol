@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include "shell_exception.cpp"
+#include "shell_exception.h"
 #include "shell_script_command_interface.h"
 
 using std::unordered_map;

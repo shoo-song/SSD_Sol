@@ -2,7 +2,7 @@
 #pragma once
 
 #include "common.h"
-#include "shell_exception.cpp"
+#include "shell_exception.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -19,12 +19,12 @@ public:
 
 	ShellScriptApiCommand parseScriptApiCmd(const string input) {
 		if (input.compare("WRITE") == 0) {
-		return WRITE_SCRIPT_COMMAND;
-	}
+			return WRITE_SCRIPT_COMMAND;
+		}
 		if (input.compare("COMPARE") == 0) {
 			return COMPARE_SCRIPT_COMMAND;
 		}
-		
+
 		return SCRIPT_UNKOWN;
 	}
 
@@ -126,7 +126,7 @@ public:
 		if (startLBA + size > 100) {
 			throw ShellArgConvertException("Erase Range over Max " + size);
 		}
-		
+
 		return size;
 	}
 
