@@ -3,9 +3,9 @@
 #include "SSD.cpp"
 #include "FileManager.h"
 #include "command_parser.h"
-#define UNIT_TEST
+//#define UNIT_TEST
 using namespace std;
-bool commandParse(int argc, CommandParser& parser, char* argv[])
+bool parseCommand(int argc, char* argv[], CommandParser& parser)
 {
 	if (argc == 3) {
 		return parser.parseArg(*argv[1], argv[2]);
@@ -15,9 +15,10 @@ bool commandParse(int argc, CommandParser& parser, char* argv[])
 	}
 	return false;
 }
-void executeCMD(CommandParser parser)
+void executeCMD(CommandParser& parser)
 {
 	SSD MySSD;
+
 	if (parser.GetCmdType() == CMD_WRITE) {
 		MySSD.DoWrite(parser.GetLBA(), parser.GetData());
 	}
@@ -27,14 +28,16 @@ void executeCMD(CommandParser parser)
 	else if (parser.GetCmdType() == CMD_ERASE) {
 		MySSD.DoErase(parser.GetLBA(), parser.GetEraseEndLBA() - parser.GetLBA() + 1);
 	}
+
 }
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
 	CommandParser parser;
 	bool invalid = false;
-	invalid = commandParse(argc, parser, argv);
+	invalid = parseCommand(argc, argv, parser );
 	if (invalid == false) return 0;
-	executeCMD(parser.GetExcuteCMD());
+
+	executeCMD(parser);
 
 	return 0;
 }
