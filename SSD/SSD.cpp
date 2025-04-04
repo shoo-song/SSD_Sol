@@ -20,12 +20,6 @@ public:
 
 		DataFileMgr->WriteFile(LBA, data);
 	}
-	void DoFlush() {
-		//buffer 내 doFlush() 로 구현하면 될듯
-
-
-	}
-
 	void DoErase(const int& StartLBA, int LBACount) {
 
 		char ErasePattern[20] = "0x00000000";

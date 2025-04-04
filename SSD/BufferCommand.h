@@ -7,8 +7,8 @@
 
 class BufferCommand {
 public:
-	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(std::make_unique<CommandFileSystem>()),
-		fs(filesystem) {
+	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(std::make_unique<CommandFileSystem>())
+	{
 	
       cmdList.clear();
     }
@@ -16,7 +16,7 @@ public:
     void InitCmdList(void);
     CmdInfo extractCMDfromFileName( std::string& file);
 	int CheckValidCmdCount(void);
-    void doFlush(std::vector<string>& fileList);
+    void doFlush(void);
 	void DoBufferRead(char* data);
 	void PushCommand(CmdInfo cmdInfo);
    	
