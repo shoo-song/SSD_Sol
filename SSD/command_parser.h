@@ -5,6 +5,13 @@
 #define CMD_ERASE (2)
 #define MAX_LBA (99)
 #define MAX_ERASE_SIZE (10)
+
+struct CmdInfo {
+	char CMDType;
+	string LBA;
+	char input_data[20];
+};
+
 struct SSDCommand {
 	int CMDType = 0;
 	int LBA = 0;

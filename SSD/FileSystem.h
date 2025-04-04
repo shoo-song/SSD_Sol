@@ -1,5 +1,6 @@
 #pragma once
-
+#include "iostream"
+#include <fstream>
 #include <cstdlib>   // system()
 #include <cstdio>    // remove()
 #include <memory>    // std::unique_ptr
@@ -7,10 +8,10 @@
 #include <string>
 #include <vector>
 #include <windows.h> 
+using namespace std;
 
 class FileSystem {
-public:
-   
+public:  
 
     bool directoryExists(const std::string& path) {
         struct stat info;

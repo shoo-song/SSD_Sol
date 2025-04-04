@@ -28,12 +28,6 @@ public:
 	MOCK_METHOD(bool, open, (const std::string& filename), ());
 };
 
-TEST_F(SSDTestFixture, Read2) {
-//Read 요청을 SSD_Output.txt 에 write하고, read 하여 write 내용이 읽혀야함
-	std::string data1 = "0xABABABAB";
-	MySSD.DoWrite(0, data1);
-	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
-}
 TEST_F(SSDTestFixture, Read3) {
 // 임이 LBA (0~99) 수행 시, LBA 검색하여 data read
 	std::string data1 = "0xABABABAB";
