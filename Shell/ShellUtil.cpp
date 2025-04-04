@@ -81,24 +81,57 @@ public:
 	}
 
 	// Size 문자열 변환 (10진수, 0~100)
-	unsigned int convertStrForSize(const std::string& size) {
-		size_t pos;
-		unsigned int value = std::stoi(size, &pos, 10);
+	unsigned int convertStrForSize(const std::string& LBA1, const std::string& size) {
+		size_t startPos, sizePos;
+		unsigned int startLBA = std::stoi(LBA1, &startPos, 10);
+		unsigned int sizeLBA = std::stoi(size, &sizePos, 10);
+		unsigned int totalSize = startLBA + sizeLBA;
 
 		// 변환된 길이 확인 (예: "12abc" 방지)
-		if (pos != size.length()) {
+		if (sizePos != size.length()) {
 			throw ShellArgConvertException("Invalid characters in input: " + size);
 		}
 
 		// 범위 검사
-		if (value < 0 || value > 100) {
+		if (sizeLBA < 0 || sizeLBA > 100) {
 			throw ShellArgConvertException("Value out of range (0-100): " + size);
 		}
 
-		return value;
+		// LBA + Range가 MAX 초과
+		if (totalSize > 100) {
+			throw ShellArgConvertException("Erase Range over Max " + size);
+		}
+
+		return sizeLBA;
 	}
 
-	
+	unsigned int convertLBAtoSize(const std::string& LBA1, const std::string& LBA2) {
+		size_t pos;
+		unsigned int startLBA = std::stoi(LBA1, &pos, 10);
+		unsigned int endLBA = std::stoi(LBA2, &pos, 10);
+
+		// 변환된 길이 확인 (예: "12abc" 방지)
+		if (pos != LBA2.length()) {
+			throw ShellArgConvertException("Invalid characters in input: " + LBA2);
+		}
+
+		// 범위 검사
+		if (endLBA < 0 || endLBA > 99) {
+			throw ShellArgConvertException("Value out of range (0-99): " + LBA2);
+		}
+
+		if (startLBA > endLBA) {
+			throw ShellArgConvertException("Start LBA : " + LBA1 + ' ' + "End LBA : " + LBA2);
+		}
+
+		unsigned int size = endLBA - startLBA + 1;
+
+		if (startLBA + size > 100) {
+			throw ShellArgConvertException("Erase Range over Max " + size);
+		}
+		
+		return size;
+	}
 
 	// Data 문자열 변환 (16진수, "0x" + 8자리)
 	unsigned int convertHexStringForData(const std::string& input) {

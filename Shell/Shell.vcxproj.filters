@@ -125,6 +125,9 @@
     <ClCompile Include="ShellEraseCommand.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
+    <ClCompile Include="ShellEraseRangeCommand.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

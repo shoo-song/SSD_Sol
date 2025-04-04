@@ -4,16 +4,16 @@
 #include "ShellUtil.cpp"
 #include "ssddriver_interface.h"
 
-class ShellEraseCommand : public ShellCommandInterface {
+class ShellEraseRangeCommand : public ShellCommandInterface {
 public:
-	ShellEraseCommand(SsdDriverInterface* pDriverInterface) {
+	ShellEraseRangeCommand(SsdDriverInterface* pDriverInterface) {
 		mpDriverInterface = pDriverInterface;
 	}
 
 	string execute(vector<string> args) {
 		try {
 			vector<unsigned int> convertedArgs = convertCmdArgs(args);
-			string output = "[Erase] Done";
+			string output = "[Full Erase] Done";
 
 			mpDriverInterface->eraseSSD((int)convertedArgs[0], (int)convertedArgs[1]);
 
@@ -37,7 +37,7 @@ private:
 
 			// LBA String으로 변환.
 			output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
-			output.push_back(ShellUtil::getUtilObj().convertStrForSize(args[1], args[2]));
+			output.push_back(ShellUtil::getUtilObj().convertLBAtoSize(args[1], args[2]));
 
 			return output;
 		}
