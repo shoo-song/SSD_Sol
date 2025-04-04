@@ -8,11 +8,8 @@ using std::string;
 
 class ShellArgConvertException : public std::exception {
 public:
-	explicit ShellArgConvertException(const std::string& msg) : message(msg) {}
-
-	const char* what() const noexcept override {
-		return message.c_str();
-	}
+	explicit ShellArgConvertException(const std::string& msg);
+	const char* what() const noexcept override;
 private:
 	string message;
 };

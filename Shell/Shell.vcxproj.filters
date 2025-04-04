@@ -146,6 +146,42 @@
     <ClCompile Include="shell_executor.h">
       <Filter>소스 파일\shell</Filter>
     </ClCompile>
+    <ClCompile Include="shell_util.cpp">
+      <Filter>소스 파일\common</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_command_factory.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_range_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_exception.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_exit_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_flush_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_full_read_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_help_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_read_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_run_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_write_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
