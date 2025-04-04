@@ -13,7 +13,7 @@
 #include "../FileSystem.h"
 using namespace testing;
 
-#define UNIT_TEST
+//#define UNIT_TEST
 class SSDTestFixture : public Test
 {
 public:
