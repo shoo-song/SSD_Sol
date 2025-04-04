@@ -38,6 +38,7 @@ void BufferCommand::doFlush(void)
         else {
             //error
         }
+        CurCmd.IsValid = false;
     }
 }
 void BufferCommand::DoBufferRead(char* data) {
@@ -76,6 +77,7 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
                 fileList[i] = newFileName;
                 cmdList[i].IsValid = false;
             }
+            cmdList[0] = cmdInfo;
             cmd_idx = 0;
         }
         MergeCMD(cmd_idx, fileList);
