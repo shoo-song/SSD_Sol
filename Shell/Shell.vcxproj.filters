@@ -164,9 +164,6 @@
     <ClCompile Include="shell_exit_command.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="shell_flush_command.cpp">
-      <Filter>소스 파일\shell\shellcommand</Filter>
-    </ClCompile>
     <ClCompile Include="shell_full_read_command.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
@@ -180,6 +177,9 @@
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="shell_write_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_flush_command.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
   </ItemGroup>
