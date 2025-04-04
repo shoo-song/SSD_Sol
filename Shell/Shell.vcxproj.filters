@@ -50,7 +50,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellInterfaceUt.cpp">
+    <ClCompile Include="shell_interface_ut.cpp">
       <Filter>UT</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver_ut.cpp">
@@ -59,16 +59,16 @@
     <ClCompile Include="ssddriver.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellCommandFactory.cpp">
+    <ClCompile Include="shell_command_factory.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellException.cpp">
+    <ClCompile Include="shell_exception.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellReadCommand.cpp">
+    <ClCompile Include="shell_read_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellWriteCommand.cpp">
+    <ClCompile Include="shell_write_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
@@ -77,26 +77,20 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShellHelpCommand.cpp">
+    <ClCompile Include="shell_help_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellFullReadCommand.cpp">
+    <ClCompile Include="shell_full_read_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellFullWriteCommand.cpp">
+    <ClCompile Include="shell_full_write_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellExitCommand.cpp">
+    <ClCompile Include="shell_exit_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="Shell.cpp">
+    <ClCompile Include="shell.h">
       <Filter>소스 파일\shell</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellExecutor.cpp">
-      <Filter>소스 파일\shell</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellUtil.cpp">
-      <Filter>소스 파일\common</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver_exception.cpp">
       <Filter>소스 파일\driver</Filter>
@@ -119,26 +113,104 @@
     <ClCompile Include="logger_exception.cpp">
       <Filter>소스 파일\logger</Filter>
     </ClCompile>
-    <ClCompile Include="ShellScriptCompareCommand.cpp">
-      <Filter>소스 파일\shell\shellscript</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScriptWriteCommand.cpp">
-      <Filter>소스 파일\shell\shellscript</Filter>
-    </ClCompile>
-    <ClCompile Include="ShellScriptRunCommand.cpp">
+    <ClCompile Include="shell_erase_command.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
-    <ClCompile Include="ShellScriptLoopCommand.cpp">
+    <ClCompile Include="shell_erase_range_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_flush_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_compare_command.h">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptParser.cpp">
+    <ClCompile Include="shell_script_write_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_run_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_loop_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="script_parser.h">
       <Filter>소스 파일\shell\shellscript\parser</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptStore.cpp">
+    <ClCompile Include="script_store.h">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptLoader.cpp">
+    <ClCompile Include="script_loader.h">
       <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_executor.h">
+      <Filter>소스 파일\shell</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_util.cpp">
+      <Filter>소스 파일\common</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_command_factory.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_erase_range_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_exception.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_exit_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_full_read_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_help_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_read_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_run_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_write_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_flush_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="script_parser.cpp">
+      <Filter>소스 파일\shell\shellscript\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="script_parameter_generator.cpp">
+      <Filter>소스 파일\shell\shellscript\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="script_loader.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="script_store.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_compare_command.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_loop_command.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_write_command.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="shell.cpp">
+      <Filter>소스 파일\shell</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_executor.cpp">
+      <Filter>소스 파일\shell</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_full_write_command.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,27 +233,27 @@
     <ClInclude Include="ssddriver.h">
       <Filter>소스 파일\driver</Filter>
     </ClInclude>
-    <ClInclude Include="ssddriver_exception.h">
-      <Filter>소스 파일\driver</Filter>
-    </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>소스 파일\logger</Filter>
     </ClInclude>
-    <ClInclude Include="ShellScriptCommandInterface.h">
+    <ClInclude Include="shell_script_command_interface.h">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptParameterGenerator.h">
+    <ClInclude Include="script_parameter_generator.h">
       <Filter>소스 파일\shell\shellscript\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_util.h">
+      <Filter>소스 파일\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dummy_file1.txt">
       <Filter>UT\dummy_files</Filter>
     </Text>
-    <ClInclude Include="Common.h">
+    <ClInclude Include="common.h">
       <Filter>소스 파일\common</Filter>
     </ClInclude>
-    <ClInclude Include="ShellCommandInterface.h">
+    <ClInclude Include="shell_command_interface.h">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClInclude>
     <Text Include="runner_script1.txt">

@@ -52,7 +52,7 @@ bool DataFileSystem::WriteFile(int LBA, string data) {
 bool DataFileSystem::ReadFile(int LBA, bool bCached, char* cached_data) {
 	bool result = true;
 	char data_buf[20] = {};
-	if (bCached != true) {
+	if (bCached != true) {		
 		if (NandFileOpen()) {
 			Nand_file_.seekg(LBA * BYTE_PER_LBA);
 			Nand_file_.read(data_buf, 10);

@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "iostream"
 #include <fstream>
 #include <cstdlib>   // system()
@@ -12,7 +11,7 @@
 using namespace std;
 
 class CommandFileSystem {
-public:
+public:  
 
     bool directoryExists(const std::string& path) {
         struct stat info;
@@ -41,8 +40,8 @@ public:
         }
     }
 
-    void updateFileName(string oldName, string newName) {
-
+    void updateFileName(string oldName, string newName) { 
+       
         if (!fileExists(oldName)) {
             std::cout << "파일이 존재하지 않습니다: " << oldName << std::endl;    // errro log 필요
         }
