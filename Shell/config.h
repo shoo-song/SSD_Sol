@@ -12,6 +12,7 @@ namespace config {
     extern const std::string READ_MARKER;
     extern const std::string WRITE_MARKER;
     extern const std::string ERASE_MARKER;
+    extern const std::string FLUSH_MARKER;
 }
 
 #endif // !CONFIG_H_

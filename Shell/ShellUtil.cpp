@@ -59,6 +59,9 @@ public:
 		if (commandArg.compare("erase_range") == 0) {
 			return ERASERANGE_COMMAND;
 		}
+		if (commandArg.compare("flush") == 0) {
+			return FLUSH_COMMAND;
+		}
 		return UNKOWN;
 	}
 

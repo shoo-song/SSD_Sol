@@ -11,4 +11,5 @@ namespace config {
     const std::string READ_MARKER = "SSD.exe R ";
     const std::string WRITE_MARKER = "SSD.exe W ";
     const std::string ERASE_MARKER = "SSD.exe E ";
+    const std::string FLUSH_MARKER = "SSD.exe F ";
 }

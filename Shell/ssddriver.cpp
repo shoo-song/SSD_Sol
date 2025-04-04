@@ -65,3 +65,10 @@ void SsdDriver::eraseSSD(int LBA, int size) {
 
     executeCmd(cmdLine);
 }
+
+void SsdDriver::flushSSD() {
+    std::string cmd = config::FLUSH_MARKER;
+    const char* cmdLine = cmd.c_str();
+
+    executeCmd(cmdLine);
+}

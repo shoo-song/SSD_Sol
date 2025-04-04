@@ -138,6 +138,7 @@
     <ClCompile Include="ShellEraseRangeCommand.cpp" />
     <ClCompile Include="ShellException.cpp" />
     <ClCompile Include="ShellExitCommand.cpp" />
+    <ClCompile Include="ShellFlushCommand.cpp" />
     <ClCompile Include="ShellFullReadCommand.cpp" />
     <ClCompile Include="ShellFullWriteCommand.cpp" />
     <ClCompile Include="ShellHelpCommand.cpp" />

@@ -10,6 +10,7 @@
 #include "ShellExitCommand.cpp"
 #include "ShellEraseCommand.cpp"
 #include "ShellEraseRangeCommand.cpp"
+#include "ShellFlushCommand.cpp"
 #include "ShellScript1.cpp"
 #include "ShellScript2.cpp"
 #include "ShellScript3.cpp"
@@ -41,6 +42,8 @@ public:
 				return std::make_shared<ShellEraseCommand>(mpDriverInterface);
 			case ERASERANGE_COMMAND:
 				return std::make_shared<ShellEraseRangeCommand>(mpDriverInterface);
+			case FLUSH_COMMAND:
+				return std::make_shared<ShellFlushCommand>(mpDriverInterface);
 			case SCRIPT_1:
 				return std::make_shared<ShellScript1>(mpDriverInterface);
 			case SCRIPT_2:
