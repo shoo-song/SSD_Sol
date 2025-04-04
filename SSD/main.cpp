@@ -1,44 +1,37 @@
 #pragma once
 #include <iostream>
 #include "SSD.cpp"
-#include "FileManager.h"
+//#include "FileManager.h"
 #include "command_parser.h"
-//#define UNIT_TEST
+#include "BufferCommand.h"
+
 using namespace std;
-bool parseCommand(int argc, char* argv[], CommandParser& parser)
+CmdInfo commandParse(int argc, char* argv[])
 {
+	CommandParser parser;
+	CmdInfo ErrorCmd;
 	if (argc == 3) {
-		return parser.parseArg(*argv[1], argv[2]);
+		return parser.parseArg(argc, *argv[1], argv[2]);
 	}
 	else if (argc == 4) {
-		return parser.parseArg(*argv[1], argv[2], argv[3]);
+		return parser.parseArg(argc , *argv[1], argv[2], argv[3]);
 	}
-	return false;
+	ErrorCmd.IsValid = false;
+	return ErrorCmd;
 }
-void executeCMD(CommandParser& parser)
+void executeCMD(CmdInfo Command)
 {
-	SSD MySSD;
-
-	if (parser.GetCmdType() == CMD_WRITE) {
-		MySSD.DoWrite(parser.GetLBA(), parser.GetData());
-	}
-	else if (parser.GetCmdType() == CMD_READ) {
-		MySSD.DoRead(parser.GetLBA());
-	}
-	else if (parser.GetCmdType() == CMD_ERASE) {
-		MySSD.DoErase(parser.GetLBA(), parser.GetEraseEndLBA() - parser.GetLBA() + 1);
-	}
-
+	BufferCommand CMDBuf;
+	CMDBuf.PushCommand(Command);
 }
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
-	CommandParser parser;
-	bool invalid = false;
-	invalid = parseCommand(argc, argv, parser );
-	if (invalid == false) return 0;
-
-	executeCMD(parser);
-
+	CmdInfo Command = commandParse(argc, argv);
+	if (!Command.IsValid) {
+		return 0;
+	}
+	cout << Command.CMDType;
+	executeCMD(Command);
 	return 0;
 }
 #endif
