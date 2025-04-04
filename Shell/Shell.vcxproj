@@ -138,8 +138,11 @@
     <ClCompile Include="ScriptStore.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="ShellCommandFactory.cpp" />
+    <ClCompile Include="ShellEraseCommand.cpp" />
+    <ClCompile Include="ShellEraseRangeCommand.cpp" />
     <ClCompile Include="ShellException.cpp" />
     <ClCompile Include="ShellExitCommand.cpp" />
+    <ClCompile Include="ShellFlushCommand.cpp" />
     <ClCompile Include="ShellFullReadCommand.cpp" />
     <ClCompile Include="ShellFullWriteCommand.cpp" />
     <ClCompile Include="ShellHelpCommand.cpp" />
@@ -177,7 +180,6 @@
     <ClInclude Include="ShellCommandInterface.h" />
     <ClInclude Include="ShellScriptCommandInterface.h" />
     <ClInclude Include="ssddriver.h" />
-    <ClInclude Include="ssddriver_exception.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dummy_file1.txt" />

@@ -119,7 +119,16 @@
     <ClCompile Include="logger_exception.cpp">
       <Filter>소스 파일\logger</Filter>
     </ClCompile>
-    <ClCompile Include="ShellScriptCompareCommand.cpp">
+    <ClCompile Include="ShellEraseCommand.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellEraseRangeCommand.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellFlushCommand.cpp">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClCompile>
+        <ClCompile Include="ShellScriptCompareCommand.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
     <ClCompile Include="ShellScriptWriteCommand.cpp">
@@ -140,6 +149,7 @@
     <ClCompile Include="ScriptLoader.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -159,9 +169,6 @@
       <Filter>소스 파일\driver</Filter>
     </ClInclude>
     <ClInclude Include="ssddriver.h">
-      <Filter>소스 파일\driver</Filter>
-    </ClInclude>
-    <ClInclude Include="ssddriver_exception.h">
       <Filter>소스 파일\driver</Filter>
     </ClInclude>
     <ClInclude Include="logger.h">

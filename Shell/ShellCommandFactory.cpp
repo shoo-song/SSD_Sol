@@ -8,6 +8,9 @@
 #include "ShellFullWriteCommand.cpp"
 #include "ShellHelpCommand.cpp"
 #include "ShellExitCommand.cpp"
+#include "ShellEraseCommand.cpp"
+#include "ShellEraseRangeCommand.cpp"
+#include "ShellFlushCommand.cpp"
 #include "ShellScriptRunCommand.cpp"
 #include <memory>
 
@@ -33,6 +36,13 @@ public:
 				return std::make_shared<ShellHelpCommand>();
 			case EXIT_COMMAND:
 				return std::make_shared<ShellExitCommand>();
+			case ERASE_COMMAND:
+				return std::make_shared<ShellEraseCommand>(mpDriverInterface);
+			case ERASERANGE_COMMAND:
+				return std::make_shared<ShellEraseRangeCommand>(mpDriverInterface);
+			case FLUSH_COMMAND:
+				return std::make_shared<ShellFlushCommand>(mpDriverInterface);
+
 		}
 		return std::make_shared<ShellScriptRunnerCommand>();
 	}

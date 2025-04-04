@@ -135,7 +135,7 @@ void Logger::print(const std::string& location, const std::string& message) {
             << " : " << message;
 
         std::string output = oss.str();
-        std::cout << output << std::endl;
+        // std::cout << output << std::endl;
 
         if (logFile_.is_open()) {
             logFile_ << output << std::endl;
