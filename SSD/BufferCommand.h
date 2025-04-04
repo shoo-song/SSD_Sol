@@ -14,16 +14,27 @@ public:
     void InitCmdList(void);
     CmdInfo extractCMDfromFileName( std::string& file);
 	int CheckValidCmdCount(void);
-    void doFlush(void);
-	void DoBufferRead(char* data);
+    void doFlushOperation(void);
 	void PushCommand(CmdInfo cmdInfo);
+
+    void doFlushBuffer(std::vector<std::string>& fileList);
+
+    void doReadBuffer(CmdInfo& cmdInfo, std::vector<std::string>& fileList);
+
+    void doWriteAndEraseBuffer(std::vector<std::string>& fileList, CmdInfo& cmdInfo);
+
+    void changeFileNameToEmpty( std::vector<std::string>& fileList);
    	
 private:
     void MergeEraseRange(CmdInfo* prevCMD, CmdInfo* curCMD);
     void MergeCMD(int cmd_index, std::vector<string> fileList);
     std::vector<CmdInfo> cmdList;
     CommandFileSystem& CommandFileMgr;
-    std::unique_ptr<DataFileSystem> DataFileMgr;
 	SSD MySSD;
+
+    bool isEmptyBuffer(string name) {
+        return (name == "empty") ? true : false;
+    }
+
 };
 

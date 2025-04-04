@@ -12,17 +12,19 @@
 #include "../command_parser.h"
 #include "../BufferCommand.h"
 #include "../CommandFileSystem.h"
+
 using namespace testing;
-#define UNIT_TEST
+//#define UNIT_TEST
 class SSDTestFixture : public Test
 {
 public:
 	SSD MySSD;
 	DataFileSystem FileMgr;
 	CommandParser InputParser;
-	CommandFileSystem filesystem;
-	//BufferCommand temp;
+	
+	CommandFileSystem fs;
 	CmdInfo cmd;
+	std::vector<CmdInfo> cmdList;
 };
 
 class MockFile : public DataFileSystem {
@@ -304,37 +306,37 @@ TEST_F(SSDTestFixture, CMDMergeTest5)
 TEST_F(SSDTestFixture, CreateBufferFolder) {
 	std::string testDir = "buffer";
 	// 1️. 폴더 생성
-	filesystem.createDirectory();
-	EXPECT_TRUE(filesystem.directoryExists(testDir)) << "폴더 생성 실패";
+	fs.createDirectory();
+	EXPECT_TRUE(fs.directoryExists(testDir)) << "폴더 생성 실패";
 
 	// 2️. 폴더 삭제
-	filesystem.removeDirectory(testDir);
-	EXPECT_FALSE(filesystem.directoryExists(testDir)) << "폴더 삭제 실패";
+	fs.removeDirectory(testDir);
+	EXPECT_FALSE(fs.directoryExists(testDir)) << "폴더 삭제 실패";
 }
 
 TEST_F(SSDTestFixture, CreateEmptyFiles) {
 	// given : create buffer directory
-	filesystem.createDirectory();
+	fs.createDirectory();
 
 	std::string testFile = "empty";
-	EXPECT_FALSE( filesystem.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
+	EXPECT_FALSE( fs.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
 
-	filesystem.createFiles();
+	fs.createFiles();
 
-	EXPECT_EQ(true, filesystem.fileExists("0_empty"));
-	EXPECT_EQ(true, filesystem.fileExists("1_empty"));
-	EXPECT_EQ(true, filesystem.fileExists("2_empty"));
-	EXPECT_EQ(true, filesystem.fileExists("3_empty"));
-	EXPECT_EQ(true, filesystem.fileExists("4_empty"));
+	EXPECT_EQ(true, fs.fileExists("0_empty"));
+	EXPECT_EQ(true, fs.fileExists("1_empty"));
+	EXPECT_EQ(true, fs.fileExists("2_empty"));
+	EXPECT_EQ(true, fs.fileExists("3_empty"));
+	EXPECT_EQ(true, fs.fileExists("4_empty"));
 }	
 
 TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
 {
 	// given : initialize output file	
-	filesystem.createFiles();
+	fs.createFiles();
 
 	std::vector<std::string> fileNames;
-	fileNames = filesystem.makeCmdList();
+	fileNames = fs.makeCmdList();
 
 	std::vector<std::string> expectedFiles = { "0_empty", "1_empty", "2_empty", "3_empty", "4_empty" };
 	for (auto name : fileNames) {
@@ -345,23 +347,20 @@ TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
 TEST_F(SSDTestFixture, updateFileName)
 {
 	// given : initialize output file	
-	filesystem.createFiles();
+	fs.createFiles();
 
 	std::vector<std::string> fileNames;
-	fileNames = filesystem.makeCmdList();
+	fileNames = fs.makeCmdList();
 
 	string newName = "0_W_0_0x12345678";
 	string oldName = fileNames[0];
-	filesystem.updateFileName(oldName, newName);
-	EXPECT_EQ(true, filesystem.fileExists(newName));
+	fs.updateFileName(oldName, newName);
+	EXPECT_EQ(true, fs.fileExists(newName));
 }
-
-
 
 TEST_F(SSDTestFixture, bufferFlush)
 {
 	// given : initialize output file	
-	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
 	fs.createFiles();
@@ -369,17 +368,18 @@ TEST_F(SSDTestFixture, bufferFlush)
 	fileNames = fs.makeCmdList();
 
 	BufferCommand buffer(fs);
-	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
 		CmdInfo cmd;
 		cmd.CMDType = 'W';
 		cmd.LBA = i;
-		cmd.LBAString = to_string(i);
+		cmd.LBAString = InputParser.toTwoDigitString(stoi(to_string(i)));
+		cmd.IsValid = true;
 		strcpy_s(cmd.input_data, "0x43211234");
 
 		cmdList.push_back(cmd);
 		buffer.PushCommand(cmd);
+		buffer.InitCmdList();
 	}
 
 	// 6번쨰 CMD
@@ -388,24 +388,24 @@ TEST_F(SSDTestFixture, bufferFlush)
 	cmd.CMDType = 'W';
 	cmd.LBA = LBA;
 	cmd.LBAString = to_string(LBA);
+	cmd.IsValid = true;
 	strcpy_s(cmd.input_data, "0x87654321");
 
 	cmdList.push_back(cmd);
 	buffer.PushCommand(cmd);
+	buffer.InitCmdList();
 
 	// NAND에서 확인
 	std::string data1 = "0x43211234";	
 	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 
-	// empty file 확인
-	EXPECT_TRUE(fs.fileExists("0_empty"));
 }
-#if 0
-TEST_F(SSDTestFixture, extractCMDfromFile)
+
+TEST_F(SSDTestFixture, flushCommand)
 {
 	// given : initialize output file	
-	CommandFileSystem fs;
+	//CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
 	fs.createFiles();
@@ -413,34 +413,78 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	fileNames = fs.makeCmdList();
 
 	BufferCommand buffer(fs);
-	std::vector<CmdInfo> cmdList;
+	
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 10; i < 12; i++) {
 		CmdInfo cmd;
 		cmd.CMDType = 'W';
 		cmd.LBA = i;
-		cmd.LBAString = to_string(i);
+		cmd.LBAString = InputParser.toTwoDigitString(stoi(to_string(i)));
+		cmd.IsValid = true;
+		strcpy_s(cmd.input_data, "0xAAfffBBB");
+		string newName = "0_W_0xAAfffBBB";
+		cmdList.push_back(cmd);
+		buffer.PushCommand(cmd);
+		buffer.InitCmdList();
+	}
+
+	int LBA = 10;
+	CmdInfo cmd;
+	cmd.CMDType = 'F';;
+	cmd.IsValid = true;
+
+	cmdList.push_back(cmd);
+	buffer.PushCommand(cmd);
+	buffer.InitCmdList();
+
+	EXPECT_EQ(true, fs.fileExists("0_empty"));
+	EXPECT_EQ(true, fs.fileExists("1_empty"));
+	EXPECT_EQ(true, fs.fileExists("2_empty"));
+	EXPECT_EQ(true, fs.fileExists("3_empty"));
+	EXPECT_EQ(true, fs.fileExists("4_empty"));
+
+}
+
+TEST_F(SSDTestFixture, fastRead) {
+	// given : initialize output file	
+	//CommandFileSystem fs;
+	fs.removeDirectory("buffer");
+	fs.createDirectory();
+	fs.createFiles();
+	std::vector<std::string> fileNames;
+	fileNames = fs.makeCmdList();
+
+	BufferCommand buffer(fs);
+
+	for (int i = 10; i < 12; i++) {
+		CmdInfo cmd;
+		cmd.CMDType = 'W';
+		cmd.LBA = i;
+		cmd.LBAString = InputParser.toTwoDigitString(stoi(to_string(i)));
+		cmd.IsValid = true;
 		strcpy_s(cmd.input_data, "0xAAAABBBB");
 		string newName = "0_W_0xAAAABBBB";
 		cmdList.push_back(cmd);
 		buffer.PushCommand(cmd);
+		buffer.InitCmdList();
 	}
-	// 6번쨰 CMD
-	int LBA = 0;
+	// 3번쨰 CMD : fast read test
+	int LBA = 10;
 	CmdInfo cmd;
 	cmd.CMDType = 'R';
 	cmd.LBA = LBA;
-	cmd.LBAString = to_string(LBA);
+	cmd.LBAString = InputParser.toTwoDigitString(stoi(to_string(LBA)));
+	cmd.IsValid = true;
 
 	cmdList.push_back(cmd);
 	buffer.PushCommand(cmd);
+	buffer.InitCmdList();
 
 	// NAND에서 확인
 	std::string data1 = "0xAAAABBBB";
-	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-#endif
+
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();

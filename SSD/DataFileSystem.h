@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-//#include "FIleSystem.h"
 using namespace std;
 
 
@@ -24,4 +23,11 @@ protected:
 	std::fstream Nand_file_;
 	std::fstream Output_file_;
 	int BYTE_PER_LBA = 10;
+
+	char filename_nand[100] = "ssd_nand.txt";
+	char filename_output[100] = "ssd_output.txt";
+
+	bool OpenFile(std::ios::openmode mode);
+	void WriteToFile(string data, bool bData);
+
 };

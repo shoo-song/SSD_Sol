@@ -145,6 +145,7 @@
     <ClInclude Include="BufferCommand.h" />
     <ClInclude Include="Command_parser.h" />
     <ClInclude Include="CommandFileSystem.h" />
+    <ClInclude Include="UT\UT.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

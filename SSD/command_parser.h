@@ -1,13 +1,16 @@
 #pragma once
 #include "DataFileSystem.h"
-#define CMD_WRITE ('W')
-#define CMD_READ ('R')
-#define CMD_ERASE ('E')
-#define CMD_FLUSH ('F')
-#define MAX_LBA_COUNT (100)
-#define MAX_ERASE_SIZE (10)
 using namespace std;
 
+#define MAX_LBA_COUNT (100)
+#define MAX_ERASE_SIZE (10)
+
+enum CommandType {
+	CMD_WRITE = 'W',
+	CMD_READ = 'R',
+	CMD_ERASE = 'E',
+	CMD_FLUSH = 'F'
+};
 struct CmdInfo {
 	char CMDType;
 	int LBA;
@@ -21,20 +24,21 @@ class CommandParser {
 public:
 	CommandParser() : FileObj(std::make_unique<DataFileSystem>()) {
 	}
+		
+	bool checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data);
+	string toTwoDigitString(unsigned int value);
+	CmdInfo parseArg(int argCount, char CMD, string LBAstring = NULL, char* data = NULL);
+
+private:
+	std::unique_ptr<DataFileSystem> FileObj;
 
 	bool PrintError();
-
-	bool checkWriteDataInvalidity(char* data, uint32_t& LBA, size_t& pos);
-
 	bool checkLBAInvalidity(size_t pos, std::string& LBAstring, uint32_t LBA);
 
 	bool checkCmdTypeInvalidity(const char& CMD);
 
-	bool NewFunction(size_t pos, std::string& LBAstring, uint32_t LBA, bool& retFlag);
+	bool checkEraseSize(int argCount, char* data, uint32_t LBA);
 
-	bool checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data);
-	string toTwoDigitString(unsigned int value);
-	CmdInfo parseArg(int argCount, char CMD, string LBAstring, char* data = NULL);
-private:
-	std::unique_ptr<DataFileSystem> FileObj;
+	bool checkWriteDataInvalidity(int argCount, char* data, size_t& pos);
+
 };

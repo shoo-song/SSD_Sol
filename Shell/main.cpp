@@ -9,6 +9,7 @@ int main(int argc, char** argv) {
     return RUN_ALL_TESTS();
 }
 #else
+#if 0
 #include "logger.h"
 #include "shell.h"
 
@@ -20,4 +21,5 @@ int main(int argc, char** argv) {
     shell.runShell(argc, argv);
     return 0;
 }
+#endif
 #endif

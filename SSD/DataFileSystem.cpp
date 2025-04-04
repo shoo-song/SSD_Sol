@@ -7,15 +7,20 @@
 #include "DataFileSystem.h"
 using namespace std;
 
+bool DataFileSystem::OpenFile(std::ios::openmode mode) {
+	Output_file_.open(filename_output, mode | std::ios::binary);
+	return Output_file_.is_open();
+}
+
 bool DataFileSystem::NandFileOpen(void) {
-	char filename_nand[100] = "ssd_nand.txt";
+	
 	if (_access(filename_nand, 0) == -1) {
 		Nand_file_.open(filename_nand, std::ios::out | std::ios::binary);
 		if (Nand_file_.is_open()) {
 			for (int formatLBA = 0; formatLBA < 100; formatLBA++) {
 				Nand_file_.seekp(formatLBA * BYTE_PER_LBA);
-				Nand_file_ << std::setw(10) << "0x00000000";
-				Nand_file_.flush();
+
+				WriteToFile("0x00000000", true);
 			}
 			Nand_file_.close();
 		}
@@ -27,14 +32,10 @@ bool DataFileSystem::NandFileOpen(void) {
 	return Nand_file_.is_open();
 }
 bool DataFileSystem::OutputFileOpenForWrite(void) {
-	char filename_output[100] = "ssd_output.txt";
-	Output_file_.open(filename_output, std::ios::out | std::ios::binary);
-	return Output_file_.is_open();
+	return OpenFile(std::ios::out);
 }
 bool DataFileSystem::OutputFileOpenForRead(void) {
-	char filename_output[100] = "ssd_output.txt";
-	Output_file_.open(filename_output, std::ios::in | std::ios::binary);
-	return Output_file_.is_open();
+	return OpenFile(std::ios::in);
 }
 
 bool DataFileSystem::WriteFile(int LBA, string data) {
@@ -42,6 +43,8 @@ bool DataFileSystem::WriteFile(int LBA, string data) {
 		Nand_file_.seekp(LBA * BYTE_PER_LBA);
 		Nand_file_ << std::setw(10) << data;
 		Nand_file_.flush();
+
+		WriteToFile(data, true);
 		CloseFiles();
 	}
 	else {
@@ -49,6 +52,16 @@ bool DataFileSystem::WriteFile(int LBA, string data) {
 	}
 	return true;
 }
+
+void DataFileSystem::WriteToFile(string data, bool bData) {
+	if (bData)
+		Output_file_ << std::setw(10) << data;
+	else 
+		Output_file_ << data;
+
+	Output_file_.flush();
+}
+
 bool DataFileSystem::ReadFile(int LBA, bool bCached, char* cached_data) {
 	bool result = true;
 	char data_buf[20] = {};
@@ -67,8 +80,8 @@ bool DataFileSystem::ReadFile(int LBA, bool bCached, char* cached_data) {
 	}
 
 	if (OutputFileOpenForWrite()) {
-		Output_file_ << std::setw(10) << data_buf;
-		Output_file_.flush();
+		string buff(data_buf);
+		WriteToFile(buff, true);
 	}
 	else {
 		return false;
@@ -88,8 +101,10 @@ string DataFileSystem::getReadDataFromOutput() {
 
 void DataFileSystem::writeInvalidLog() {
 	if (OutputFileOpenForWrite()) {
-		Output_file_ << "ERROR";
-		Output_file_.flush();
+		//Output_file_ << "ERROR";
+		//Output_file_.flush();
+		WriteToFile("ERROR", false);
+
 		CloseFiles();
 	}
 }

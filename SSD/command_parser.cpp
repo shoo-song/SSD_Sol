@@ -32,6 +32,36 @@ bool CommandParser::checkLBAInvalidity(size_t pos, std::string& LBAstring, uint3
 	return true;
 }
 
+bool CommandParser::checkEraseSize(int argCount, char* data, uint32_t LBA){	
+	if (argCount != 4) {
+		return PrintError();
+	}
+	int EraseCount = stoi(data);
+	if ((EraseCount < 0) || (EraseCount > MAX_ERASE_SIZE)) {
+		return PrintError();
+	}
+	else if ((LBA + EraseCount) > MAX_LBA_COUNT) {
+		return PrintError();
+	}
+	return true;
+}
+
+bool CommandParser::checkWriteDataInvalidity(int argCount, char* data, size_t& pos)
+{
+	if (argCount != 4) {
+		return PrintError();
+	}
+	std::string firstTwo(data, 2);
+	if (strlen(data) != 10 || firstTwo != "0x") {
+		return PrintError();
+	}
+	uint32_t LBA = std::stoul(data, &pos, 16);
+	if (pos != strlen(data)) {
+		return PrintError();
+	}
+	return true;
+}
+
 bool CommandParser::checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data) {
 	bool retVal = checkCmdTypeInvalidity(CMD);
 	if (retVal != true) return false;
@@ -40,34 +70,14 @@ bool CommandParser::checkInvalidity(int argCount, const char& CMD, string LBAstr
 
 	size_t pos;
 	uint32_t LBA = std::stoi(LBAstring, &pos, 10);
-	
-	retVal = checkLBAInvalidity(pos, LBAstring, LBA);
-	if (retVal != true) return false;
+
+	if (checkLBAInvalidity(pos, LBAstring, LBA) != true) return false;
 
 	if ((CMD == 'W') || (CMD == 'w')) {
-		if (argCount != 4) {
-			return PrintError();
-		}
-		std::string firstTwo(data, 2);
-		if (strlen(data) != 10 || firstTwo != "0x") {
-			return PrintError();
-		}
-		uint32_t LBA = std::stoul(data, &pos, 16);
-		if (pos != strlen(data)) {
-			return PrintError();
-		}
+		if (checkWriteDataInvalidity(argCount, data, pos) != true) return false;
 	}
 	else if ((CMD == 'E') || (CMD == 'e')) {
-		if (argCount != 4) {
-			return PrintError();
-		}
-		int EraseCount = stoi(data);
-		if ((EraseCount < 0) || (EraseCount > MAX_ERASE_SIZE)) {
-			return PrintError();
-		}
-		else if ((LBA + EraseCount) > MAX_LBA_COUNT) {
-			return PrintError();
-		}
+		if (checkEraseSize(argCount, data, LBA) != true) return false;
 	}
 	return true;
 }
@@ -79,26 +89,32 @@ string CommandParser::toTwoDigitString(unsigned int value) {
 CmdInfo CommandParser::parseArg(int argCount, char CMD, string LBAstring, char* data) {
 	CmdInfo Command;
 	Command.IsValid = false;
-	Command.LBAString = toTwoDigitString(stoi(LBAstring));
+	if (argCount == 2) {
+		Command.LBAString = toTwoDigitString(0);
+	}
+	else 
+		Command.LBAString = toTwoDigitString(stoi(LBAstring));
+
 	if (checkInvalidity(argCount, CMD, LBAstring, data) != true) {
 		return Command;
 	}
-	Command.LBA = stoi(LBAstring);
+	if (!LBAstring.empty())	Command.LBA = stoi(LBAstring);
 	if ((CMD == 'W') || (CMD == 'w')) {
 		strcpy_s(Command.input_data, data);
 		Command.CMDType = CMD_WRITE;
 	}
-	else if ((CMD == 'R') || (CMD == 'r')) {
+	if ((CMD == 'R') || (CMD == 'r')) {
 		Command.CMDType = CMD_READ;
 	}
-	else if ((CMD == 'E') || (CMD == 'e')) {
+	if ((CMD == 'E') || (CMD == 'e')) {
 		Command.EraseEndLBA = Command.LBA + stoi(data)-1;
 		strcpy_s(Command.input_data, data);
 		Command.CMDType = CMD_ERASE;
 	}
-	else {
-		return Command;
+	if ((CMD == 'F') || (CMD == 'f')) {
+		Command.CMDType = CMD_FLUSH;
 	}
+
 	Command.IsValid = true;
 	return Command;
 }
