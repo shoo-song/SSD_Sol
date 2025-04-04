@@ -7,7 +7,7 @@
 class BufferCommand {
 public:
     BufferCommand(FileSystem& filesystem) : fs(filesystem){
-       cmdList.clear();
+      cmdList.clear();
     }
 
     CmdInfo extractCMDfromFileName( std::string& file);
@@ -17,7 +17,7 @@ public:
     void updateCmdList(CmdInfo cmdInfo);
 private:
     FileSystem& fs;
-    std::vector<string> cmdList;
+    std::vector<CmdInfo> cmdList;
     CommandParser ssd;
     std::unique_ptr<FileManager> FileMgr;
 

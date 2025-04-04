@@ -15,7 +15,7 @@ public:
 	bool OutputFileOpenForRead(void);
 	bool OutputFileOpenForWrite(void);
 	bool WriteFile(int LBA, string data);
-	bool ReadFile(int LBA);
+	bool ReadFile(int LBA, bool bCached, char* data);
 	string getReadDataFromOutput();
 	void writeInvalidLog();
 	void CloseFiles();

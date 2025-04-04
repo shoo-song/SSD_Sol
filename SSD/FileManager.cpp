@@ -50,17 +50,22 @@ bool FileManager::WriteFile(int LBA, string data) {
 	return true;
 }
 
-bool FileManager::ReadFile(int LBA) {
+bool FileManager::ReadFile(int LBA, bool bCached, char* cached_data) {
 	bool result = true;
 	char data_buf[20] = {};
-	if (NandFileOpen()) {
-		Nand_file_.seekg(LBA * BYTE_PER_LBA);
-		Nand_file_.read(data_buf, 10);
+	if (bCached != true) {		
+		if (NandFileOpen()) {
+			Nand_file_.seekg(LBA * BYTE_PER_LBA);
+			Nand_file_.read(data_buf, 10);
+		}
+		else {
+			return false;
+		}
+		CloseFiles();
 	}
 	else {
-		return false;
+		memcpy(data_buf, cached_data, BYTE_PER_LBA);
 	}
-	CloseFiles();
 
 	if (OutputFileOpenForWrite()) {
 		Output_file_ << std::setw(10) << data_buf;
