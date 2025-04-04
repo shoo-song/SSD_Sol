@@ -134,17 +134,17 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="DataFileSystem.cpp" />
     <ClCompile Include="UT\UT.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">  %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="DataFileSystem.h" />
     <ClInclude Include="BufferCommand.h" />
     <ClInclude Include="Command_parser.h" />
-    <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="CommandFileSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

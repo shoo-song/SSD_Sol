@@ -9,7 +9,7 @@
 using namespace std;
 
 
-class FileManager {
+class DataFileSystem {
 public:
 	bool NandFileOpen(void);
 	bool OutputFileOpenForRead(void);

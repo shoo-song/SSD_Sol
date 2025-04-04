@@ -1,12 +1,14 @@
 #pragma once
 #include "BufferCommand.h"
-#include "FileSystem.h"
+#include "CommandFileSystem.h"
 
 CmdInfo BufferCommand::extractCMDfromFileName(std::string& file)
 {
     CmdInfo cmd;
     cmd.CMDType = file.at(2);
-    cmd.LBA = file.substr(4, 1);
+    cmd.LBAString = file.substr(4, 1);
+    cmd.LBA = stoi(cmd.LBAString);
+    cmd.IsValid = true;
     string temp = file.substr(6);
     strcpy_s(cmd.input_data, temp.c_str());
     return cmd;
@@ -14,56 +16,73 @@ CmdInfo BufferCommand::extractCMDfromFileName(std::string& file)
 
 void BufferCommand::doFlush(std::vector<string>& fileList)
 {
-    for (auto file : fileList) {
-        CmdInfo input;
-        input = extractCMDfromFileName(file);
-
-        ssd.parseArg(input.CMDType, input.LBA, input.input_data);   // validate check
-        SSD io;
-        io.DoWrite(stoi(input.LBA), input.input_data);
+    for (auto CurCmd : cmdList) {
+        if (CurCmd.CMDType == CMD_WRITE) {
+            MySSD.DoWrite(CurCmd.LBA, CurCmd.input_data);
+        }
+        else if (CurCmd.CMDType == CMD_ERASE) {
+            MySSD.DoErase(CurCmd.LBA, stoi(CurCmd.input_data));
+        }
+        else {
+            //error
+        }
     }
 }
+void BufferCommand::DoBufferRead(char* data) {
+    MySSD.DoCachedRead(0, data);
+}
+void BufferCommand::PushCommand(CmdInfo cmdInfo) {
+    std::vector<string> fileList = CommandFileMgr->getCmdList();
+    if ((cmdInfo.CMDType == CMD_WRITE) || (cmdInfo.CMDType == CMD_ERASE)) {
+        // file 이름으로 부터 cmd parsing
+        int cmd_idx = 0;
+        for (auto file : fileList) {
+            string name = file.substr(2);
+            if (name == "empty") {// 새로 들어온 cmd는 아직 buffer 에
+                cout << cmdInfo.CMDType << cmdInfo.input_data << cmdInfo.LBA << cmdInfo.LBAString;
+                string newFileName = to_string(cmd_idx) + "_" +
+                    std::string(1, cmdInfo.CMDType) + "_" +
+                    cmdInfo.LBAString + "_" +
+                    cmdInfo.input_data;
 
-void BufferCommand::updateCmdList(CmdInfo cmdInfo) {
-    std::vector<string> fileList = fs.getCmdList();
-
-    // file 이름으로 부터 cmd parsing
-    int idx = 0;
-    for (auto file : fileList) {
-        string name = file.substr(2);
-        if (name == "empty") {// 새로 들어온 cmd는 아직 buffer 에
-            string newFileName = to_string(idx) + "_" +
-                std::string(1, cmdInfo.CMDType) + "_" +
-                cmdInfo.LBA + "_" +
-                cmdInfo.input_data;
-
-            fs.updateFileName(fileList[idx], newFileName);
-
-            break;
-        }
-        else { // 이전에 있던 cmd 들을 list로
-            if ((cmdInfo.CMDType == 'R') || (cmdInfo.CMDType == 'r')) {
+                CommandFileMgr->updateFileName(fileList[cmd_idx], newFileName);
+                cmdList.push_back(cmdInfo);
+                break;
+            }
+            else { // 이전에 있던 cmd 들을 list로
                 CmdInfo command = extractCMDfromFileName(file);
                 cmdList.push_back(command);
-                // 새로 들어온 CMD 가 read 였다면, 이전 cmd list 에서 동일 LBA 검색
-                if (cmdInfo.LBA == command.LBA) {
-                    SSD io;
-                    io.DoCachedRead(stoi(command.LBA), command.input_data);
+            }
+            cmd_idx++;
+        }
+        // full
+        if (cmd_idx == 5) {
+            doFlush(fileList);
+            for (int i = 0; i < 5; i++) {
+                string newFileName = to_string(i) + "_" + "empty";
+
+                CommandFileMgr->updateFileName(fileList[i], newFileName);
+            }
+            cmd_idx = 0;
+        }
+        MergeCMD(cmd_idx);
+    }
+    else if (cmdInfo.CMDType == CMD_READ) {
+        for (auto file : fileList) {
+            string name = file.substr(2);
+            if (name == "empty") {
+                break;
+            }
+            else {
+                CmdInfo PrevCommand = extractCMDfromFileName(file);
+                if ((PrevCommand.CMDType == CMD_WRITE) && (PrevCommand.LBA == cmdInfo.LBA)) {
+                    DoBufferRead(PrevCommand.input_data);
                 }
-            }       
+                else if ((PrevCommand.CMDType == CMD_ERASE) && (((PrevCommand.LBA) <= (cmdInfo.LBA)) && ((PrevCommand.EraseEndLBA) >= (cmdInfo.LBA)))) {
+                    DoBufferRead((char*)"0x00000000");
+                }
+            }
         }
-        idx++;
     }
-
-    // full
-    if (idx == 5) {
-        doFlush(fileList);
-        for (int i = 0; i < 5; i++) {
-            string newFileName = to_string(i) + "_" + "empty";
-
-            fs.updateFileName(fileList[i], newFileName);
-        }
-
-
-    }
+ 
 }

@@ -4,10 +4,10 @@
 #include <io.h>
 #include <iomanip>
 #include <iostream>
-#include "FileManager.h"
+#include "DataFileSystem.h"
 using namespace std;
 
-bool FileManager::NandFileOpen(void) {
+bool DataFileSystem::NandFileOpen(void) {
 	char filename_nand[100] = "ssd_nand.txt";
 	if (_access(filename_nand, 0) == -1) {
 		Nand_file_.open(filename_nand, std::ios::out | std::ios::binary);
@@ -26,18 +26,18 @@ bool FileManager::NandFileOpen(void) {
 	Nand_file_.open(filename_nand, std::ios::in | std::ios::out | std::ios::binary);
 	return Nand_file_.is_open();
 }
-bool FileManager::OutputFileOpenForWrite(void) {
+bool DataFileSystem::OutputFileOpenForWrite(void) {
 	char filename_output[100] = "ssd_output.txt";
 	Output_file_.open(filename_output, std::ios::out | std::ios::binary);
 	return Output_file_.is_open();
 }
-bool FileManager::OutputFileOpenForRead(void) {
+bool DataFileSystem::OutputFileOpenForRead(void) {
 	char filename_output[100] = "ssd_output.txt";
 	Output_file_.open(filename_output, std::ios::in | std::ios::binary);
 	return Output_file_.is_open();
 }
 
-bool FileManager::WriteFile(int LBA, string data) {
+bool DataFileSystem::WriteFile(int LBA, string data) {
 	if (NandFileOpen()) {
 		Nand_file_.seekp(LBA * BYTE_PER_LBA);
 		Nand_file_ << std::setw(10) << data;
@@ -49,8 +49,7 @@ bool FileManager::WriteFile(int LBA, string data) {
 	}
 	return true;
 }
-
-bool FileManager::ReadFile(int LBA, bool bCached, char* cached_data) {
+bool DataFileSystem::ReadFile(int LBA, bool bCached, char* cached_data) {
 	bool result = true;
 	char data_buf[20] = {};
 	if (bCached != true) {		
@@ -78,7 +77,7 @@ bool FileManager::ReadFile(int LBA, bool bCached, char* cached_data) {
 	return true;
 }
 
-string FileManager::getReadDataFromOutput() {
+string DataFileSystem::getReadDataFromOutput() {
 	char data_buf[20] = {};
 	if (OutputFileOpenForRead()) {
 		Output_file_.read(data_buf, 10);
@@ -87,7 +86,7 @@ string FileManager::getReadDataFromOutput() {
 	return data_buf;
 }
 
-void FileManager::writeInvalidLog() {
+void DataFileSystem::writeInvalidLog() {
 	if (OutputFileOpenForWrite()) {
 		Output_file_ << "ERROR";
 		Output_file_.flush();
@@ -95,7 +94,7 @@ void FileManager::writeInvalidLog() {
 	}
 }
 
-void FileManager::CloseFiles() {
+void DataFileSystem::CloseFiles() {
 	if (Output_file_.is_open()) {
 		Output_file_.close();
 	}

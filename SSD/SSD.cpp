@@ -1,33 +1,34 @@
 #pragma once
 #include <iostream>
-#include "FileManager.h"
+#include "DataFileSystem.h"
 using namespace std;
 class SSD {
 public:
-	SSD() : FileMgr(std::make_unique<FileManager>()) {
+	SSD() : DataFileMgr(std::make_unique<DataFileSystem>())
+	{
 	}
 	void DoRead(int LBA) {
-		if (FileMgr == nullptr) return;
-		FileMgr->ReadFile(LBA, false, nullptr);
+		if (DataFileMgr == nullptr) return;
+		DataFileMgr->ReadFile(LBA, false, nullptr);
 	}
 
 	void DoCachedRead(int LBA, char* data) {
-		if (FileMgr == nullptr) return;
-		FileMgr->ReadFile(LBA, true, data);
+		if (DataFileMgr == nullptr) return;
+		DataFileMgr->ReadFile(LBA, true, data);
 	}
 	void DoWrite(const int& LBA, const string& data) {
 
-		if (FileMgr == nullptr) return;
-		FileMgr->WriteFile(LBA, data);
+		if (DataFileMgr == nullptr) return;
+		DataFileMgr->WriteFile(LBA, data);
 	}
 	void DoErase(const int& StartLBA, int LBACount) {
-		if (FileMgr == nullptr) return;
+		if (DataFileMgr == nullptr) return;
 		char ErasePattern[20] = "0x00000000";
 		for (int offset = 0; offset < LBACount; offset++) {
-			FileMgr->WriteFile(StartLBA + offset, ErasePattern);
+			DataFileMgr->WriteFile(StartLBA + offset, ErasePattern);
 		}
 	}
 private:
-	std::unique_ptr<FileManager> FileMgr;
+	std::unique_ptr<DataFileSystem> DataFileMgr;
 };
 
