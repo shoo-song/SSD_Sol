@@ -16,7 +16,9 @@ CmdInfo BufferCommand::extractCMDfromFileName(std::string& file)
     cmd.IsValid = true;
     string temp = file.substr(7);
     strcpy_s(cmd.input_data, temp.c_str());
-    cmd.EraseEndLBA = cmd.LBA + stoi(cmd.input_data) - 1;
+    if (cmd.CMDType == CMD_ERASE) {
+        cmd.EraseEndLBA = cmd.LBA + stoi(cmd.input_data) - 1;
+    }
     return cmd;
 }
 int BufferCommand::CheckValidCmdCount(void) {
@@ -38,6 +40,7 @@ void BufferCommand::doFlush(void)
         else {
             //error
         }
+        CurCmd.IsValid = false;
     }
 }
 void BufferCommand::DoBufferRead(char* data) {
@@ -76,11 +79,13 @@ void BufferCommand::PushCommand(CmdInfo cmdInfo) {
                 fileList[i] = newFileName;
                 cmdList[i].IsValid = false;
             }
+            cmdList[0] = cmdInfo;
             cmd_idx = 0;
         }
         MergeCMD(cmd_idx, fileList);
     }
     else if (cmdInfo.CMDType == CMD_READ) {
+        MySSD.DoRead(cmdInfo.LBA);
         for (auto file : fileList) {
             string name = file.substr(2);
             if (name == "empty") {
