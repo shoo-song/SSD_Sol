@@ -26,7 +26,6 @@ void BufferCommand::doFlush(std::vector<string>& fileList)
 
 void BufferCommand::updateCmdList(CmdInfo cmdInfo) {
     std::vector<string> fileList = fs.getCmdList();
-    std::vector<CmdInfo> cmdList;
 
     // file 이름으로 부터 cmd parsing
     int idx = 0;
@@ -43,13 +42,15 @@ void BufferCommand::updateCmdList(CmdInfo cmdInfo) {
             break;
         }
         else { // 이전에 있던 cmd 들을 list로
-            CmdInfo command = extractCMDfromFileName(file);
-            cmdList.push_back(command);
-            // 새로 들어온 CMD 가 read 였다면, 이전 cmd list 에서 동일 LBA 검색
-            if (cmdInfo.LBA == command.LBA)
-            {
-                //return cmdInfo.input_data;   data를 return 한다. (how)
-            }
+            if ((cmdInfo.CMDType == 'R') || (cmdInfo.CMDType == 'r')) {
+                CmdInfo command = extractCMDfromFileName(file);
+                cmdList.push_back(command);
+                // 새로 들어온 CMD 가 read 였다면, 이전 cmd list 에서 동일 LBA 검색
+                if (cmdInfo.LBA == command.LBA) {
+                    SSD io;
+                    io.DoCachedRead(stoi(command.LBA), command.input_data);
+                }
+            }       
         }
         idx++;
     }

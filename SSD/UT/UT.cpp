@@ -338,11 +338,15 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 		buffer.updateCmdList(cmd);
 	}
 	// 6번쨰 CMD
-	CmdInfo cmd = { 'R' , to_string(0) };
+	int LBA = 0;
+	CmdInfo cmd = { 'R' , to_string(LBA) };
 	cmdList.push_back(cmd);
 	buffer.updateCmdList(cmd);
 
-
+	// NAND에서 확인
+	std::string data1 = "0xAAAABBBB";
+	MySSD.DoRead(LBA);
+	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
 
 #ifdef UNIT_TEST
