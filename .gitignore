@@ -398,3 +398,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/SSD/buffer
+/SSD/buffer/0_empty
+/SSD/buffer/1_empty
+/SSD/buffer/2_empty
+/SSD/buffer/3_empty
+/SSD/buffer/4_empty
