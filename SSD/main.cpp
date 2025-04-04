@@ -4,7 +4,7 @@
 //#include "FileManager.h"
 #include "command_parser.h"
 #include "BufferCommand.h"
-
+#define UNIT_TEST
 using namespace std;
 CmdInfo commandParse(int argc, char* argv[])
 {

@@ -12,7 +12,7 @@
 #include "../BufferCommand.h"
 #include "../CommandFileSystem.h"
 using namespace testing;
-
+#define UNIT_TEST
 class SSDTestFixture : public Test
 {
 public:
@@ -20,6 +20,8 @@ public:
 	DataFileSystem FileMgr;
 	CommandParser InputParser;
 	CommandFileSystem filesystem;
+	BufferCommand temp;
+	CmdInfo cmd;
 };
 
 class MockFile : public DataFileSystem {
@@ -176,95 +178,122 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	MySSD.DoRead(0x0);
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
 }
-/*
+
 TEST_F(SSDTestFixture, CMDMergeTest1)
 {
 	// Merge 3 to 1
-	CMDBuffer temp;
-	CmdInfo cmd;
 	//Erase 10~12
+	temp.InitDir();
+	cmd.IsValid = true;
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 10;
+	cmd.LBAString = "10";
 	cmd.EraseEndLBA = 12;
-	temp.AppendCMD(cmd);
+	strcpy_s(cmd.input_data, "3");
+	temp.PushCommand(cmd);
+	temp.InitCmdList();
 	//Write 14
 	cmd.CMDType = CMD_WRITE;
 	cmd.LBA = 14;
+	cmd.LBAString = "14";
 	strcpy_s(cmd.input_data, "0xABABABAB");
-	temp.AppendCMD(cmd);
+	temp.PushCommand(cmd);
+	temp.InitCmdList();
 	//Erase 11~15
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 11;
 	cmd.EraseEndLBA = 15;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "11";
+	strcpy_s(cmd.input_data, "5");
+	temp.PushCommand(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
 TEST_F(SSDTestFixture, CMDMergeTest2)
 {
 	// Merge erase range, start lba same
-	CMDBuffer temp;
-	CmdInfo cmd;
 	//Erase 10~12
+	temp.InitDir();
+	cmd.IsValid = true;
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 10;
 	cmd.EraseEndLBA = 12;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "10";
+	strcpy_s(cmd.input_data, "3");
+	temp.PushCommand(cmd);
+	temp.InitCmdList();
 	//Erase 10~15
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 10;
+	cmd.LBAString = "10";
+	strcpy_s(cmd.input_data, "6");
 	cmd.EraseEndLBA = 15;
-	temp.AppendCMD(cmd);
+	temp.PushCommand(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
 TEST_F(SSDTestFixture, CMDMergeTest3)
 {
 	// Merge erase range, end lba same
-	CMDBuffer temp;
-	CmdInfo cmd;
 	//Erase 10~15
+	temp.InitDir();
+	cmd.IsValid = true;
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 10;
 	cmd.EraseEndLBA = 15;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "10";
+	strcpy_s(cmd.input_data, "6");
+	temp.PushCommand(cmd);
+	temp.InitCmdList();
 	//Erase 11~15
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 14;
 	cmd.EraseEndLBA = 15;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "14";
+	strcpy_s(cmd.input_data, "2");
+	temp.PushCommand(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
 TEST_F(SSDTestFixture, CMDMergeTest4)
 {
 	// Merge erase range, exceed erase size
-	CMDBuffer temp;
-	CmdInfo cmd;
 	//Erase 10~15
+	temp.InitDir();
+	cmd.IsValid = true;
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 10;
 	cmd.EraseEndLBA = 15;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "10";
+	strcpy_s(cmd.input_data, "6");
+	temp.PushCommand(cmd);
+	temp.InitCmdList();
 	//Erase 16~23
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 16;
 	cmd.EraseEndLBA = 23;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "16";
+	strcpy_s(cmd.input_data, "8");
+	temp.PushCommand(cmd);
 	EXPECT_EQ(2, temp.CheckValidCmdCount());
 }
 TEST_F(SSDTestFixture, CMDMergeTest5)
 {
 	// Merge erase range, split range
-	CMDBuffer temp;
-	CmdInfo cmd;
 	//Erase 10~15
+	temp.InitDir();
+	cmd.IsValid = true;
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 10;
 	cmd.EraseEndLBA = 15;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "10";
+	strcpy_s(cmd.input_data, "6");
+	temp.PushCommand(cmd);
+	temp.InitCmdList();
 	//Erase 20~23
 	cmd.CMDType = CMD_ERASE;
 	cmd.LBA = 20;
 	cmd.EraseEndLBA = 23;
-	temp.AppendCMD(cmd);
+	cmd.LBAString = "20";
+	strcpy_s(cmd.input_data, "4");
+	temp.PushCommand(cmd);
 	EXPECT_EQ(2, temp.CheckValidCmdCount());
 }
 TEST_F(SSDTestFixture, CreateBufferFolder) {
@@ -285,7 +314,7 @@ TEST_F(SSDTestFixture, CreateEmptyFiles) {
 	std:string testFile = "empty";
 	EXPECT_FALSE( filesystem.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
 
-	filesystem.createFile(true);
+	filesystem.createFiles();
 	EXPECT_EQ(true, filesystem.fileExists("0_empty"));
 	EXPECT_EQ(true, filesystem.fileExists("1_empty"));
 	EXPECT_EQ(true, filesystem.fileExists("2_empty"));
@@ -296,7 +325,7 @@ TEST_F(SSDTestFixture, CreateEmptyFiles) {
 TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
 {
 	// given : initialize output file	
-	filesystem.createFile(true);
+	filesystem.createFiles();
 
 	std::vector<std::string> fileNames;
 	fileNames = filesystem.makeCmdList();
@@ -310,7 +339,7 @@ TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
 TEST_F(SSDTestFixture, updateFileName)
 {
 	// given : initialize output file	
-	filesystem.createFile(true);
+	filesystem.createFiles();
 
 	std::vector<std::string> fileNames;
 	fileNames = filesystem.makeCmdList();
@@ -327,11 +356,11 @@ TEST_F(SSDTestFixture, updateCmdListAndFileName)
 	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
-	fs.createFile(true);
+	fs.createFiles();
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
-	BufferCommand buffer(fs);
+	BufferCommand buffer;
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
@@ -358,11 +387,11 @@ TEST_F(SSDTestFixture, bufferFlush)
 	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
-	fs.createFile(true);
+	fs.createFiles();
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
-	BufferCommand buffer(fs);
+	BufferCommand buffer;
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
@@ -391,11 +420,11 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
-	fs.createFile(true);
+	fs.createFiles();
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
-	BufferCommand buffer(fs);
+	BufferCommand buffer;
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
@@ -415,7 +444,7 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-*/
+
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
