@@ -22,7 +22,7 @@ bool CommandParser::checkInvalidity(const char& CMD, string LBAstring, char* dat
 		PrintError();
 		return false;
 	}
-	if (LBA < 0 || LBA > MAX_LBA) {
+	if (LBA < 0 || LBA >= MAX_LBA_COUNT) {
 		PrintError();
 		return false;
 	}
@@ -44,7 +44,7 @@ bool CommandParser::checkInvalidity(const char& CMD, string LBAstring, char* dat
 			PrintError();
 			return false;
 		}
-		else if ((LBA + EraseCount) > MAX_LBA) {
+		else if ((LBA + EraseCount) > MAX_LBA_COUNT) {
 			PrintError();
 			return false;
 		}
@@ -64,6 +64,7 @@ bool CommandParser::parseArg(char CMD, string LBAstring, char* data) {
 	}
 	else {
 		InputCMD.EraseEndLBA = InputCMD.LBA + stoi(data)-1;
+		strcpy_s(InputCMD.input_data, data);
 		InputCMD.CMDType = CMD_ERASE;
 	}
 	return true;

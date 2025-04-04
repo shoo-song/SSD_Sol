@@ -178,8 +178,9 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
 }
 
-TEST_F(SSDTestFixture, CMDMergeTest)
+TEST_F(SSDTestFixture, CMDMergeTest1)
 {
+	// Merge 3 to 1
 	CMDBuffer temp;
 	SSDCommand cmd;
 	//Erase 10~12
@@ -199,7 +200,74 @@ TEST_F(SSDTestFixture, CMDMergeTest)
 	temp.AppendCMD(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
-
+TEST_F(SSDTestFixture, CMDMergeTest2)
+{
+	// Merge erase range, start lba same
+	CMDBuffer temp;
+	SSDCommand cmd;
+	//Erase 10~12
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 10;
+	cmd.EraseEndLBA = 12;
+	temp.AppendCMD(cmd);
+	//Erase 10~15
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 10;
+	cmd.EraseEndLBA = 15;
+	temp.AppendCMD(cmd);
+	EXPECT_EQ(1, temp.CheckValidCmdCount());
+}
+TEST_F(SSDTestFixture, CMDMergeTest3)
+{
+	// Merge erase range, end lba same
+	CMDBuffer temp;
+	SSDCommand cmd;
+	//Erase 10~15
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 10;
+	cmd.EraseEndLBA = 15;
+	temp.AppendCMD(cmd);
+	//Erase 11~15
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 14;
+	cmd.EraseEndLBA = 15;
+	temp.AppendCMD(cmd);
+	EXPECT_EQ(1, temp.CheckValidCmdCount());
+}
+TEST_F(SSDTestFixture, CMDMergeTest4)
+{
+	// Merge erase range, exceed erase size
+	CMDBuffer temp;
+	SSDCommand cmd;
+	//Erase 10~15
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 10;
+	cmd.EraseEndLBA = 15;
+	temp.AppendCMD(cmd);
+	//Erase 16~23
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 16;
+	cmd.EraseEndLBA = 23;
+	temp.AppendCMD(cmd);
+	EXPECT_EQ(2, temp.CheckValidCmdCount());
+}
+TEST_F(SSDTestFixture, CMDMergeTest5)
+{
+	// Merge erase range, split range
+	CMDBuffer temp;
+	SSDCommand cmd;
+	//Erase 10~15
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 10;
+	cmd.EraseEndLBA = 15;
+	temp.AppendCMD(cmd);
+	//Erase 20~23
+	cmd.CMDType = CMD_ERASE;
+	cmd.LBA = 20;
+	cmd.EraseEndLBA = 23;
+	temp.AppendCMD(cmd);
+	EXPECT_EQ(2, temp.CheckValidCmdCount());
+}
 TEST_F(SSDTestFixture, CreateBufferFolder) {
 	std::string testDir = "buffer";
 	// 1️. 폴더 생성
