@@ -12,41 +12,10 @@ class ShellScriptLoopCommand : public ShellScriptCommandInterface, public ShellS
 public:
 	ShellScriptLoopCommand(shared_ptr<ShellScriptParameterGenInterface> startParameter,
 		shared_ptr<ShellScriptParameterGenInterface> endParameter,
-		shared_ptr<ShellScriptParameterGenInterface> cntPerLoop) {
-		mpStartLoop = startParameter;
-		mpEndLoop = endParameter;
-		mpCntPerLoop = cntPerLoop;
-		mCurLoopCnt = 0;
-	}
-
-	void addCommand(shared_ptr<ShellScriptCommandInterface> command) {
-		mpCommandVec.push_back(command);
-	}
-
-	int getCurrentLoopIdx() {
-		return mCurLoopCnt;
-	}
-
-	bool execute() {
-		try {
-			mCurLoopCnt = mpStartLoop->generateParameter();
-			int endLoopCnt = mpEndLoop->generateParameter();
-			int cntPerLoop = mpCntPerLoop->generateParameter();
-
-			while (mCurLoopCnt < endLoopCnt) {
-				for (shared_ptr<ShellScriptCommandInterface> cmd : mpCommandVec) {
-					if (cmd->execute() == false)
-						return false;
-				}
-
-				mCurLoopCnt += cntPerLoop;
-			}
-			return true;
-		}
-		catch (exception e) {
-			return false;
-		}
-	}
+		shared_ptr<ShellScriptParameterGenInterface> cntPerLoop);
+	void addCommand(shared_ptr<ShellScriptCommandInterface> command);
+	int getCurrentLoopIdx();
+	bool execute();
 private:
 	vector<shared_ptr< ShellScriptCommandInterface>> mpCommandVec;
 	int mCurLoopCnt;

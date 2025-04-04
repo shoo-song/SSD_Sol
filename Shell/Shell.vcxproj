@@ -132,10 +132,15 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logger_exception.cpp" />
+    <ClCompile Include="script_loader.cpp" />
     <ClCompile Include="script_loader.h" />
+    <ClCompile Include="script_parameter_generator.cpp" />
+    <ClCompile Include="script_parser.cpp" />
     <ClCompile Include="script_parser.h" />
     <ClCompile Include="mock_ssddriver.h" />
+    <ClCompile Include="script_store.cpp" />
     <ClCompile Include="script_store.h" />
+    <ClCompile Include="shell.cpp" />
     <ClCompile Include="shell.h" />
     <ClCompile Include="shell_command_factory.cpp" />
     <ClCompile Include="shell_command_factory.h" />
@@ -145,6 +150,7 @@
     <ClCompile Include="shell_erase_range_command.h" />
     <ClCompile Include="shell_exception.cpp" />
     <ClCompile Include="shell_exception.h" />
+    <ClCompile Include="shell_executor.cpp" />
     <ClCompile Include="shell_executor.h" />
     <ClCompile Include="shell_exit_command.cpp" />
     <ClCompile Include="shell_exit_command.h" />
@@ -156,10 +162,13 @@
     <ClCompile Include="shell_help_command.cpp" />
     <ClCompile Include="shell_help_command.h" />
     <ClCompile Include="shell_read_command.cpp" />
+    <ClCompile Include="shell_script_compare_command.cpp" />
     <ClCompile Include="shell_script_compare_command.h" />
+    <ClCompile Include="shell_script_loop_command.cpp" />
     <ClCompile Include="shell_script_loop_command.h" />
     <ClCompile Include="shell_script_run_command.cpp" />
     <ClCompile Include="shell_script_run_command.h" />
+    <ClCompile Include="shell_script_write_command.cpp" />
     <ClCompile Include="shell_script_write_command.h" />
     <ClCompile Include="shell_read_command.h" />
     <ClCompile Include="shell_util.cpp" />
