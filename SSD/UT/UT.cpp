@@ -1,10 +1,11 @@
 #pragma once
 #include <gmock/gmock.h>
-#include <filesystem>
+#include "iostream"
 #include <cstdlib>   // system()
 #include <cstdio>    // remove()
 #include <memory>    // std::unique_ptr
 #include <sys/stat.h> // mkdir(), stat()
+#include <string>
 
 #include "../DataFileSystem.h"
 #include "../SSD.cpp"
@@ -105,7 +106,7 @@ TEST_F(SSDTestFixture, ReadAndWriteTest) {
 TEST_F(SSDTestFixture, CheckInvalidCmd) {
 	// when : invalid cmd
 	char data[20] = "0x12345678";
-	InputParser.parseArg(4, 's', "0", data);
+	InputParser.parseArg(3, 's', "0", data);
 
 	DataFileSystem file;
 	string actual = file.getReadDataFromOutput();
@@ -176,7 +177,7 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	MySSD.DoRead(0x0);
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
 }
-/*
+#if 0
 TEST_F(SSDTestFixture, CMDMergeTest1)
 {
 	// Merge 3 to 1
@@ -267,6 +268,8 @@ TEST_F(SSDTestFixture, CMDMergeTest5)
 	temp.AppendCMD(cmd);
 	EXPECT_EQ(2, temp.CheckValidCmdCount());
 }
+
+#endif
 TEST_F(SSDTestFixture, CreateBufferFolder) {
 	std::string testDir = "buffer";
 	// 1️. 폴더 생성
@@ -282,10 +285,11 @@ TEST_F(SSDTestFixture, CreateEmptyFiles) {
 	// given : create buffer directory
 	filesystem.createDirectory();
 
-	std:string testFile = "empty";
+	std::string testFile = "empty";
 	EXPECT_FALSE( filesystem.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
 
-	filesystem.createFile(true);
+	filesystem.createFiles();
+
 	EXPECT_EQ(true, filesystem.fileExists("0_empty"));
 	EXPECT_EQ(true, filesystem.fileExists("1_empty"));
 	EXPECT_EQ(true, filesystem.fileExists("2_empty"));
@@ -296,7 +300,7 @@ TEST_F(SSDTestFixture, CreateEmptyFiles) {
 TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
 {
 	// given : initialize output file	
-	filesystem.createFile(true);
+	filesystem.createFiles();
 
 	std::vector<std::string> fileNames;
 	fileNames = filesystem.makeCmdList();
@@ -310,7 +314,7 @@ TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
 TEST_F(SSDTestFixture, updateFileName)
 {
 	// given : initialize output file	
-	filesystem.createFile(true);
+	filesystem.createFiles();
 
 	std::vector<std::string> fileNames;
 	fileNames = filesystem.makeCmdList();
@@ -318,7 +322,7 @@ TEST_F(SSDTestFixture, updateFileName)
 	string newName = "0_W_0_0x12345678";
 	string oldName = fileNames[0];
 	filesystem.updateFileName(oldName, newName);
-	EXPECT_TRUE(true, filesystem.fileExists(newName));
+	EXPECT_EQ(true, filesystem.fileExists(newName));
 }
 
 TEST_F(SSDTestFixture, updateCmdListAndFileName)
@@ -327,7 +331,7 @@ TEST_F(SSDTestFixture, updateCmdListAndFileName)
 	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
-	fs.createFile(true);
+	fs.createFiles();
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
@@ -335,7 +339,12 @@ TEST_F(SSDTestFixture, updateCmdListAndFileName)
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
-		CmdInfo cmd = { 'W' , i, to_string(i), "0x12345678" };
+		CmdInfo cmd;
+		cmd.CMDType = 'W';
+		cmd.LBA = i;
+		cmd.LBAString = to_string(i);
+		strcpy_s(cmd.input_data, "0x12345678");
+
 		cmdList.push_back(cmd);
 		buffer.PushCommand(cmd);
 	}
@@ -347,7 +356,8 @@ TEST_F(SSDTestFixture, updateCmdListAndFileName)
 			cmd.LBAString + "_" +
 			cmd.input_data;
 
-		EXPECT_TRUE(true, file.fileExists(newFileName));
+		EXPECT_EQ(true, fs.fileExists(newFileName));
+		idx++;
 	}
 }
 
@@ -358,7 +368,7 @@ TEST_F(SSDTestFixture, bufferFlush)
 	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
-	fs.createFile(true);
+	fs.createFiles();
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
@@ -366,14 +376,24 @@ TEST_F(SSDTestFixture, bufferFlush)
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
-		CmdInfo cmd = { 'W' , i, to_string(i), "0x43211234" };
+		CmdInfo cmd;
+		cmd.CMDType = 'W';
+		cmd.LBA = i;
+		cmd.LBAString = to_string(i);
+		strcpy_s(cmd.input_data, "0x43211234");
+
 		cmdList.push_back(cmd);
 		buffer.PushCommand(cmd);
 	}
 
 	// 6번쨰 CMD
 	int LBA = 0;
-	CmdInfo cmd = { 'W', 0, to_string(LBA), "0x87654321" };
+	CmdInfo cmd;
+	cmd.CMDType = 'W';
+	cmd.LBA = LBA;
+	cmd.LBAString = to_string(LBA);
+	strcpy_s(cmd.input_data, "0x87654321");
+
 	cmdList.push_back(cmd);
 	buffer.PushCommand(cmd);
 
@@ -383,7 +403,7 @@ TEST_F(SSDTestFixture, bufferFlush)
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 
 	// empty file 확인
-	EXPECT_TRUE(true, filesystem.fileExists("0_empty"));
+	EXPECT_TRUE(fs.fileExists("0_empty"));
 }
 TEST_F(SSDTestFixture, extractCMDfromFile)
 {
@@ -391,7 +411,7 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	CommandFileSystem fs;
 	fs.removeDirectory("buffer");
 	fs.createDirectory();
-	fs.createFile(true);
+	fs.createFiles();
 	std::vector<std::string> fileNames;
 	fileNames = fs.makeCmdList();
 
@@ -399,14 +419,22 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	std::vector<CmdInfo> cmdList;
 
 	for (int i = 0; i < 5; i++) {
-		CmdInfo cmd = { 'W' , i, to_string(i), "0xAAAABBBB" };
+		CmdInfo cmd;
+		cmd.CMDType = 'W';
+		cmd.LBA = i;
+		cmd.LBAString = to_string(i);
+		strcpy_s(cmd.input_data, "0xAAAABBBB");
 		string newName = "0_W_0xAAAABBBB";
 		cmdList.push_back(cmd);
 		buffer.PushCommand(cmd);
 	}
 	// 6번쨰 CMD
 	int LBA = 0;
-	CmdInfo cmd = { 'R' , 0, to_string(LBA) };
+	CmdInfo cmd;
+	cmd.CMDType = 'R';
+	cmd.LBA = LBA;
+	cmd.LBAString = to_string(LBA);
+
 	cmdList.push_back(cmd);
 	buffer.PushCommand(cmd);
 
@@ -415,7 +443,36 @@ TEST_F(SSDTestFixture, extractCMDfromFile)
 	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-*/
+
+TEST_F(SSDTestFixture, flushCmd) {
+	// given : initialize output file	
+	CommandFileSystem fs;
+	fs.removeDirectory("buffer");
+	fs.createDirectory();
+	fs.createFiles();
+	std::vector<std::string> fileNames;
+	fileNames = fs.makeCmdList();
+
+	BufferCommand buffer(fs);
+	std::vector<CmdInfo> cmdList;
+
+	for (int i = 0; i < 3; i++) {
+		CmdInfo cmd;
+		cmd.CMDType = 'W';
+		cmd.LBA = i;
+		cmd.LBAString = to_string(i);
+		strcpy_s(cmd.input_data, "0xBBBBCCCC");
+		
+		cmdList.push_back(cmd);
+		buffer.PushCommand(cmd);
+	}
+
+	//MySSD.DoFlush();
+
+	//EXPECT_EQ(true, fs.fileExists("0_empty"));
+}
+
+
 #ifdef UNIT_TEST
 int main() {
 	::testing::InitGoogleMock();
