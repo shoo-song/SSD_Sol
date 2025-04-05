@@ -49,30 +49,35 @@ std::string ScriptParser::trim(const std::string& s) {
 // 파라미터 토큰을 파싱하는 함수
 shared_ptr<ShellScriptParameterGenInterface> ScriptParser::parseParameter(
     const std::string& token, shared_ptr<ShellScriptLoopIdxGetter> looper) {
-    // VAL(숫자)
-    std::regex regexVal(R"(VAL\(\s*(\d+)\s*\))");
-    // IND(숫자) 또는 IND() : 숫자 없으면 기본 0
-    std::regex regexInd(R"(IND\(\s*(-?\d+)?\s*\))");
-    // RAND(숫자,숫자,숫자)
-    std::regex regexRand(R"(RAND\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\))");
-    // RAND_REF(숫자,숫자,숫자)
-    std::regex regexRandRef(R"(RAND_REF\(\s*(\d+)\s*\))");
+    // VAL(숫자) : 10진수 혹은 16진수
+    std::regex regexVal(R"(VAL\(\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*\))");
+
+    // IND(숫자) 또는 IND() : 숫자 없으면 기본 0, 음수 포함
+    std::regex regexInd(R"(IND\(\s*(-?(?:(?:0[xX][0-9a-fA-F]+)|\d+))?\s*\))");
+
+    // RAND(숫자,숫자,숫자) : 각 숫자가 10진수 또는 16진수
+    std::regex regexRand(R"(RAND\(\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*,\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*,\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*\))");
+
+    // RAND_REF(숫자) : 10진수 또는 16진수
+    std::regex regexRandRef(R"(RAND_REF\(\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*\))");
 
     std::smatch match;
 
     if (std::regex_match(token, match, regexVal)) {
-        return make_shared<ScriptParamValGen>(std::stoi(match[1]));
+        return make_shared<ScriptParamValGen>(std::stoul(match[1], nullptr, 0));
     } else if (std::regex_match(token, match, regexInd)) {
         if (looper == nullptr) {
             throw std::runtime_error("looper 0");
         }
-
-        return make_shared<ScriptParamIdxGen>(looper, std::stoi(match[1]));
+        return make_shared<ScriptParamIdxGen>(looper, std::stoi(match[1], nullptr, 0));
     } else if (std::regex_match(token, match, regexRand)) {
-        return make_shared<ScriptParamRanGen>(std::stoi(match[1]), std::stoi(match[2]),
-                                              std::stoi(match[3]));
+        return make_shared<ScriptParamRanGen>(
+            std::stoi(match[1], nullptr, 0),
+            std::stoi(match[2], nullptr, 0),
+            std::stoul(match[3], nullptr, 0)
+        );
     } else if (std::regex_match(token, match, regexRandRef)) {
-        return make_shared<ShellScriptRandGetGen>(std::stoi(match[1]));
+        return make_shared<ShellScriptRandGetGen>(std::stoi(match[1], nullptr, 0));
     }
     return nullptr;
 }
