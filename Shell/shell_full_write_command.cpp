@@ -14,10 +14,10 @@ string ShellFullWriteCommand::execute(vector<string> args) {
         }
 
         return fullWriteResult;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }
 
@@ -25,15 +25,15 @@ vector<unsigned int> ShellFullWriteCommand::convertCmdArgs(vector<string> args) 
     try {
         vector<unsigned int> output;
         if (args.size() != 2) {
-            throw ShellArgConvertException("args parameter size invalid");
+            throw ShellException("args parameter size invalid");
         }
 
         output.push_back(ShellUtil::getUtilObj().convertHexStringForData(args[1]));
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

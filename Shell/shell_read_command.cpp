@@ -16,10 +16,10 @@ string ShellReadCommand::execute(vector<string> args) {
         output += ShellUtil::getUtilObj().toHexFormat(result);
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }
 
@@ -28,14 +28,14 @@ vector<unsigned int> ShellReadCommand::convertCmdArgs(vector<string> args) {
         vector<unsigned int> output;
 
         if (args.size() != 2) {
-            throw ShellArgConvertException("args parameter size invalid");
+            throw ShellException("args parameter size invalid");
         }
 
         output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

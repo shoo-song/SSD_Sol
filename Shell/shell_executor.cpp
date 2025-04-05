@@ -6,17 +6,17 @@ string ShellExecutor::execute(string input, bool isRunnerMode) {
 
         ShellCommand cmd = ShellUtil::getUtilObj().parse(separatedStr[0]);
         if (isRunnerMode && (cmd != SSD_SCRIPT_RUN_COMMAND)) {
-            throw ShellArgConvertException("invalid command");
+            throw ShellException("invalid command");
         }
         shared_ptr<ShellCommandInterface> commandExecutor = mCommandFactory.getCommand(cmd);
         if (commandExecutor == nullptr) {
-            throw ShellArgConvertException("invalid command");
+            throw ShellException("invalid command");
         }
 
         return commandExecutor->execute(separatedStr);
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

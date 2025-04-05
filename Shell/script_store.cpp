@@ -25,7 +25,7 @@ vector<shared_ptr<ShellScriptCommandInterface>> ScriptStore::getScriptCommand(st
     if (mWildCardCommandMap.find(wildcardNum) != mWildCardCommandMap.end()) {
         return mWildCardCommandMap[wildcardNum];
     }
-    throw ShellArgConvertException("err");
+    throw ShellException("err");
 }
 
 void ScriptStore::addScript(string scriptName,
@@ -49,6 +49,6 @@ int ScriptStore::getWildcardNumber(string fileName) {
             throw e;
         }
     } else {
-        throw ShellArgConvertException("err");
+        throw ShellException("err");
     }
 }

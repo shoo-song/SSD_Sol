@@ -11,9 +11,9 @@ string ShellFlushCommand::execute(vector<string> args) {
         SsdDriverStore::getSsdDriverStore().getSsdDriver()->flushSSD();
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

@@ -58,14 +58,14 @@ TEST_F(ShellExecutorFixture, readTest1) {
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
-    EXPECT_THROW(shellExecutor.execute("read 200", false), ShellArgConvertException);
+    EXPECT_THROW(shellExecutor.execute("read 200", false), ShellException);
 }
 
 TEST_F(ShellExecutorFixture, writeTest1) {
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
-    EXPECT_THROW(shellExecutor.execute("write 200 200", false), ShellArgConvertException);
+    EXPECT_THROW(shellExecutor.execute("write 200 200", false), ShellException);
 }
 
 TEST_F(ShellExecutorFixture, script1_fullmatching) {

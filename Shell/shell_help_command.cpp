@@ -4,7 +4,7 @@ ShellHelpCommand::ShellHelpCommand() {}
 
 string ShellHelpCommand::execute(vector<string> args) {
     if (args.size() != 1) {
-        throw ShellArgConvertException("args parameter size invalid");
+        throw ShellException("args parameter size invalid");
     }
     string output =
         "Team:Alpha Devs(ÀÌ¿øÃ¶/¼Û½ÂÈ£/½Åµ¿Àç/ÀüºÀ¼ö)\n"

@@ -5,10 +5,10 @@ ShellScriptRunnerCommand::ShellScriptRunnerCommand() {}
 string ShellScriptRunnerCommand::execute(vector<string> args) {
     try {
         if (args.size() != 1) {
-            throw ShellArgConvertException("invalid args");
+            throw ShellException("invalid args");
         }
         if (ScriptStore::getScriptStore().isThereScript(args[0]) == false) {
-            throw ShellArgConvertException("invalid args");
+            throw ShellException("invalid args");
         }
 
         ShellScriptRandValStore::getShellScriptRandValStore().clear();
@@ -22,9 +22,9 @@ string ShellScriptRunnerCommand::execute(vector<string> args) {
         }
 
         return "PASS";
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

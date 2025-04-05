@@ -17,9 +17,9 @@ string ShellFullReadCommand::execute(vector<string> args) {
         }
 
         return fullreadResult;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

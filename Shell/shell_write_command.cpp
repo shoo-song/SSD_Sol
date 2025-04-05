@@ -12,10 +12,10 @@ string ShellWriteCommand::execute(vector<string> args) {
         SsdDriverStore::getSsdDriverStore().getSsdDriver()->writeSSD((int)convertedArgs[0], convertedArgs[1]);
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }
 
@@ -23,16 +23,16 @@ vector<unsigned int> ShellWriteCommand::convertCmdArgs(vector<string> args) {
     try {
         vector<unsigned int> output;
         if (args.size() != 3) {
-            throw ShellArgConvertException("args parameter size invalid");
+            throw ShellException("args parameter size invalid");
         }
 
         output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
         output.push_back(ShellUtil::getUtilObj().convertHexStringForData(args[2]));
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

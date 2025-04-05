@@ -97,7 +97,6 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
 
         // 블록 종료를 알리는 '}'를 만나면 이 블록의 파싱 종료
         if (line == "}") {
-            // 블록이 정상 종료되었으므로 idx를 한 칸 증가시키고 반환
             if (mValidationStack.empty()) {
                 throw std::runtime_error("Error: .");
             }
@@ -129,13 +128,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
             }
             commandVec.push_back(compositCmd);
         } else {
-            // loop header가 아닌 경우는 단순 명령어로 처리 (닫는 중괄호 '}'도 여기서 걸러짐)
-            // 만약 line이 "loop"로 시작하지만 형식이 올바르지 않으면 예외 처리
-            if (line.find("loop") == 0) {
-                throw std::runtime_error(
-                    "Error: Malformed loop statement or missing '{' at line: " + line);
-            }
-            // 명령어 파싱: 공백으로 분리
+            // 명령어 파싱: 공백으로 분리. Parameter는 
             vector<string> separatedStr = ShellUtil::getUtilObj().splitString(line);
             ShellScriptApiCommand scriptCmdEnum =
                 ShellUtil::getUtilObj().parseScriptApiCmd(separatedStr[0]);

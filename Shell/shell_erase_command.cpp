@@ -12,10 +12,10 @@ string ShellEraseCommand::execute(vector<string> args) {
         SsdDriverStore::getSsdDriverStore().getSsdDriver()->eraseSSD((int)convertedArgs[0], (int)convertedArgs[1]);
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }
 
@@ -24,7 +24,7 @@ vector<unsigned int> ShellEraseCommand::convertCmdArgs(vector<string> args) {
         vector<unsigned int> output;
 
         if (args.size() != 3) {
-            throw ShellArgConvertException("args parameter size invalid");
+            throw ShellException("args parameter size invalid");
         }
 
         // LBA String으로 변환.
@@ -32,9 +32,9 @@ vector<unsigned int> ShellEraseCommand::convertCmdArgs(vector<string> args) {
         output.push_back(ShellUtil::getUtilObj().convertStrForSize(args[1], args[2]));
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }
