@@ -1,4 +1,16 @@
 #include "script_parser.h"
+#include "shell_script_compare_command.h"
+#include "shell_script_loop_command.h"
+#include "shell_script_write_command.h"
+#include "shell_script_erase_command.h"
+#include "shell_script_flush_command.h"
+#include "shell_util.h"
+#include <regex>
+#include <sstream>
+#include <stdexcept>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 
 std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(string scriptName) {
     std::vector<shared_ptr<ShellScriptCommandInterface>> script;

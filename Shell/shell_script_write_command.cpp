@@ -1,5 +1,8 @@
 #include "shell_script_write_command.h"
 #include "ssddriver_store.h"
+#include <exception>
+
+using std::exception;
 
 ShellScriptWriteCommand::ShellScriptWriteCommand(
     shared_ptr<ShellScriptParameterGenInterface> lbaParam,

@@ -1,24 +1,12 @@
 
 #pragma once
-#include <algorithm>
-#include <fstream>
-#include <iostream>
 #include <memory>
-#include <regex>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 #include <vector>
-
 #include "script_parameter_generator.h"
 #include "shell_script_command_interface.h"
-#include "shell_script_compare_command.h"
-#include "shell_script_loop_command.h"
-#include "shell_script_write_command.h"
-#include "shell_script_erase_command.h"
-#include "shell_script_flush_command.h"
-#include "shell_util.h"
 #include <stack>
+
 using std::make_shared;
 using std::shared_ptr;
 

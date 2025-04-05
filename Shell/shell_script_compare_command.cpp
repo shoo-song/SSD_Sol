@@ -1,6 +1,9 @@
 
 #include "shell_script_compare_command.h"
 #include "ssddriver_store.h"
+#include <exception>
+
+using std::exception;
 
 ShellScriptCompareCommand::ShellScriptCompareCommand(
     shared_ptr<ShellScriptParameterGenInterface> lbaParam,

@@ -1,4 +1,5 @@
 #include "script_store.h"
+#include "shell_exception.h"
 
 ScriptStore& ScriptStore::getScriptStore() {
     static ScriptStore scriptStore;

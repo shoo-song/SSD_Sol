@@ -1,5 +1,8 @@
 #include "shell_script_erase_command.h"
 #include "ssddriver_store.h"
+#include <exception>
+
+using std::exception;
 
 ShellScriptEraseCommand::ShellScriptEraseCommand(
     shared_ptr<ShellScriptParameterGenInterface> startLbaParam,
