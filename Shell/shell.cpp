@@ -1,3 +1,4 @@
+#include "logger.h"
 #include "shell.h"
 #include "ssddriver_store.h"
 #include "ssddriver.h"
@@ -8,10 +9,13 @@ using std::shared_ptr;
 using std::make_shared;
 
 Shell::Shell() {
+    logger.setLogFile();
+    logger.print("Shell.shell()", "∑Œ±Î Ω√¿€");
+
     mScriptLoader.loadScript();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(make_shared<SsdDriver>());
 }
-void Shell::runShell(int argc, char** argv) {
+int Shell::runShell(int argc, char** argv) {
     if (argc == 1) {
         runShellMode();
     } else if (argc == 2) {
@@ -20,6 +24,8 @@ void Shell::runShell(int argc, char** argv) {
         // err
         cout << "Invalid parameter \n";
     }
+
+    return 0;
 }
 
 void Shell::runShellMode() {

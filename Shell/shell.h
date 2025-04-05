@@ -11,7 +11,7 @@ using std::string;
 class Shell {
    public:
     Shell();
-    void runShell(int argc, char** argv);
+    int runShell(int argc, char** argv);
 
    private:
     void runShellMode();

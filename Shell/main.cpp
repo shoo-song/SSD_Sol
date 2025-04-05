@@ -9,15 +9,10 @@ int main(int argc, char** argv) {
     return RUN_ALL_TESTS();
 }
 #else
-#include "logger.h"
 #include "shell.h"
 
 int main(int argc, char** argv) {
-    logger.setLogFile();
-    logger.print("Main.main()", "∑Œ±Î Ω√¿€");
-
     Shell shell;
-    shell.runShell(argc, argv);
-    return 0;
+    return shell.runShell(argc, argv);
 }
 #endif
