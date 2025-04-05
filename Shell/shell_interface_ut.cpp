@@ -234,12 +234,15 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
 TEST_F(ShellExecutorFixture, helpCmd) {
     EXPECT_THAT(shellExecutor.execute("help", false),
         HasSubstr(
-        "Team:Alpha Devs(ÀÌ¿øÃ¶/¼Û½ÂÈ£/½Åµ¿Àç/ÀüºÀ¼ö)\n"
-        "READ command: read [LBA]\n"
-        "Write command: write [LBA] [DATA:(ex)0x123456]\n"
-        "Full Read command: fullread\n"
-        "Full Write command: fullwrite\n"
-        "Exit command: exit\n"
+        "\n\n COMMAND \n\n"
+            "READ command: read [LBA]\n"
+            "Write command: write [LBA] [DATA:(ex)0x123456]\n"
+            "Full Read command: fullread\n"
+            "Full Write command: fullwrite [DATA:(ex)0x123456]\n"
+            "Erase command: erase [LBA] [SIZE]\n"
+            "Erase Range command: erase_range [start LBA] [end LBA]\n"
+            "Flush command: flush\n"
+            "Exit command: exit\n"
         "\n\n SCRIPT \n\n"
         ));
 }
