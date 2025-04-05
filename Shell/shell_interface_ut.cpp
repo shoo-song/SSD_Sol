@@ -9,6 +9,7 @@
 #include "mock_ssddriver.h"
 #include "shell_executor.h"
 #include "ssddriver_store.h"
+#include "script_loader.h"
 
 using namespace testing;
 using namespace std;
@@ -69,6 +70,9 @@ TEST_F(ShellExecutorFixture, writeTest1) {
 }
 
 TEST_F(ShellExecutorFixture, script1_fullmatching) {
+    ScriptLoader loader;
+    loader.loadScript();
+
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
@@ -93,6 +97,9 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
 }
 
 TEST_F(ShellExecutorFixture, script1_wildcard) {
+    ScriptLoader loader;
+    loader.loadScript();
+
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
@@ -117,6 +124,9 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
 }
 
 TEST_F(ShellExecutorFixture, script2_fullmatching) {
+    ScriptLoader loader;
+    loader.loadScript();
+
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
@@ -141,6 +151,9 @@ TEST_F(ShellExecutorFixture, script2_fullmatching) {
 }
 
 TEST_F(ShellExecutorFixture, script2_wildcard) {
+    ScriptLoader loader;
+    loader.loadScript();
+
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
@@ -165,6 +178,9 @@ TEST_F(ShellExecutorFixture, script2_wildcard) {
 }
 
 TEST_F(ShellExecutorFixture, script3_fullmatching) {
+    ScriptLoader loader;
+    loader.loadScript();
+
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
@@ -189,6 +205,9 @@ TEST_F(ShellExecutorFixture, script3_fullmatching) {
 }
 
 TEST_F(ShellExecutorFixture, script3_wildcard) {
+    ScriptLoader loader;
+    loader.loadScript();
+
     shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
@@ -213,14 +232,16 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
 }
 
 TEST_F(ShellExecutorFixture, helpCmd) {
-    EXPECT_EQ(
+    EXPECT_THAT(shellExecutor.execute("help", false),
+        HasSubstr(
         "Team:Alpha Devs(ÀÌ¿øÃ¶/¼Û½ÂÈ£/½Åµ¿Àç/ÀüºÀ¼ö)\n"
         "READ command: read [LBA]\n"
         "Write command: write [LBA] [DATA:(ex)0x123456]\n"
         "Full Read command: fullread\n"
         "Full Write command: fullwrite\n"
-        "Exit command: exit\n",
-        shellExecutor.execute("help", false));
+        "Exit command: exit\n"
+        "\n\n SCRIPT \n\n"
+        ));
 }
 
 TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
