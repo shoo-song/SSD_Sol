@@ -18,33 +18,33 @@ ShellScriptApiCommand ShellUtil::parseScriptApiCmd(const string input) {
 
 ShellCommand ShellUtil::parse(string commandArg) {
     if (commandArg.compare("read") == 0) {
-        return READ_COMMAND;
+        return SSD_READ_COMMAND;
     }
     if (commandArg.compare("write") == 0) {
-        return WRITE_COMMAND;
+        return SSD_WRITE_COMMAND;
     }
     if (commandArg.compare("help") == 0) {
-        return HELP_COMMAND;
+        return SSD_HELP_COMMAND;
     }
     if (commandArg.compare("exit") == 0) {
-        return EXIT_COMMAND;
+        return SSD_EXIT_COMMAND;
     }
     if (commandArg.compare("fullwrite") == 0) {
-        return FULLWRITE_COMMAND;
+        return SSD_FULLWRITE_COMMAND;
     }
     if (commandArg.compare("fullread") == 0) {
-        return FULLREAD_COMMAND;
+        return SSD_FULLREAD_COMMAND;
     }
     if (commandArg.compare("erase") == 0) {
-        return ERASE_COMMAND;
+        return SSD_ERASE_COMMAND;
     }
     if (commandArg.compare("erase_range") == 0) {
-        return ERASERANGE_COMMAND;
+        return SSD_ERASERANGE_COMMAND;
     }
     if (commandArg.compare("flush") == 0) {
-        return FLUSH_COMMAND;
+        return SSD_FLUSH_COMMAND;
     }
-    return SCRIPT_RUN_COMMAND;
+    return SSD_SCRIPT_RUN_COMMAND;
 }
 
 // LBA 문자열 변환 (10진수, 0~99)

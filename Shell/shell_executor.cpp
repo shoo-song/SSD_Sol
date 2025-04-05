@@ -10,7 +10,7 @@ string ShellExecutor::execute(string input, bool isRunnerMode) {
         vector<string> separatedStr = ShellUtil::getUtilObj().splitString(input);
 
         ShellCommand cmd = ShellUtil::getUtilObj().parse(separatedStr[0]);
-        if (isRunnerMode && (cmd != SCRIPT_RUN_COMMAND)) {
+        if (isRunnerMode && (cmd != SSD_SCRIPT_RUN_COMMAND)) {
             throw ShellArgConvertException("invalid command");
         }
         shared_ptr<ShellCommandInterface> commandExecutor = mCommandFactory.getCommand(cmd);
