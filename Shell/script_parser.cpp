@@ -8,6 +8,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(
         throw std::runtime_error("Error: .");
     }
 
+    validationStackClear();
     std::vector<std::string> lines;
     std::string line;
     while (std::getline(file, line)) {
@@ -17,10 +18,19 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(
     try {
         size_t idx = 0;
         script = parseStatements(nullptr, lines, idx);
+        if (!mValidationStack.empty()) {
+            throw std::runtime_error("Error: .");
+        }
     } catch (const std::exception& ex) {
         throw ex;
     }
     return script;
+}
+
+void ScriptParser::validationStackClear() {
+    while (!mValidationStack.empty()) {
+        mValidationStack.pop();
+    }
 }
 
 // 공백 제거 함수
@@ -67,8 +77,8 @@ shared_ptr<ShellScriptParameterGenInterface> ScriptParser::parseParameter(
     return nullptr;
 }
 
-// 재귀적으로 스크립트 라인을 파싱하는 함수
-// idx는 현재 라인 인덱스를 가리키며, block 종료('}')를 만나면 반환합니다.
+// 재귀적으로 스크립트 라인을 파싱
+// idx는 현재 라인 인덱스를 가리키며, block 종료('}')를 만나면 반환
 std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatements(
     shared_ptr<ShellScriptLoopIdxGetter> parentLooper, const std::vector<std::string>& lines,
     size_t& idx) {
@@ -83,6 +93,10 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
         // 블록 종료를 알리는 '}'를 만나면 이 블록의 파싱 종료
         if (line == "}") {
             // 블록이 정상 종료되었으므로 idx를 한 칸 증가시키고 반환
+            if (mValidationStack.empty()) {
+                throw std::runtime_error("Error: .");
+            }
+            mValidationStack.pop();
             return commandVec;
         }
 
@@ -97,6 +111,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
                 parseParameter(match[3].str(), parentLooper);
 
             ++idx;  // loop 다음 줄부터 블록 내부 파싱 시작
+            mValidationStack.push('{');
 
             // 재귀 호출하여 현재 loop의 내부 구문 파싱
             shared_ptr<ShellScriptLoopCommand> compositCmd =

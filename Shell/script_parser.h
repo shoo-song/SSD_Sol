@@ -17,6 +17,7 @@
 #include "shell_script_write_command.h"
 #include "shell_script_erase_command.h"
 #include "shell_util.h"
+#include <stack>
 using std::make_shared;
 using std::shared_ptr;
 
@@ -33,4 +34,6 @@ class ScriptParser {
     std::vector<shared_ptr<ShellScriptCommandInterface>> parseStatements(
         shared_ptr<ShellScriptLoopIdxGetter> parentLooper, const std::vector<std::string>& lines,
         size_t& idx);
+    void validationStackClear();
+    std::stack<char> mValidationStack;
 };
