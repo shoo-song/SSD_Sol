@@ -166,6 +166,9 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
 
                 scriptCmd =
                     std::make_shared<ShellScriptEraseCommand>(startLba, endLba);
+            } else if (scriptCmdEnum == FLUSH_SCRIPT_COMMAND) {
+                scriptCmd =
+                    std::make_shared<ShellScriptFlushCommand>();
             }
             commandVec.push_back(scriptCmd);
         }

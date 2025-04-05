@@ -16,6 +16,7 @@
 #include "shell_script_loop_command.h"
 #include "shell_script_write_command.h"
 #include "shell_script_erase_command.h"
+#include "shell_script_flush_command.h"
 #include "shell_util.h"
 #include <stack>
 using std::make_shared;

@@ -15,6 +15,9 @@ ShellScriptApiCommand ShellUtil::parseScriptApiCmd(const string input) {
     if (input.compare("ERASE") == 0) {
         return ERASE_SCRIPT_COMMAND;
     }
+    if (input.compare("FLUSH") == 0) {
+        return FLUSH_SCRIPT_COMMAND;
+    }
     return SCRIPT_UNKOWN;
 }
 
