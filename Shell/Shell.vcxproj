@@ -165,7 +165,9 @@
     <ClCompile Include="shell_read_command.cpp" />
     <ClCompile Include="shell_script_compare_command.cpp" />
     <ClInclude Include="shell_script_compare_command.h" />
+    <ClCompile Include="shell_script_erase_command.cpp" />
     <ClCompile Include="shell_script_loop_command.cpp" />
+    <ClInclude Include="shell_script_erase_command.h" />
     <ClInclude Include="shell_script_loop_command.h" />
     <ClCompile Include="shell_script_run_command.cpp" />
     <ClInclude Include="shell_script_run_command.h" />
@@ -190,6 +192,7 @@
     <None Include="1_FullWriteAndReadCompare.script" />
     <None Include="2_PartialLBAWrite.script" />
     <None Include="3_WriteReadAging.script" />
+    <None Include="4_EraseAndWriteAging.script" />
     <None Include="MakeFile" />
     <None Include="packages.config" />
   </ItemGroup>

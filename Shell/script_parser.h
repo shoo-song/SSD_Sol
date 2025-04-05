@@ -15,6 +15,7 @@
 #include "shell_script_compare_command.h"
 #include "shell_script_loop_command.h"
 #include "shell_script_write_command.h"
+#include "shell_script_erase_command.h"
 #include "shell_util.h"
 using std::make_shared;
 using std::shared_ptr;

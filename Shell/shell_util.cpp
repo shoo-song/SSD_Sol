@@ -12,7 +12,9 @@ ShellScriptApiCommand ShellUtil::parseScriptApiCmd(const string input) {
     if (input.compare("COMPARE") == 0) {
         return COMPARE_SCRIPT_COMMAND;
     }
-
+    if (input.compare("ERASE") == 0) {
+        return ERASE_SCRIPT_COMMAND;
+    }
     return SCRIPT_UNKOWN;
 }
 
