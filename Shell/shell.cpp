@@ -1,8 +1,15 @@
 #include "shell.h"
+#include "ssddriver_store.h"
+#include "ssddriver.h"
+
+#include <memory>
+
+using std::shared_ptr;
+using std::make_shared;
 
 Shell::Shell() {
-    mExcutor.setDriverInterface(&mSsdDriver);
-    mScriptLoader.loadScript(&mSsdDriver);
+    mScriptLoader.loadScript();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(make_shared<SsdDriver>());
 }
 void Shell::runShell(int argc, char** argv) {
     if (argc == 1) {

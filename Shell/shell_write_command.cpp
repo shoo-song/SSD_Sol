@@ -1,7 +1,7 @@
 #include "shell_write_command.h"
+#include "ssddriver_store.h"
 
-ShellWriteCommand::ShellWriteCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellWriteCommand::ShellWriteCommand() {
 }
 
 string ShellWriteCommand::execute(vector<string> args) {
@@ -9,7 +9,7 @@ string ShellWriteCommand::execute(vector<string> args) {
         vector<unsigned int> convertedArgs = convertCmdArgs(args);
         string output = "[Write] Done";
 
-        mpDriverInterface->writeSSD((int)convertedArgs[0], convertedArgs[1]);
+        SsdDriverStore::getSsdDriverStore().getSsdDriver()->writeSSD((int)convertedArgs[0], convertedArgs[1]);
 
         return output;
     } catch (ShellArgConvertException e) {

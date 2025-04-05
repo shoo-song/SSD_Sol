@@ -1,7 +1,7 @@
 #include "shell_erase_range_command.h"
+#include "ssddriver_store.h"
 
-ShellEraseRangeCommand::ShellEraseRangeCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellEraseRangeCommand::ShellEraseRangeCommand() {
 }
 
 string ShellEraseRangeCommand::execute(vector<string> args) {
@@ -9,7 +9,7 @@ string ShellEraseRangeCommand::execute(vector<string> args) {
         vector<unsigned int> convertedArgs = convertCmdArgs(args);
         string output = "[Full Erase] Done";
 
-        mpDriverInterface->eraseSSD((int)convertedArgs[0], (int)convertedArgs[1]);
+        SsdDriverStore::getSsdDriverStore().getSsdDriver()->eraseSSD((int)convertedArgs[0], (int)convertedArgs[1]);
 
         return output;
     } catch (ShellArgConvertException e) {

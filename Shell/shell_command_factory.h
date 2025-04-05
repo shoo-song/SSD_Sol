@@ -19,9 +19,5 @@ using std::shared_ptr;
 
 class ShellCommandFactory {
    public:
-    void setDriverInterface(SsdDriverInterface* pDriverInterface);
     shared_ptr<ShellCommandInterface> getCommand(ShellCommand cmd);
-
-   private:
-    SsdDriverInterface* mpDriverInterface;
 };

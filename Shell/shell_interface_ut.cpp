@@ -4,9 +4,11 @@
 
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 #include "mock_ssddriver.h"
 #include "shell_executor.h"
+#include "ssddriver_store.h"
 
 using namespace testing;
 using namespace std;
@@ -42,42 +44,42 @@ TEST_F(ShellExecutorFixture, parseFullreadTest) {
 }
 
 TEST_F(ShellExecutorFixture, readWriteTest1) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
-    EXPECT_CALL(mockDriver, readSSD(1)).WillOnce(testing::Return(0xAAAABBBB));
-    EXPECT_CALL(mockDriver, writeSSD(1, 0xAAAABBBB)).WillOnce(testing::Return());
+    EXPECT_CALL(*mockDriver, readSSD(1)).WillOnce(testing::Return(0xAAAABBBB));
+    EXPECT_CALL(*mockDriver, writeSSD(1, 0xAAAABBBB)).WillOnce(testing::Return());
 
     EXPECT_EQ("[Write] Done", shellExecutor.execute("write 01 0xAAAABBBB", false));
     EXPECT_EQ("[Read] LBA 01 : 0xAAAABBBB", shellExecutor.execute("read 01", false));
 }
 
 TEST_F(ShellExecutorFixture, readTest1) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     EXPECT_THROW(shellExecutor.execute("read 200", false), ShellArgConvertException);
 }
 
 TEST_F(ShellExecutorFixture, writeTest1) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     EXPECT_THROW(shellExecutor.execute("write 200 200", false), ShellArgConvertException);
 }
 
 TEST_F(ShellExecutorFixture, script1_fullmatching) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
             auto it = memory.find(pos);
@@ -91,17 +93,17 @@ TEST_F(ShellExecutorFixture, script1_fullmatching) {
 }
 
 TEST_F(ShellExecutorFixture, script1_wildcard) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(100)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
             auto it = memory.find(pos);
@@ -115,17 +117,17 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
 }
 
 TEST_F(ShellExecutorFixture, script2_fullmatching) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(120)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(120)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
             auto it = memory.find(pos);
@@ -139,17 +141,17 @@ TEST_F(ShellExecutorFixture, script2_fullmatching) {
 }
 
 TEST_F(ShellExecutorFixture, script2_wildcard) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(120)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(120)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
             auto it = memory.find(pos);
@@ -163,17 +165,17 @@ TEST_F(ShellExecutorFixture, script2_wildcard) {
 }
 
 TEST_F(ShellExecutorFixture, script3_fullmatching) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(400)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(400)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
             auto it = memory.find(pos);
@@ -187,17 +189,17 @@ TEST_F(ShellExecutorFixture, script3_fullmatching) {
 }
 
 TEST_F(ShellExecutorFixture, script3_wildcard) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, ::testing::_))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
         .Times(400)
         .WillRepeatedly(::testing::Invoke([&memory](int pos, int data) { memory[pos] = data; }));
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(400)
         .WillRepeatedly(::testing::Invoke([&memory](int pos) -> int {
             auto it = memory.find(pos);
@@ -222,8 +224,8 @@ TEST_F(ShellExecutorFixture, helpCmd) {
 }
 
 TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
-    MockSsdDriver mockDriver;
-    shellExecutor.setDriverInterface(&mockDriver);
+    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
     unsigned int writeData = 0x123456;
     string hexString = ShellUtil::getUtilObj().toHexFormat(writeData);
     string fullreadResult = "";
@@ -234,11 +236,11 @@ TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
     }
 
     // write 호출 시 해당 위치에 데이터를 저장
-    EXPECT_CALL(mockDriver, writeSSD(::testing::_, writeData))
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, writeData))
         .Times(100)
         .WillRepeatedly(testing::Return());
 
-    EXPECT_CALL(mockDriver, readSSD(::testing::_))
+    EXPECT_CALL(*mockDriver, readSSD(::testing::_))
         .Times(100)
         .WillRepeatedly(testing::Return(writeData));
 

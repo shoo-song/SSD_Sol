@@ -1,7 +1,7 @@
 #include "shell_read_command.h"
+#include "ssddriver_store.h"
 
-ShellReadCommand::ShellReadCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellReadCommand::ShellReadCommand() {
 }
 
 string ShellReadCommand::execute(vector<string> args) {
@@ -9,7 +9,7 @@ string ShellReadCommand::execute(vector<string> args) {
         vector<unsigned int> convertedArgs = convertCmdArgs(args);
         string output = "[Read] LBA ";
 
-        unsigned int result = mpDriverInterface->readSSD((int)convertedArgs[0]);
+        unsigned int result = SsdDriverStore::getSsdDriverStore().getSsdDriver()->readSSD((int)convertedArgs[0]);
 
         output += ShellUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
         output += " : ";

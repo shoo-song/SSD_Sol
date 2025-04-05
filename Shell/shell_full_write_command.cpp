@@ -1,7 +1,7 @@
 #include "shell_full_write_command.h"
+#include "ssddriver_store.h"
 
-ShellFullWriteCommand::ShellFullWriteCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellFullWriteCommand::ShellFullWriteCommand() {
 }
 
 string ShellFullWriteCommand::execute(vector<string> args) {
@@ -10,7 +10,7 @@ string ShellFullWriteCommand::execute(vector<string> args) {
         string fullWriteResult = "[Full Write] Done";
 
         for (int i = 0; i < 100; i++) {
-            mpDriverInterface->writeSSD(i, convertedArgs[0]);
+            SsdDriverStore::getSsdDriverStore().getSsdDriver()->writeSSD(i, convertedArgs[0]);
         }
 
         return fullWriteResult;

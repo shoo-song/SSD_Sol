@@ -183,10 +183,12 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="ssddriver.cpp" />
+    <ClCompile Include="ssddriver_store.cpp" />
     <ClCompile Include="ssddriver_ut.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="ssddriver_exception.cpp" />
+    <ClInclude Include="ssddriver_store.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="1_FullWriteAndReadCompare.script" />

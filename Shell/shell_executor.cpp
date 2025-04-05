@@ -1,10 +1,5 @@
 #include "shell_executor.h"
 
-void ShellExecutor::setDriverInterface(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
-    mCommandFactory.setDriverInterface(pDriverInterface);
-}
-
 string ShellExecutor::execute(string input, bool isRunnerMode) {
     try {
         vector<string> separatedStr = ShellUtil::getUtilObj().splitString(input);

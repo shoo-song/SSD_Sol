@@ -4,7 +4,6 @@
 
 #include "script_loader.h"
 #include "shell_executor.h"
-#include "ssddriver.h"
 using std::cin;
 using std::cout;
 using std::string;
@@ -19,6 +18,5 @@ class Shell {
     void runRunnerMode(string runnerScriptName);
 
     ShellExecutor mExcutor;
-    SsdDriver mSsdDriver;
     ScriptLoader mScriptLoader;
 };

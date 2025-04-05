@@ -152,6 +152,9 @@
     <ClCompile Include="shell_script_erase_command.cpp">
       <Filter>소스 파일\shell\shellscript</Filter>
     </ClCompile>
+    <ClCompile Include="ssddriver_store.cpp">
+      <Filter>소스 파일\driver</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="shell_script_compare_command.h">
       <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="ssddriver_store.h">
+      <Filter>소스 파일\driver</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

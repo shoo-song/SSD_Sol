@@ -1,7 +1,7 @@
 #include "shell_full_read_command.h"
+#include "ssddriver_store.h"
 
-ShellFullReadCommand::ShellFullReadCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellFullReadCommand::ShellFullReadCommand() {
 }
 
 string ShellFullReadCommand::execute(vector<string> args) {
@@ -9,7 +9,7 @@ string ShellFullReadCommand::execute(vector<string> args) {
         string fullreadResult = "";
 
         for (int i = 0; i < 100; i++) {
-            string hexString = ShellUtil::getUtilObj().toHexFormat(mpDriverInterface->readSSD(i));
+            string hexString = ShellUtil::getUtilObj().toHexFormat(SsdDriverStore::getSsdDriverStore().getSsdDriver()->readSSD(i));
 
             fullreadResult += "[Full Read] LBA ";
             fullreadResult += ShellUtil::getUtilObj().toTwoDigitString(i) + " ";

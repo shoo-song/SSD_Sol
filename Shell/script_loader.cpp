@@ -1,9 +1,8 @@
 #include "script_loader.h"
 
-void ScriptLoader::loadScript(SsdDriverInterface* pDriverInterface) {
+void ScriptLoader::loadScript() {
     vector<string> fileNames = getScriptFileName();
     ScriptParser scriptParser;
-    scriptParser.setSsdDriver(pDriverInterface);
 
     for (string fileName : fileNames) {
         try {

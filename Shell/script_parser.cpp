@@ -1,9 +1,5 @@
 #include "script_parser.h"
 
-void ScriptParser::setSsdDriver(SsdDriverInterface* pdriverInterface) {
-    mpDriverInterface = pdriverInterface;
-}
-
 std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(string scriptName) {
     std::vector<shared_ptr<ShellScriptCommandInterface>> script;
 
@@ -134,14 +130,14 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
                     parseParameter(separatedStr[2], parentLooper);
 
                 scriptCmd =
-                    std::make_shared<ShellScriptCompareCommand>(mpDriverInterface, lba, expected);
+                    std::make_shared<ShellScriptCompareCommand>(lba, expected);
             } else if (scriptCmdEnum == WRITE_SCRIPT_COMMAND) {
                 shared_ptr<ShellScriptParameterGenInterface> lba =
                     parseParameter(separatedStr[1], parentLooper);
                 shared_ptr<ShellScriptParameterGenInterface> val =
                     parseParameter(separatedStr[2], parentLooper);
 
-                scriptCmd = std::make_shared<ShellScriptWriteCommand>(mpDriverInterface, lba, val);
+                scriptCmd = std::make_shared<ShellScriptWriteCommand>(lba, val);
             } else if (scriptCmdEnum == ERASE_SCRIPT_COMMAND) {
                 shared_ptr<ShellScriptParameterGenInterface> startLba =
                     parseParameter(separatedStr[1], parentLooper);
@@ -149,7 +145,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
                     parseParameter(separatedStr[2], parentLooper);
 
                 scriptCmd =
-                    std::make_shared<ShellScriptEraseCommand>(mpDriverInterface, startLba, endLba);
+                    std::make_shared<ShellScriptEraseCommand>(startLba, endLba);
             }
             commandVec.push_back(scriptCmd);
         }
