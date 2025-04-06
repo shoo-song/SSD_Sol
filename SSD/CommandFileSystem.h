@@ -11,8 +11,8 @@
 using namespace std;
 
 class CommandFileSystem {
-public:  
-
+public:      
+    ~CommandFileSystem() = default;
     bool directoryExists(const std::string& path);
     void removeDirectory(const std::string& path);
     void createDirectory();
@@ -20,9 +20,8 @@ public:
 
     void createFiles(void);
 
-    void updateFileName(string oldName, string newName);
+    void updateFileName(std::string oldName, std::string newName);
     std::vector<string> getCmdList();
-
     std::vector<string> makeCmdList();
 private:
     std::string bufferDir = "buffer";

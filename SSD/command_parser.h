@@ -27,18 +27,18 @@ public:
 		
 	bool checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data);
 	string toTwoDigitString(unsigned int value);
-	CmdInfo parseArg(int argCount, char CMD, string LBAstring = NULL, char* data = NULL);
+	CmdInfo parseArg(int argCount, char CMD, string LBAstring = "", char* data = nullptr);
 
 private:
 	std::unique_ptr<DataFileSystem> FileObj;
 
 	bool PrintError();
-	bool checkLBAInvalidity(size_t pos, std::string& LBAstring, uint32_t LBA);
+	bool isInvalidCommand(size_t pos, std::string& LBAstring, uint32_t LBA);
 
-	bool checkCmdTypeInvalidity(const char& CMD);
+	bool isCmdTypeValid(const char& CMD);
 
-	bool checkEraseSize(int argCount, char* data, uint32_t LBA);
+	bool isEraseSizeValid(int argCount, char* data, uint32_t LBA);
 
-	bool checkWriteDataInvalidity(int argCount, char* data, size_t& pos);
+	bool isWriteDataValid(int argCount, char* data, size_t& pos);
 
 };

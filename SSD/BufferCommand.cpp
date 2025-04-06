@@ -56,6 +56,15 @@ void BufferCommand::doFlushBuffer(std::vector<std::string>& fileList)
 
     changeFileNameToEmpty(fileList);
 }
+
+bool BufferCommand::isMatchingWrite(const CmdInfo& prevCmd, const CmdInfo& currentCmd) const {
+    return prevCmd.CMDType == CMD_WRITE && prevCmd.LBA == currentCmd.LBA;
+}
+
+bool BufferCommand::isErasedRange(const CmdInfo& prevCmd, int LBA) const {
+    return prevCmd.CMDType == CMD_ERASE &&
+        prevCmd.LBA <= LBA && prevCmd.EraseEndLBA >= LBA;
+}
 void BufferCommand::doReadBuffer(CmdInfo& cmdInfo, std::vector<std::string>& fileList)
 {
     MySSD.DoRead(cmdInfo.LBA);
@@ -64,17 +73,17 @@ void BufferCommand::doReadBuffer(CmdInfo& cmdInfo, std::vector<std::string>& fil
         if (isEmptyBuffer(name)) {
             break;
         }
-        else {
-            CmdInfo PrevCommand = extractCMDfromFileName(file);
-            if ((PrevCommand.CMDType == CMD_WRITE) && (PrevCommand.LBA == cmdInfo.LBA)) {
-                MySSD.DoCachedRead(0, PrevCommand.input_data);
-            }
-            else if ((PrevCommand.CMDType == CMD_ERASE) && (((PrevCommand.LBA) <= (cmdInfo.LBA)) && ((PrevCommand.EraseEndLBA) >= (cmdInfo.LBA)))) {
-                MySSD.DoCachedRead(0, (char*)"0x00000000");
-            }
+        CmdInfo prevCmd = extractCMDfromFileName(file);
+        if (isMatchingWrite(prevCmd, cmdInfo)) {
+            MySSD.DoCachedRead(0, prevCmd.input_data);
+        }
+        else if (isErasedRange(prevCmd, cmdInfo.LBA)) {
+            static char erasedData[] = "0x00000000";
+            MySSD.DoCachedRead(0, erasedData);
         }
     }
 }
+
 void BufferCommand::loadPreviousCommand(std::string& file)
 {
     CmdInfo command = extractCMDfromFileName(file);
@@ -145,26 +154,28 @@ void BufferCommand::MergeEraseRange(CmdInfo* prevCMD, CmdInfo* curCMD) {
         prevCMD->IsValid = false;
     }
 }
+
 void BufferCommand::HandleEraseWrite(CmdInfo* curCMD, CmdInfo* prevCMD)
 {
-    if (curCMD->LBA == prevCMD->EraseEndLBA) {
-        prevCMD->EraseEndLBA--;
-        if (prevCMD->EraseEndLBA < prevCMD->LBA) {
-            prevCMD->IsValid = false;
-        }
-    }
-    else if (curCMD->LBA == prevCMD->LBA) {
-        prevCMD->LBA++;
-        if (prevCMD->LBA > prevCMD->EraseEndLBA) {
-            prevCMD->IsValid = false;
-        }
-    }
+    // 이전 상태 저장
+    int originalLBA = prevCMD->LBA;
+    int originalEraseEnd = prevCMD->EraseEndLBA;
+
+    // 연산 결과를 조건 없이 계산
+    int eraseBegin = originalLBA + (curCMD->LBA == originalLBA);
+    int eraseEnd = originalEraseEnd - (curCMD->LBA == originalEraseEnd);
+
+    // 적용
+    prevCMD->LBA = eraseBegin;
+    prevCMD->EraseEndLBA = eraseEnd;
+
+    // 유효성 검사
+    prevCMD->IsValid = eraseBegin <= eraseEnd;
 }
+
 void BufferCommand::HandleWriteWrite(CmdInfo* curCMD, CmdInfo* prevCMD)
 {
-    if (curCMD->LBA == prevCMD->LBA) {
-        prevCMD->IsValid = false;
-    }
+    prevCMD->IsValid = (curCMD->LBA != prevCMD->LBA);
 }
 void BufferCommand::HandleWriteCommand(CmdInfo* prevCMD, CmdInfo* curCMD)
 {
@@ -179,9 +190,8 @@ void BufferCommand::HandleWriteCommand(CmdInfo* prevCMD, CmdInfo* curCMD)
 }
 void BufferCommand::HandleWriteErase(CmdInfo* prevCMD, CmdInfo* curCMD)
 {
-    if (((prevCMD->LBA) >= (curCMD->LBA)) && ((prevCMD->LBA) <= (curCMD->EraseEndLBA))) {
-        prevCMD->IsValid = false;
-    }
+    bool isOverlapping = (prevCMD->LBA >= curCMD->LBA) && (prevCMD->LBA <= curCMD->EraseEndLBA);
+    prevCMD->IsValid = !isOverlapping;
 }
 void BufferCommand::HandleEraseErase(CmdInfo* prevCMD, CmdInfo* curCMD)
 {
@@ -221,10 +231,12 @@ void BufferCommand::UpdateFileNames(std::vector<std::string>& fileList)
 {
     int fileoffset = 0;
     for (auto cmd : cmdList) {
-        if (cmd.IsValid == true) {
-            string newFileName = generateFileName(fileoffset, cmd);
-            CommandFileMgr.updateFileName(fileList[fileoffset++], newFileName);
-        }
+        if (!cmd.IsValid) continue;
+
+        string newFileName = generateFileName(fileoffset, cmd);
+        CommandFileMgr.updateFileName(fileList[fileoffset], newFileName);
+        ++fileoffset;
+        
     }
     for (int nIter = fileoffset; nIter < 5; nIter++) {
         string newFileName = to_string(nIter) + "_" + "empty";

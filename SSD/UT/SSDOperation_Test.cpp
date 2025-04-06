@@ -7,12 +7,12 @@
 #include <sys/stat.h> // mkdir(), stat()
 #include <string>
 
+#include "../CommandExecutor.h"
 #include "../DataFileSystem.h"
 #include "../SSD.cpp"
 #include "../command_parser.h"
 #include "../BufferCommand.h"
 #include "../CommandFileSystem.h"
-
 using namespace testing;
 //#define UNIT_TEST
 class SSDTestFixture : public Test
@@ -21,19 +21,14 @@ public:
 	SSD MySSD;
 	DataFileSystem FileMgr;
 	CommandParser InputParser;
-	
+
 	CommandFileSystem fs;
 	CmdInfo cmd;
 	std::vector<CmdInfo> cmdList;
-	
+
 };
 
-class MockFile : public DataFileSystem {
-public:
-	MOCK_METHOD(bool, open, (const std::string& filename), ());
-};
-
-TEST_F(SSDTestFixture, Read3) {
+TEST_F(SSDTestFixture, WriteAndRead) {
 // 임이 LBA (0~99) 수행 시, LBA 검색하여 data read
 	std::string data1 = "0xABABABAB";
 	int LBA = 10;
@@ -41,14 +36,12 @@ TEST_F(SSDTestFixture, Read3) {
 	MySSD.DoRead(LBA);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-
 TEST_F(SSDTestFixture, ReadAfterWrite) {
 	std::string data1 = "0x12345678";
 	MySSD.DoWrite(0x0, data1);
 	MySSD.DoRead(0x0);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-
 TEST_F(SSDTestFixture, WriteSameLBA) {
 	std::string data1 = "0x12345678";
 	MySSD.DoWrite(0x0, data1);
@@ -66,7 +59,6 @@ TEST_F(SSDTestFixture, WriteSameLBA) {
 	MySSD.DoRead(1);
 	EXPECT_EQ(data2, FileMgr.getReadDataFromOutput());
 }
-
 TEST_F(SSDTestFixture, CheckReadFile) {
 	std::string data1 = "0x12345678";
 	MySSD.DoWrite(0x0, data1);
@@ -107,74 +99,6 @@ TEST_F(SSDTestFixture, ReadAndWriteTest) {
 	MySSD.DoRead(10);
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-
-TEST_F(SSDTestFixture, CheckInvalidCmd) {
-	// when : invalid cmd
-	char data[20] = "0x12345678";
-	InputParser.parseArg(3, 's', "0", data);
-
-	DataFileSystem file;
-	string actual = file.getReadDataFromOutput();
-
-	EXPECT_THAT(actual, StrEq(string("ERROR")));
-}
-
-TEST_F(SSDTestFixture, CheckInvalidLBALenght) {
-	// given : initialize output file
-	char data[20] = "0x12345678";
-	MySSD.DoWrite(0x0, data);
-	MySSD.DoRead(0x0);
-
-	// when : invalid LBA length
-	InputParser.parseArg(4, 'W', "1a", data);
-
-	DataFileSystem file;
-	string actual = file.getReadDataFromOutput();
-	EXPECT_THAT(actual, StrEq(string("ERROR")));
-}
-
-TEST_F(SSDTestFixture, CheckInvalidLBARange) {
-	// given : initialize output file
-	char data[20] = "0x12345678";
-	MySSD.DoWrite(0x0, data);
-	MySSD.DoRead(0x0);
-
-	// when : invalid LBA range
-	InputParser.parseArg(4, 'W', "300", data);
-
-	DataFileSystem file;
-	string actual = file.getReadDataFromOutput();
-	EXPECT_THAT(actual, StrEq(string("ERROR")));
-}
-
-TEST_F(SSDTestFixture, CheckInvalidDataRange1) {
-	// given : initialize output file	
-	char data[20] = "0x12345678";
-	MySSD.DoWrite(0x0, data);
-	MySSD.DoRead(0x0);
-
-	// when : invalid data size
-	char data1[20] = "0x1234";
-	InputParser.parseArg(4, 'W', "3", data1);
-
-	DataFileSystem file;
-	string actual = file.getReadDataFromOutput();
-	EXPECT_THAT(actual, StrEq(string("ERROR")));
-}
-
-TEST_F(SSDTestFixture, CheckInvalidDataRange2) {
-	// given : initialize output file	
-	char data[20] = "0x12345678";
-	MySSD.DoWrite(0x0, data);
-	MySSD.DoRead(0x0);
-
-	// when : invalid data size
-	char data1[20] = "0x1234544444";
-	InputParser.parseArg(4, 'W', "3", data1);
-	DataFileSystem file;
-	string actual = file.getReadDataFromOutput();
-	EXPECT_THAT(actual, StrEq(string("ERROR")));
-}
 TEST_F(SSDTestFixture, EraseAndRead) {
 	std::string data1 = "0x12345678";
 	MySSD.DoWrite(0x0, data1);
@@ -182,7 +106,6 @@ TEST_F(SSDTestFixture, EraseAndRead) {
 	MySSD.DoRead(0x0);
 	EXPECT_EQ("0x00000000", FileMgr.getReadDataFromOutput());
 }
-
 TEST_F(SSDTestFixture, CMDMergeTest1)
 {
 	// Merge 3 to 1
@@ -214,7 +137,6 @@ TEST_F(SSDTestFixture, CMDMergeTest1)
 	temp.PushCommand(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
-
 TEST_F(SSDTestFixture, CMDMergeTest2)
 {
 	// Merge erase range, start lba same
@@ -238,7 +160,6 @@ TEST_F(SSDTestFixture, CMDMergeTest2)
 	temp.PushCommand(cmd);
 	EXPECT_EQ(1, temp.CheckValidCmdCount());
 }
-
 TEST_F(SSDTestFixture, CMDMergeTest3)
 {
 	// Merge erase range, end lba same
@@ -308,7 +229,6 @@ TEST_F(SSDTestFixture, CMDMergeTest5)
 	temp.PushCommand(cmd);
 	EXPECT_EQ(2, temp.CheckValidCmdCount());
 }
-
 TEST_F(SSDTestFixture, CMDMergeTest6)
 {
 	// Merge same LBA write
@@ -333,7 +253,6 @@ TEST_F(SSDTestFixture, CMDMergeTest6)
 	
 	EXPECT_EQ(true, fs.fileExists("0_W_10_0xABABABAB"));
 }
-
 TEST_F(SSDTestFixture, CMDMergeTest7)
 {
 	// Merge same LBA write
@@ -356,63 +275,6 @@ TEST_F(SSDTestFixture, CMDMergeTest7)
 
 	EXPECT_EQ(true, fs.fileExists("0_W_8_0xABABABAB"));
 }
-
-
-TEST_F(SSDTestFixture, CreateBufferFolder) {
-	std::string testDir = "buffer";
-	// 1️. 폴더 생성
-	fs.createDirectory();
-	EXPECT_TRUE(fs.directoryExists(testDir)) << "폴더 생성 실패";
-
-	// 2️. 폴더 삭제
-	fs.removeDirectory(testDir);
-	EXPECT_FALSE(fs.directoryExists(testDir)) << "폴더 삭제 실패";
-}
-
-TEST_F(SSDTestFixture, CreateEmptyFiles) {
-	// given : create buffer directory
-	fs.createDirectory();
-
-	std::string testFile = "empty";
-	EXPECT_FALSE( fs.fileExists(testFile)) << "empty.txt 파일이 존재하지 않음";
-
-	fs.createFiles();
-
-	EXPECT_EQ(true, fs.fileExists("0_empty"));
-	EXPECT_EQ(true, fs.fileExists("1_empty"));
-	EXPECT_EQ(true, fs.fileExists("2_empty"));
-	EXPECT_EQ(true, fs.fileExists("3_empty"));
-	EXPECT_EQ(true, fs.fileExists("4_empty"));
-}	
-
-TEST_F(SSDTestFixture, MakeCmdListFromBufferFiles)
-{
-	// given : initialize output file	
-	fs.createFiles();
-
-	std::vector<std::string> fileNames;
-	fileNames = fs.makeCmdList();
-
-	std::vector<std::string> expectedFiles = { "0_empty", "1_empty", "2_empty", "3_empty", "4_empty" };
-	for (auto name : fileNames) {
-		EXPECT_THAT(name, AnyOfArray(expectedFiles));
-	}
-}
-
-TEST_F(SSDTestFixture, updateFileName)
-{
-	// given : initialize output file	
-	fs.createFiles();
-
-	std::vector<std::string> fileNames;
-	fileNames = fs.makeCmdList();
-
-	string newName = "0_W_0_0x12345678";
-	string oldName = fileNames[0];
-	fs.updateFileName(oldName, newName);
-	EXPECT_EQ(true, fs.fileExists(newName));
-}
-
 TEST_F(SSDTestFixture, bufferFlush)
 {
 	// given : initialize output file	
@@ -456,7 +318,6 @@ TEST_F(SSDTestFixture, bufferFlush)
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 
 }
-
 TEST_F(SSDTestFixture, flushCommand)
 {
 	// given : initialize output file		
@@ -500,7 +361,6 @@ TEST_F(SSDTestFixture, flushCommand)
 	EXPECT_EQ(true, fs.fileExists("3_empty"));
 	EXPECT_EQ(true, fs.fileExists("4_empty"));
 }
-
 TEST_F(SSDTestFixture, fastRead) {
 	// given : initialize output file
 	fs.removeDirectory("buffer");
@@ -539,7 +399,6 @@ TEST_F(SSDTestFixture, fastRead) {
 	std::string data1 = "0xAAAABBBB";
 	EXPECT_EQ(data1, FileMgr.getReadDataFromOutput());
 }
-
 TEST_F(SSDTestFixture, fastReadEraseCMD) {
 	// given : initialize output file
 	fs.removeDirectory("buffer");

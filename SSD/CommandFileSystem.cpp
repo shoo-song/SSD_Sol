@@ -31,13 +31,15 @@ void CommandFileSystem::createFiles(void) {
 }
 
 void CommandFileSystem::updateFileName(string oldName, string newName) {
-
+    string oldName_ = bufferDir + "/" + oldName;
+    string newName_ = bufferDir + "/" + newName;
     if (!fileExists(oldName)) {
         std::cout << "파일이 존재하지 않습니다: " << oldName << std::endl;    // errro log 필요
     }
-    string oldName_ = bufferDir + "/" + oldName;
-    string newName_ = bufferDir + "/" + newName;
-    rename(oldName_.c_str(), newName_.c_str());
+    
+    if (rename(oldName_.c_str(), newName_.c_str()) != 0) {        
+        std::cout << "[ERROR] 파일 이름 변경 실패 " << std::endl;
+    }
 }
 
 std::vector<string> CommandFileSystem::getCmdList() {

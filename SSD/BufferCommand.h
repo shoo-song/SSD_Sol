@@ -7,9 +7,9 @@
 const int MAX_BUFFER_SIZE = 5;
 class BufferCommand {
 public:
-	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(filesystem) {     
-      cmdList.clear();
+	BufferCommand(CommandFileSystem& filesystem) : CommandFileMgr(filesystem) {          
     }
+    ~BufferCommand() = default;
     void InitDir(void);
     void InitCmdList(void);   
 	int CheckValidCmdCount(void);    
@@ -39,6 +39,9 @@ private:
     void MergeCMD(int cmd_index, std::vector<string> fileList);
     void MergeEraseRange(CmdInfo* prevCMD, CmdInfo* curCMD);    
     bool isEmptyBuffer(string name);
+
+    bool isErasedRange(const CmdInfo& prevCmd, int LBA) const;
+    bool isMatchingWrite(const CmdInfo& prevCmd, const CmdInfo& currentCmd) const;
 
     std::vector<CmdInfo> cmdList;
     CommandFileSystem& CommandFileMgr;
