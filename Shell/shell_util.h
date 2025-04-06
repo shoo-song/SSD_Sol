@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "shell_exception.h"
-#include "common.h"
 
 using std::vector;
 
