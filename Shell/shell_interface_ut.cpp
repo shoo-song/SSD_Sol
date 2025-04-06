@@ -6,13 +6,21 @@
 #include <vector>
 #include <memory>
 
-#include "mock_ssddriver.h"
 #include "shell_executor.h"
 #include "ssddriver_store.h"
 #include "script_loader.h"
 
 using namespace testing;
 using namespace std;
+
+class MockSsdDriverInterface : public SsdDriverInterface {
+public:
+    MOCK_METHOD(uint32_t, readSSD, (int LBA), (override));
+    MOCK_METHOD(void, writeSSD, (int LBA, uint32_t data), (override));
+    MOCK_METHOD(void, eraseSSD, (int LBA, int size), (override));
+    MOCK_METHOD(void, flushSSD, (), (override));
+};
+
 
 class ShellExecutorFixture : public testing::Test {
    public:
@@ -45,7 +53,7 @@ TEST_F(ShellExecutorFixture, parseFullreadTest) {
 }
 
 TEST_F(ShellExecutorFixture, readWriteTest1) {
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     EXPECT_CALL(*mockDriver, readSSD(1)).WillOnce(testing::Return(0xAAAABBBB));
@@ -56,24 +64,51 @@ TEST_F(ShellExecutorFixture, readWriteTest1) {
 }
 
 TEST_F(ShellExecutorFixture, readTest1) {
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     EXPECT_THROW(shellExecutor.execute("read 200", false), ShellException);
 }
 
 TEST_F(ShellExecutorFixture, writeTest1) {
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     EXPECT_THROW(shellExecutor.execute("write 200 200", false), ShellException);
+}
+
+TEST_F(ShellExecutorFixture, erase_size) {
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
+
+    EXPECT_CALL(*mockDriver, eraseSSD(1, 2))
+        .Times(1);
+    EXPECT_EQ("[Erase] Done", shellExecutor.execute("erase 01 2", false));
+}
+
+TEST_F(ShellExecutorFixture, erase_range) {
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
+
+    EXPECT_CALL(*mockDriver, eraseSSD(1, 2))
+        .Times(1);
+    EXPECT_EQ("[Full Erase] Done", shellExecutor.execute("erase_range 1 2", false));
+}
+
+TEST_F(ShellExecutorFixture, flush) {
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
+
+    EXPECT_CALL(*mockDriver, flushSSD())
+        .Times(1);
+    EXPECT_EQ("[Flush] Done", shellExecutor.execute("flush", false));
 }
 
 TEST_F(ShellExecutorFixture, script1_fullmatching) {
     ScriptLoader loader;
     loader.loadScript();
 
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
@@ -100,7 +135,7 @@ TEST_F(ShellExecutorFixture, script1_wildcard) {
     ScriptLoader loader;
     loader.loadScript();
 
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
@@ -127,7 +162,7 @@ TEST_F(ShellExecutorFixture, script2_fullmatching) {
     ScriptLoader loader;
     loader.loadScript();
 
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
@@ -154,7 +189,7 @@ TEST_F(ShellExecutorFixture, script2_wildcard) {
     ScriptLoader loader;
     loader.loadScript();
 
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
@@ -181,7 +216,7 @@ TEST_F(ShellExecutorFixture, script3_fullmatching) {
     ScriptLoader loader;
     loader.loadScript();
 
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
@@ -208,7 +243,7 @@ TEST_F(ShellExecutorFixture, script3_wildcard) {
     ScriptLoader loader;
     loader.loadScript();
 
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
 
     std::unordered_map<int, int> memory;
@@ -248,7 +283,7 @@ TEST_F(ShellExecutorFixture, helpCmd) {
 }
 
 TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
-    shared_ptr<MockSsdDriver> mockDriver = make_shared<MockSsdDriver>();
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
     unsigned int writeData = 0x123456;
     string hexString = ShellUtil::getUtilObj().toHexFormat(writeData);
@@ -270,4 +305,38 @@ TEST_F(ShellExecutorFixture, fullReadFullWriteTest1) {
 
     EXPECT_EQ("[Full Write] Done", shellExecutor.execute("fullwrite " + hexString, false));
     EXPECT_EQ(fullreadResult, shellExecutor.execute("fullread", false));
+}
+
+TEST_F(ShellExecutorFixture, script4_fullmatching) {
+    ScriptLoader loader;
+    loader.loadScript();
+
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
+
+    // write 호출 시 해당 위치에 데이터를 저장
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
+        .Times(2940);
+
+    EXPECT_CALL(*mockDriver, eraseSSD(::testing::_, ::testing::_))
+        .Times(1471);
+
+    EXPECT_EQ("PASS", shellExecutor.execute("4_EraseAndWriteAging", false));
+}
+
+TEST_F(ShellExecutorFixture, script4_wildcardMatching) {
+    ScriptLoader loader;
+    loader.loadScript();
+
+    shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
+    SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
+
+    // write 호출 시 해당 위치에 데이터를 저장
+    EXPECT_CALL(*mockDriver, writeSSD(::testing::_, ::testing::_))
+        .Times(2940);
+
+    EXPECT_CALL(*mockDriver, eraseSSD(::testing::_, ::testing::_))
+        .Times(1471);
+
+    EXPECT_EQ("PASS", shellExecutor.execute("4_", false));
 }
