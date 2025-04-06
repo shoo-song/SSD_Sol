@@ -5,6 +5,7 @@
 #include <vector>
 #include "script_parameter_generator.h"
 #include "shell_script_command_interface.h"
+#include "common.h"
 #include <stack>
 
 using std::make_shared;
@@ -15,6 +16,7 @@ class ScriptParser {
     std::vector<shared_ptr<ShellScriptCommandInterface>> makingScript(string scriptName);
 
    private:
+    ShellScriptApiCommand parseScriptApiCmd(const string input);
     std::string trim(const std::string& s);
     // 파라미터 토큰을 파싱하는 함수
     shared_ptr<ShellScriptParameterGenInterface> parseParameter(

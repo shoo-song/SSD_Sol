@@ -58,6 +58,23 @@ std::string ScriptParser::trim(const std::string& s) {
     return std::string(start, end + 1);
 }
 
+ShellScriptApiCommand ScriptParser::parseScriptApiCmd(const string input) {
+    if (input.compare("WRITE") == 0) {
+        return WRITE_SCRIPT_COMMAND;
+    }
+    if (input.compare("COMPARE") == 0) {
+        return COMPARE_SCRIPT_COMMAND;
+    }
+    if (input.compare("ERASE") == 0) {
+        return ERASE_SCRIPT_COMMAND;
+    }
+    if (input.compare("FLUSH") == 0) {
+        return FLUSH_SCRIPT_COMMAND;
+    }
+    return SCRIPT_UNKOWN;
+}
+
+
 // 파라미터 토큰을 파싱하는 함수
 shared_ptr<ShellScriptParameterGenInterface> ScriptParser::parseParameter(
     const std::string& token, shared_ptr<ShellScriptLoopIdxGetter> looper) {
@@ -142,8 +159,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
         } else {
             // 명령어 파싱: 공백으로 분리. Parameter는 
             vector<string> separatedStr = ShellUtil::getUtilObj().splitString(line);
-            ShellScriptApiCommand scriptCmdEnum =
-                ShellUtil::getUtilObj().parseScriptApiCmd(separatedStr[0]);
+            ShellScriptApiCommand scriptCmdEnum = parseScriptApiCmd(separatedStr[0]);
             shared_ptr<ShellScriptCommandInterface> scriptCmd;
 
             if (scriptCmdEnum == SCRIPT_UNKOWN) {

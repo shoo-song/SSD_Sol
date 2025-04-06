@@ -6,16 +6,14 @@
 #include <sstream>
 #include <vector>
 
-#include "common.h"
 #include "shell_exception.h"
+#include "common.h"
 
 using std::vector;
 
 class ShellUtil {
    public:
     static ShellUtil& getUtilObj();
-    ShellScriptApiCommand parseScriptApiCmd(const string input);
-    ShellCommand parse(string commandArg);
     // LBA 문자열 변환 (10진수, 0~99)
     unsigned int convertDecimalStringForLba(const std::string& input);
     // Size 문자열 변환 (10진수, 0~100)

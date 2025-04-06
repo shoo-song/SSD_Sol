@@ -5,53 +5,6 @@ ShellUtil& ShellUtil::getUtilObj() {
     return shellInterfaceUtil;
 }
 
-ShellScriptApiCommand ShellUtil::parseScriptApiCmd(const string input) {
-    if (input.compare("WRITE") == 0) {
-        return WRITE_SCRIPT_COMMAND;
-    }
-    if (input.compare("COMPARE") == 0) {
-        return COMPARE_SCRIPT_COMMAND;
-    }
-    if (input.compare("ERASE") == 0) {
-        return ERASE_SCRIPT_COMMAND;
-    }
-    if (input.compare("FLUSH") == 0) {
-        return FLUSH_SCRIPT_COMMAND;
-    }
-    return SCRIPT_UNKOWN;
-}
-
-ShellCommand ShellUtil::parse(string commandArg) {
-    if (commandArg.compare("read") == 0) {
-        return SSD_READ_COMMAND;
-    }
-    if (commandArg.compare("write") == 0) {
-        return SSD_WRITE_COMMAND;
-    }
-    if (commandArg.compare("help") == 0) {
-        return SSD_HELP_COMMAND;
-    }
-    if (commandArg.compare("exit") == 0) {
-        return SSD_EXIT_COMMAND;
-    }
-    if (commandArg.compare("fullwrite") == 0) {
-        return SSD_FULLWRITE_COMMAND;
-    }
-    if (commandArg.compare("fullread") == 0) {
-        return SSD_FULLREAD_COMMAND;
-    }
-    if (commandArg.compare("erase") == 0) {
-        return SSD_ERASE_COMMAND;
-    }
-    if (commandArg.compare("erase_range") == 0) {
-        return SSD_ERASERANGE_COMMAND;
-    }
-    if (commandArg.compare("flush") == 0) {
-        return SSD_FLUSH_COMMAND;
-    }
-    return SSD_SCRIPT_RUN_COMMAND;
-}
-
 // LBA 문자열 변환 (10진수, 0~99)
 unsigned int ShellUtil::convertDecimalStringForLba(const std::string& input) {
     size_t pos;

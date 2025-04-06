@@ -28,30 +28,6 @@ class ShellExecutorFixture : public testing::Test {
     string result;
 };
 
-TEST_F(ShellExecutorFixture, parseReadTest) {
-    EXPECT_EQ(SSD_READ_COMMAND, ShellUtil::getUtilObj().parse("read"));
-};
-
-TEST_F(ShellExecutorFixture, parseWriteTest) {
-    EXPECT_EQ(SSD_WRITE_COMMAND, ShellUtil::getUtilObj().parse("write"));
-};
-
-TEST_F(ShellExecutorFixture, parseExitTest) {
-    EXPECT_EQ(SSD_EXIT_COMMAND, ShellUtil::getUtilObj().parse("exit"));
-}
-
-TEST_F(ShellExecutorFixture, parseHelpTest) {
-    EXPECT_EQ(SSD_HELP_COMMAND, ShellUtil::getUtilObj().parse("help"));
-}
-
-TEST_F(ShellExecutorFixture, parseFullwriteTest) {
-    EXPECT_EQ(SSD_FULLWRITE_COMMAND, ShellUtil::getUtilObj().parse("fullwrite"));
-}
-
-TEST_F(ShellExecutorFixture, parseFullreadTest) {
-    EXPECT_EQ(SSD_FULLREAD_COMMAND, ShellUtil::getUtilObj().parse("fullread"));
-}
-
 TEST_F(ShellExecutorFixture, readWriteTest1) {
     shared_ptr<MockSsdDriverInterface> mockDriver = make_shared<MockSsdDriverInterface>();
     SsdDriverStore::getSsdDriverStore().setSsdDriver(mockDriver);
