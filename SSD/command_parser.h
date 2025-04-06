@@ -6,39 +6,39 @@ using namespace std;
 #define MAX_ERASE_SIZE (10)
 
 enum CommandType {
-	CMD_WRITE = 'W',
-	CMD_READ = 'R',
-	CMD_ERASE = 'E',
-	CMD_FLUSH = 'F'
+  CMD_WRITE = 'W',
+  CMD_READ = 'R',
+  CMD_ERASE = 'E',
+  CMD_FLUSH = 'F'
 };
 struct CmdInfo {
-	char CMDType;
-	int LBA;
-	string LBAString;
-	char input_data[20];
-	int EraseEndLBA = 0;
-	bool IsValid = false;
+  char CMDType;
+  int LBA;
+  string LBAString;
+  char input_data[20];
+  int EraseEndLBA = 0;
+  bool IsValid = false;
 };
 
 class CommandParser {
-public:
-	CommandParser() : FileObj(std::make_unique<DataFileSystem>()) {
-	}
-		
-	bool checkInvalidity(int argCount, const char& CMD, string LBAstring, char* data);
-	string toTwoDigitString(unsigned int value);
-	CmdInfo parseArg(int argCount, char CMD, string LBAstring = "", char* data = nullptr);
+ public:
+  CommandParser() : FileObj(std::make_unique<DataFileSystem>()) {}
 
-private:
-	std::unique_ptr<DataFileSystem> FileObj;
+  bool checkInvalidity(int argCount, const char &CMD, string LBAstring,
+                       char *data);
+  string toTwoDigitString(unsigned int value);
+  CmdInfo parseArg(int argCount, char CMD, string LBAstring = "",
+                   char *data = nullptr);
 
-	bool PrintError();
-	bool isInvalidCommand(size_t pos, std::string& LBAstring, uint32_t LBA);
+ private:
+  std::unique_ptr<DataFileSystem> FileObj;
 
-	bool isCmdTypeValid(const char& CMD);
+  bool PrintError();
+  bool isInvalidCommand(size_t pos, std::string &LBAstring, uint32_t LBA);
 
-	bool isEraseSizeValid(int argCount, char* data, uint32_t LBA);
+  bool isCmdTypeValid(const char &CMD);
 
-	bool isWriteDataValid(int argCount, char* data, size_t& pos);
+  bool isEraseSizeValid(int argCount, char *data, uint32_t LBA);
 
+  bool isWriteDataValid(int argCount, char *data, size_t &pos);
 };

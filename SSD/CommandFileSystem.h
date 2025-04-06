@@ -1,30 +1,33 @@
 #pragma once
-#include "iostream"
+#include <sys/stat.h>  // mkdir(), stat()
+#include <windows.h>
+
+#include <cstdio>   // remove()
+#include <cstdlib>  // system()
 #include <fstream>
-#include <cstdlib>   // system()
-#include <cstdio>    // remove()
-#include <memory>    // std::unique_ptr
-#include <sys/stat.h> // mkdir(), stat()
+#include <memory>  // std::unique_ptr
 #include <string>
 #include <vector>
-#include <windows.h> 
+
+#include "iostream"
 using namespace std;
 
 class CommandFileSystem {
-public:      
-    ~CommandFileSystem() = default;
-    bool directoryExists(const std::string& path);
-    void removeDirectory(const std::string& path);
-    void createDirectory();
-    bool fileExists(const std::string& filename);
+ public:
+  ~CommandFileSystem() = default;
+  bool directoryExists(const std::string &path);
+  void removeDirectory(const std::string &path);
+  void createDirectory();
+  bool fileExists(const std::string &filename);
 
-    void createFiles(void);
+  void createFiles(void);
 
-    void updateFileName(std::string oldName, std::string newName);
-    std::vector<string> getCmdList();
-    std::vector<string> makeCmdList();
-private:
-    std::string bufferDir = "buffer";
-    std::string emptyFile = "empty";
-    std::vector<std::string> fileNames;
+  void updateFileName(std::string oldName, std::string newName);
+  std::vector<string> getCmdList();
+  std::vector<string> makeCmdList();
+
+ private:
+  std::string bufferDir = "buffer";
+  std::string emptyFile = "empty";
+  std::vector<std::string> fileNames;
 };
