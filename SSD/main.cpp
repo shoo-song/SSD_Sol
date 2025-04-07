@@ -11,6 +11,7 @@ using namespace std;
 CmdInfo commandParse(int argc, char *argv[]) {
   CommandParser parser;
   CmdInfo ErrorCmd;
+  
   if (argc < 2) {
     ErrorCmd.IsValid = false;
     return ErrorCmd;
