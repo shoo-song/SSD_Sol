@@ -7,7 +7,7 @@
 #include <memory>   // std::unique_ptr
 #include <string>
 
-#include "../CommandExecutor.h"
+#include "../ssd_command_executor.h"
 #include "iostream"
 
 using namespace testing;
@@ -23,7 +23,7 @@ class CommandExecutorFixture : public Test {
 class MockBufferCommand : public BufferCommand {
  public:
   MockBufferCommand(CommandFileSystem &fs) : BufferCommand(fs) {}
-  MOCK_METHOD(void, PushCommand, (const CmdInfo &cmdInfo), ());
+  MOCK_METHOD(void, pushCommand, (const CmdInfo &cmdInfo), ());
 };
 
 TEST_F(CommandExecutorFixture, ParseInvalidCommand_MissingArgs) {
@@ -82,8 +82,8 @@ TEST_F(CommandExecutorFixture, CheckInvalidCmd) {
 TEST_F(CommandExecutorFixture, CheckInvalidLBALenght) {
   // given : initialize output file
   char data[20] = "0x12345678";
-  MySSD.DoWrite(0x0, data);
-  MySSD.DoRead(0x0);
+  MySSD.doWrite(0x0, data);
+  MySSD.doRead(0x0);
 
   // when : invalid LBA length
   InputParser.parseArg(4, 'W', "1a", data);
@@ -96,8 +96,8 @@ TEST_F(CommandExecutorFixture, CheckInvalidLBALenght) {
 TEST_F(CommandExecutorFixture, CheckInvalidLBARange) {
   // given : initialize output file
   char data[20] = "0x12345678";
-  MySSD.DoWrite(0x0, data);
-  MySSD.DoRead(0x0);
+  MySSD.doWrite(0x0, data);
+  MySSD.doRead(0x0);
 
   // when : invalid LBA range
   InputParser.parseArg(4, 'W', "300", data);
@@ -110,8 +110,8 @@ TEST_F(CommandExecutorFixture, CheckInvalidLBARange) {
 TEST_F(CommandExecutorFixture, CheckInvalidDataRange1) {
   // given : initialize output file
   char data[20] = "0x12345678";
-  MySSD.DoWrite(0x0, data);
-  MySSD.DoRead(0x0);
+  MySSD.doWrite(0x0, data);
+  MySSD.doRead(0x0);
 
   // when : invalid data size
   char data1[20] = "0x1234";
@@ -125,8 +125,8 @@ TEST_F(CommandExecutorFixture, CheckInvalidDataRange1) {
 TEST_F(CommandExecutorFixture, CheckInvalidDataRange2) {
   // given : initialize output file
   char data[20] = "0x12345678";
-  MySSD.DoWrite(0x0, data);
-  MySSD.DoRead(0x0);
+  MySSD.doWrite(0x0, data);
+  MySSD.doRead(0x0);
 
   // when : invalid data size
   char data1[20] = "0x1234544444";

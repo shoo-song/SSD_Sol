@@ -11,8 +11,8 @@ using namespace std;
 
 class DataFileSystem {
  public:
-  bool WriteFile(int LBA, string data);
-  bool ReadFile(int LBA, bool bCached, char *data);
+  bool writeFile(int LBA, string data);
+  bool readFile(int LBA, bool bCached, char *data);
   string getReadDataFromOutput();
   void writeInvalidLog();
 
@@ -24,15 +24,15 @@ class DataFileSystem {
   char filename_nand[100] = "ssd_nand.txt";
   char filename_output[100] = "ssd_output.txt";
 
-  bool NandFileOpen(void);
-  bool OpenNandFileWithMode(std::ios::openmode mode);
-  bool OpenOutputFile(std::ios::openmode mode);
-  bool OutputFileOpenForRead(void);
-  bool OutputFileOpenForWrite(void);
-  void WriteToFile(string data, bool bData);
+  bool nandFileOpen(void);
+  bool openNandFileWithMode(std::ios::openmode mode);
+  bool openOutputFile(std::ios::openmode mode);
+  bool outputFileOpenForRead(void);
+  bool outputFileOpenForWrite(void);
+  void writeToFile(string data, bool bData);
   bool fileExists(const char *filename);
   bool formatNandFile();
-  void CloseFiles();
+  void closeFiles();
   void closeFile(std::fstream &file);
   bool loadFromNand(int LBA, char *out_buf);
   bool loadData(int LBA, bool bCached, char *cached_data, char *out_buf);

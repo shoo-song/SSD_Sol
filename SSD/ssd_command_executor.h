@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BufferCommand.h"
-#include "CommandFileSystem.h"
+#include "ssd_buffer_command.h"
+#include "ssd_command_file_system.h"
 
 CmdInfo commandParse(int argc, char *argv[]);
 

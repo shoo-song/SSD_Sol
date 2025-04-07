@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 
-#include "BufferCommand.h"
-#include "CommandExecutor.h"
-#include "SSD.cpp"
-#include "command_parser.h"
+#include "ssd_buffer_command.h"
+#include "ssd_command_executor.h"
+#include "ssd.cpp"
+#include "ssd_command_parser.h"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ CmdInfo commandParse(int argc, char *argv[]) {
 }
 
 void executeCMD(const CmdInfo &command, BufferCommand &bufferCmd) {
-  bufferCmd.PushCommand(command);
+  bufferCmd.pushCommand(command);
 }
 #ifndef UNIT_TEST
 int main(int argc, char *argv[]) {

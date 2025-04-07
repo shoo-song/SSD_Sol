@@ -1,4 +1,4 @@
-#include "Command_parser.h"
+#include "ssd_command_parser.h"
 
 #include <io.h>
 
@@ -10,14 +10,14 @@
 
 using namespace std;
 
-bool CommandParser::PrintError() {
+bool CommandParser::printError() {
   FileObj->writeInvalidLog();
   return false;
 }
 
 bool CommandParser::isCmdTypeValid(const char &CMD) {
   static const std::unordered_set<char> validCmds = {'w', 'r', 'e', 'f'};
-  return validCmds.count(CMD) ? true : PrintError();
+  return validCmds.count(CMD) ? true : printError();
 }
 
 bool CommandParser::isInvalidCommand(size_t pos, std::string &LBAstring,
@@ -26,7 +26,7 @@ bool CommandParser::isInvalidCommand(size_t pos, std::string &LBAstring,
   bool isOutOfRange = (LBA >= MAX_LBA_COUNT);
 
   if (isLengthMismatch || isOutOfRange) {
-    return PrintError();
+    return printError();
   }
 
   return true;
@@ -34,29 +34,29 @@ bool CommandParser::isInvalidCommand(size_t pos, std::string &LBAstring,
 
 bool CommandParser::isEraseSizeValid(int argCount, char *data, uint32_t LBA) {
   if (argCount != 4) {
-    return PrintError();
+    return printError();
   }
   int EraseCount = stoi(data);
   bool isOutOfRange = (EraseCount < 0 || EraseCount > MAX_ERASE_SIZE);
   bool isOverflow = (LBA + EraseCount > MAX_LBA_COUNT);
 
   if (isOutOfRange || isOverflow) {
-    return PrintError();
+    return printError();
   }
   return true;
 }
 
 bool CommandParser::isWriteDataValid(int argCount, char *data, size_t &pos) {
   if (argCount != 4) {
-    return PrintError();
+    return printError();
   }
   std::string firstTwo(data, 2);
   if (strlen(data) != 10 || firstTwo != "0x") {
-    return PrintError();
+    return printError();
   }
   uint32_t LBA = std::stoul(data, &pos, 16);
   if (pos != strlen(data)) {
-    return PrintError();
+    return printError();
   }
   return true;
 }

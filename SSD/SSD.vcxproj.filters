@@ -18,25 +18,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SSD.cpp">
+    <ClCompile Include="ssd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="UT\SSDOperation_Test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
-    <ClCompile Include="DataFileSystem.cpp">
+    <ClCompile Include="ssd_data_file_system.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Command_parser.cpp">
+    <ClCompile Include="ssd_command_parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BufferCommand.cpp">
+    <ClCompile Include="ssd_buffer_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CommandFileSystem.cpp">
+    <ClCompile Include="ssd_command_file_system.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="UT\CommandParse_Test.cpp">
@@ -45,30 +45,24 @@
     <ClCompile Include="UT\Filesystem_Test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Command_parser.h">
+    <ClInclude Include="ssd_command_parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DataFileSystem.h">
+    <ClInclude Include="ssd_data_file_system.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="BufferCommand.h">
+    <ClInclude Include="ssd_buffer_command.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CommandFileSystem.h">
+    <ClInclude Include="ssd_command_file_system.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UT\UT.h">
+    <ClInclude Include="UT\ssd_UT.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CommandExecutor.h">
+    <ClInclude Include="ssd_command_executor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

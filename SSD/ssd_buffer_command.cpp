@@ -1,11 +1,11 @@
 #pragma once
-#include "BufferCommand.h"
+#include "ssd_buffer_command.h"
 
 #include <unordered_map>
 
-#include "CommandFileSystem.h"
-void BufferCommand::InitDir(void) { CommandFileMgr.removeDirectory("buffer"); }
-void BufferCommand::InitCmdList(void) { cmdList.clear(); }
+#include "ssd_command_file_system.h"
+void BufferCommand::initDir(void) { CommandFileMgr.removeDirectory("buffer"); }
+void BufferCommand::initCmdList(void) { cmdList.clear(); }
 CmdInfo BufferCommand::extractCMDfromFileName(std::string &file) {
   CmdInfo cmd;
   cmd.CMDType = file.at(2);
@@ -19,7 +19,7 @@ CmdInfo BufferCommand::extractCMDfromFileName(std::string &file) {
   }
   return cmd;
 }
-int BufferCommand::CheckValidCmdCount(void) {
+int BufferCommand::checkValidCmdCount(void) {
   int result = 0;
   for (auto cmd : cmdList) {
     if (cmd.IsValid == true) result++;
@@ -29,9 +29,9 @@ int BufferCommand::CheckValidCmdCount(void) {
 void BufferCommand::doFlushOperation(void) {
   for (auto CurCmd : cmdList) {
     if (CurCmd.CMDType == CMD_WRITE) {
-      MySSD.DoWrite(CurCmd.LBA, CurCmd.input_data);
+      MySSD.doWrite(CurCmd.LBA, CurCmd.input_data);
     } else if (CurCmd.CMDType == CMD_ERASE) {
-      MySSD.DoErase(CurCmd.LBA, stoi(CurCmd.input_data));
+      MySSD.doErase(CurCmd.LBA, stoi(CurCmd.input_data));
     } else {
       // error
     }
@@ -63,7 +63,7 @@ bool BufferCommand::isErasedRange(const CmdInfo &prevCmd, int LBA) const {
 }
 void BufferCommand::doReadBuffer(CmdInfo &cmdInfo,
                                  std::vector<std::string> &fileList) {
-  MySSD.DoRead(cmdInfo.LBA);
+  MySSD.doRead(cmdInfo.LBA);
   for (auto file : fileList) {
     string name = file.substr(2);
     if (isEmptyBuffer(name)) {
@@ -71,10 +71,10 @@ void BufferCommand::doReadBuffer(CmdInfo &cmdInfo,
     }
     CmdInfo prevCmd = extractCMDfromFileName(file);
     if (isMatchingWrite(prevCmd, cmdInfo)) {
-      MySSD.DoCachedRead(0, prevCmd.input_data);
+      MySSD.doCacheRead(0, prevCmd.input_data);
     } else if (isErasedRange(prevCmd, cmdInfo.LBA)) {
       static char erasedData[] = "0x00000000";
-      MySSD.DoCachedRead(0, erasedData);
+      MySSD.doCacheRead(0, erasedData);
     }
   }
 }
@@ -121,7 +121,7 @@ void BufferCommand::doWriteAndEraseBuffer(std::vector<std::string> &fileList,
     cmdList[0] = cmdInfo;
     cmd_idx = 0;
   }
-  MergeCMD(cmd_idx, fileList);
+  mergeCMD(cmd_idx, fileList);
 }
 
 void BufferCommand::changeFileNameToEmpty(std::vector<std::string> &fileList) {
@@ -134,7 +134,7 @@ void BufferCommand::changeFileNameToEmpty(std::vector<std::string> &fileList) {
     idx++;
   }
 }
-void BufferCommand::MergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD) {
+void BufferCommand::mergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD) {
   int EraseCount = max(curCMD->EraseEndLBA, prevCMD->EraseEndLBA) -
                    min(curCMD->LBA, prevCMD->LBA) + 1;
   if (EraseCount <= MAX_ERASE_SIZE) {
@@ -146,7 +146,7 @@ void BufferCommand::MergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD) {
   }
 }
 
-void BufferCommand::HandleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
+void BufferCommand::handleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
   // 이전 상태 저장
   int originalLBA = prevCMD->LBA;
   int originalEraseEnd = prevCMD->EraseEndLBA;
@@ -163,24 +163,24 @@ void BufferCommand::HandleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
   prevCMD->IsValid = eraseBegin <= eraseEnd;
 }
 
-void BufferCommand::HandleWriteWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
+void BufferCommand::handleWriteWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
   prevCMD->IsValid = (curCMD->LBA != prevCMD->LBA);
 }
-void BufferCommand::HandleWriteCommand(CmdInfo *prevCMD, CmdInfo *curCMD) {
+void BufferCommand::handleWriteCommand(CmdInfo *prevCMD, CmdInfo *curCMD) {
   if (prevCMD->CMDType == CMD_WRITE) {
     // W-W
-    HandleWriteWrite(curCMD, prevCMD);
+    handleWriteWrite(curCMD, prevCMD);
   } else {
     // E-W
-    HandleEraseWrite(curCMD, prevCMD);
+    handleEraseWrite(curCMD, prevCMD);
   }
 }
-void BufferCommand::HandleWriteErase(CmdInfo *prevCMD, CmdInfo *curCMD) {
+void BufferCommand::handleWriteErase(CmdInfo *prevCMD, CmdInfo *curCMD) {
   bool isOverlapping =
       (prevCMD->LBA >= curCMD->LBA) && (prevCMD->LBA <= curCMD->EraseEndLBA);
   prevCMD->IsValid = !isOverlapping;
 }
-void BufferCommand::HandleEraseErase(CmdInfo *prevCMD, CmdInfo *curCMD) {
+void BufferCommand::handleEraseErase(CmdInfo *prevCMD, CmdInfo *curCMD) {
   bool sameStart = (prevCMD->LBA == curCMD->LBA);
   bool sameEnd = (prevCMD->EraseEndLBA == curCMD->EraseEndLBA);
   bool prevStartInsideCur =
@@ -190,16 +190,16 @@ void BufferCommand::HandleEraseErase(CmdInfo *prevCMD, CmdInfo *curCMD) {
 
   if (sameStart || sameEnd || prevStartInsideCur || prevEndInsideCur) {
     // mrege
-    MergeEraseRange(prevCMD, curCMD);
+    mergeEraseRange(prevCMD, curCMD);
   }
 }
-void BufferCommand::HandleEraseCommand(CmdInfo *prevCMD, CmdInfo *curCMD) {
+void BufferCommand::handleEraseCommand(CmdInfo *prevCMD, CmdInfo *curCMD) {
   if (prevCMD->CMDType == CMD_WRITE) {
     // W-E
-    HandleWriteErase(prevCMD, curCMD);
+    handleWriteErase(prevCMD, curCMD);
   } else {
     // E-E
-    HandleEraseErase(prevCMD, curCMD);
+    handleEraseErase(prevCMD, curCMD);
   }
 }
 string BufferCommand::generateFileName(int fileOffset, CmdInfo cmd) {
@@ -211,7 +211,7 @@ bool BufferCommand::isEmptyBuffer(string name) {
   return (name == "empty") ? true : false;
 }
 
-void BufferCommand::UpdateFileNames(std::vector<std::string> &fileList) {
+void BufferCommand::updateFileNames(std::vector<std::string> &fileList) {
   int fileoffset = 0;
   for (auto cmd : cmdList) {
     if (!cmd.IsValid) continue;
@@ -225,21 +225,21 @@ void BufferCommand::UpdateFileNames(std::vector<std::string> &fileList) {
     CommandFileMgr.updateFileName(fileList[nIter], newFileName);
   }
 }
-void BufferCommand::MergeCMD(int cmd_index, std::vector<string> fileList) {
+void BufferCommand::mergeCMD(int cmd_index, std::vector<string> fileList) {
   for (int cmd_offset = cmd_index - 1; cmd_offset >= 0; cmd_offset--) {
     CmdInfo *prevCMD = &cmdList[cmd_offset];
     CmdInfo *curCMD = &cmdList[cmd_index];
     // check merge
     if (curCMD->CMDType == CMD_WRITE) {
-      HandleWriteCommand(prevCMD, curCMD);
+      handleWriteCommand(prevCMD, curCMD);
     } else if (curCMD->CMDType == CMD_ERASE) {
-      HandleEraseCommand(prevCMD, curCMD);
+      handleEraseCommand(prevCMD, curCMD);
     }
   }
-  UpdateFileNames(fileList);
+  updateFileNames(fileList);
 }
 
-void BufferCommand::PushCommand(CmdInfo cmdInfo) {
+void BufferCommand::pushCommand(CmdInfo cmdInfo) {
   std::vector<std::string> fileList = CommandFileMgr.getCmdList();
 
   static const std::unordered_map<char, std::shared_ptr<ICommandHandler>>

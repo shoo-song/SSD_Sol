@@ -1,5 +1,5 @@
 #pragma once
-#include "DataFileSystem.h"
+#include "ssd_data_file_system.h"
 
 #include <io.h>
 
@@ -10,11 +10,11 @@
 #include "iostream"
 using namespace std;
 
-bool DataFileSystem::OpenOutputFile(std::ios::openmode mode) {
+bool DataFileSystem::openOutputFile(std::ios::openmode mode) {
   Output_file_.open(filename_output, mode | std::ios::binary);
   return Output_file_.is_open();
 }
-bool DataFileSystem::OpenNandFileWithMode(std::ios::openmode mode) {
+bool DataFileSystem::openNandFileWithMode(std::ios::openmode mode) {
   Nand_file_.open(filename_nand, mode);
   return Nand_file_.is_open();
 }
@@ -24,7 +24,7 @@ bool DataFileSystem::fileExists(const char *filename) {
 }
 
 bool DataFileSystem::formatNandFile() {
-  OpenNandFileWithMode(std::ios::out | std::ios::binary);
+  openNandFileWithMode(std::ios::out | std::ios::binary);
 
   if (!Nand_file_.is_open()) {
     return false;
@@ -32,48 +32,48 @@ bool DataFileSystem::formatNandFile() {
 
   for (int lba = 0; lba < 100; ++lba) {
     Nand_file_.seekp(lba * BYTE_PER_LBA);
-    WriteToFile("0x00000000", true);
+    writeToFile("0x00000000", true);
   }
 
   Nand_file_.close();
   return true;
 }
-bool DataFileSystem::NandFileOpen(void) {
+bool DataFileSystem::nandFileOpen(void) {
   if (!fileExists(filename_nand)) {
     if (!formatNandFile()) {
       return false;
     }
   }
 
-  OpenNandFileWithMode(std::ios::in | std::ios::out | std::ios::binary);
+  openNandFileWithMode(std::ios::in | std::ios::out | std::ios::binary);
   return Nand_file_.is_open();
 }
 
-bool DataFileSystem::OutputFileOpenForWrite(void) {
-  return OpenOutputFile(std::ios::out);
+bool DataFileSystem::outputFileOpenForWrite(void) {
+  return openOutputFile(std::ios::out);
 }
-bool DataFileSystem::OutputFileOpenForRead(void) {
-  return OpenOutputFile(std::ios::in);
+bool DataFileSystem::outputFileOpenForRead(void) {
+  return openOutputFile(std::ios::in);
 }
 void DataFileSystem::writeToNand(int LBA, const std::string &data) {
   Nand_file_.seekp(LBA * BYTE_PER_LBA);
   Nand_file_ << std::setw(10) << data;
   Nand_file_.flush();
 }
-bool DataFileSystem::WriteFile(int LBA, string data) {
-  if (!NandFileOpen()) {
+bool DataFileSystem::writeFile(int LBA, string data) {
+  if (!nandFileOpen()) {
     return false;
   }
 
   writeToNand(LBA, data);
 
-  WriteToFile(data, true);
-  CloseFiles();
+  writeToFile(data, true);
+  closeFiles();
 
   return true;
 }
 
-void DataFileSystem::WriteToFile(string data, bool bData) {
+void DataFileSystem::writeToFile(string data, bool bData) {
   if (bData)
     Output_file_ << std::setw(10) << data;
   else
@@ -83,13 +83,13 @@ void DataFileSystem::WriteToFile(string data, bool bData) {
 }
 
 bool DataFileSystem::loadFromNand(int LBA, char *out_buf) {
-  if (!NandFileOpen()) {
+  if (!nandFileOpen()) {
     return false;
   }
 
   Nand_file_.seekg(LBA * BYTE_PER_LBA);
   Nand_file_.read(out_buf, BYTE_PER_LBA);
-  CloseFiles();
+  closeFiles();
   return true;
 }
 
@@ -102,7 +102,7 @@ bool DataFileSystem::loadData(int LBA, bool bCached, char *cached_data,
   return loadFromNand(LBA, out_buf);
 }
 
-bool DataFileSystem::ReadFile(int LBA, bool bCached, char *cached_data) {
+bool DataFileSystem::readFile(int LBA, bool bCached, char *cached_data) {
   bool result = true;
   char data_buf[20] = {};
 
@@ -110,31 +110,31 @@ bool DataFileSystem::ReadFile(int LBA, bool bCached, char *cached_data) {
     return false;
   }
 
-  if (!OutputFileOpenForWrite()) {
+  if (!outputFileOpenForWrite()) {
     return false;
   }
 
-  WriteToFile(std::string(data_buf), true);
-  CloseFiles();
+  writeToFile(std::string(data_buf), true);
+  closeFiles();
   return true;
 }
 
 string DataFileSystem::getReadDataFromOutput() {
-  if (!OutputFileOpenForRead()) {
+  if (!outputFileOpenForRead()) {
     return {};
   }
 
   char data_buf[20] = {};
   Output_file_.read(data_buf, BYTE_PER_LBA);
-  CloseFiles();
+  closeFiles();
 
   return data_buf;
 }
 
 void DataFileSystem::writeInvalidLog() {
-  if (OutputFileOpenForWrite()) {
-    WriteToFile("ERROR", false);
-    CloseFiles();
+  if (outputFileOpenForWrite()) {
+    writeToFile("ERROR", false);
+    closeFiles();
   }
 }
 void DataFileSystem::closeFile(std::fstream &file) {
@@ -142,7 +142,7 @@ void DataFileSystem::closeFile(std::fstream &file) {
     file.close();
   }
 }
-void DataFileSystem::CloseFiles() {
+void DataFileSystem::closeFiles() {
   closeFile(Output_file_);
   closeFile(Nand_file_);
 }

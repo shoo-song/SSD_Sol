@@ -127,15 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BufferCommand.cpp" />
-    <ClCompile Include="CommandFileSystem.cpp" />
-    <ClCompile Include="Command_parser.cpp" />
+    <ClCompile Include="ssd_buffer_command.cpp" />
+    <ClCompile Include="ssd_command_file_system.cpp" />
+    <ClCompile Include="ssd_command_parser.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SSD.cpp">
+    <ClCompile Include="ssd.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="DataFileSystem.cpp" />
+    <ClCompile Include="ssd_data_file_system.cpp" />
     <ClCompile Include="UT\CommandParse_Test.cpp" />
     <ClCompile Include="UT\Filesystem_Test.cpp" />
     <ClCompile Include="UT\SSDOperation_Test.cpp">
@@ -144,12 +144,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandExecutor.h" />
-    <ClInclude Include="DataFileSystem.h" />
-    <ClInclude Include="BufferCommand.h" />
-    <ClInclude Include="Command_parser.h" />
-    <ClInclude Include="CommandFileSystem.h" />
-    <ClInclude Include="UT\UT.h" />
+    <ClInclude Include="ssd_command_executor.h" />
+    <ClInclude Include="ssd_data_file_system.h" />
+    <ClInclude Include="ssd_buffer_command.h" />
+    <ClInclude Include="ssd_command_parser.h" />
+    <ClInclude Include="ssd_command_file_system.h" />
+    <ClInclude Include="UT\ssd_UT.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
