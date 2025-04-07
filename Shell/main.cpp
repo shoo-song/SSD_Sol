@@ -9,11 +9,11 @@ int main(int argc, char** argv) {
     return RUN_ALL_TESTS();
 }
 #else
+#include "logger.h"
 #include "shell.h"
 
 int main(int argc, char** argv) {
     Shell shell;
     return shell.runShell(argc, argv);
 }
-#endif
 #endif
