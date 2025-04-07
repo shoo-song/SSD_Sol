@@ -265,7 +265,7 @@ TEST_F(SSDTestFixture, CMDMergeTest7) {
   temp.pushCommand(cmd);
   temp.initCmdList();
 
-  EXPECT_EQ(true, fs.fileExists("0_W_8_0xABABABAB"));
+  EXPECT_EQ(true, fs.fileExists("0_W_08_0xABABABAB"));
 }
 TEST_F(SSDTestFixture, bufferFlush) {
   // given : initialize output file
