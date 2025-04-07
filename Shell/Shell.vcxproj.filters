@@ -47,9 +47,6 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="shell_interface_ut.cpp">
       <Filter>UT</Filter>
     </ClCompile>
@@ -57,9 +54,6 @@
       <Filter>UT</Filter>
     </ClCompile>
     <ClCompile Include="ssddriver.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
@@ -172,6 +166,15 @@
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
     <None Include="4_EraseAndWriteAging.script">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
+    <None Include="5_EraseCommandMerge.script">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
+    <None Include="6_WriteCommandMerge.script">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
+    <None Include="7_Flush.script">
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
   </ItemGroup>
