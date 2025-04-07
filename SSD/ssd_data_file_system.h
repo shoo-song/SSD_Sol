@@ -29,7 +29,8 @@ class DataFileSystem {
   bool openOutputFile(std::ios::openmode mode);
   bool outputFileOpenForRead(void);
   bool outputFileOpenForWrite(void);
-  void writeToFile(string data, bool bData);
+  void writeToNandFile(string data, bool bData);
+  void writeToOutputFile(string data, bool bData);
   bool fileExists(const char *filename);
   bool formatNandFile();
   void closeFiles();
