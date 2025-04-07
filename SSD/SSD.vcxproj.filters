@@ -21,7 +21,7 @@
     <ClCompile Include="SSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UT\UT.cpp">
+    <ClCompile Include="UT\SSDOperation_Test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
     <ClCompile Include="DataFileSystem.cpp">
@@ -35,6 +35,15 @@
     </ClCompile>
     <ClCompile Include="BufferCommand.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandFileSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UT\CommandParse_Test.cpp">
+      <Filter>UnitTest</Filter>
+    </ClCompile>
+    <ClCompile Include="UT\Filesystem_Test.cpp">
+      <Filter>UnitTest</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
@@ -54,6 +63,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CommandFileSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UT\UT.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandExecutor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

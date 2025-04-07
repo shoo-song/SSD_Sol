@@ -3,91 +3,79 @@
 #include "CommandFileSystem.h"
 #include "Command_parser.h"
 #include "SSD.cpp"
-
+const int MAX_BUFFER_SIZE = 5;
 class BufferCommand {
-public:
-    BufferCommand() : CommandFileMgr(std::make_unique<CommandFileSystem>()){
-      cmdList.clear();
-    }
+ public:
+  BufferCommand(CommandFileSystem &filesystem) : CommandFileMgr(filesystem) {}
+  ~BufferCommand() = default;
+  void InitDir(void);
+  void InitCmdList(void);
+  int CheckValidCmdCount(void);
+  void PushCommand(CmdInfo cmdInfo);
 
-    CmdInfo extractCMDfromFileName( std::string& file);
+  void doWriteAndEraseBuffer(std::vector<std::string> &fileList,
+                             CmdInfo &cmdInfo);
+  void doFlushBuffer(std::vector<std::string> &fileList);
+  void doReadBuffer(CmdInfo &cmdInfo, std::vector<std::string> &fileList);
 
-    void doFlush(std::vector<string>& fileList);
-	void DoBufferRead(char* data);
-    void PushCommand(CmdInfo cmdInfo);
-private:
-	void MergeEraseRange(CmdInfo* prevCMD, CmdInfo* curCMD) {
-		int EraseCount = max(curCMD->EraseEndLBA, prevCMD->EraseEndLBA) - min(curCMD->LBA, prevCMD->LBA) + 1;
-		if (EraseCount <= MAX_ERASE_SIZE) {
-			curCMD->LBA = min(curCMD->LBA, prevCMD->LBA);
-			curCMD->EraseEndLBA = max(curCMD->EraseEndLBA, prevCMD->EraseEndLBA);
-			prevCMD->IsValid = false;
-		}
-	}
-	void MergeCMD(int cmd_index, std::vector<string> fileList) {
-		for (int cmd_offset = cmd_index-1; cmd_offset >= 0; cmd_offset--) {
-			CmdInfo* prevCMD = &cmdList[cmd_offset];
-			CmdInfo* curCMD = &cmdList[cmd_index];
-			//check merge
-			if (curCMD->CMDType == CMD_WRITE) {
-				if (prevCMD->CMDType == CMD_WRITE) {
-					// W-W
-					if (curCMD->LBA == prevCMD->LBA) {
-						prevCMD->IsValid = false;
-					}
-				}
-				else {
-					// E-W
-					if (curCMD->LBA == prevCMD->EraseEndLBA) {
-						prevCMD->EraseEndLBA--;
-						if (prevCMD->EraseEndLBA < prevCMD->LBA) {
-							prevCMD->IsValid = false;
-						}
-					}
-					else if (curCMD->LBA == prevCMD->LBA) {
-						prevCMD->LBA++;
-						if (prevCMD->LBA > prevCMD->EraseEndLBA) {
-							prevCMD->IsValid = false;
-						}
-					}
-				}
-			}
-			else if (curCMD->CMDType == CMD_ERASE) {
-				if (prevCMD->CMDType == CMD_WRITE) {
-					// W-E
-					if (((prevCMD->LBA) >= (curCMD->LBA)) && ((prevCMD->LBA) <= (curCMD->EraseEndLBA))) {
-						prevCMD->IsValid = false;
-					}
-				}
-				else {
-					// E-E
-					if (((prevCMD->LBA == curCMD->LBA) || (prevCMD->EraseEndLBA == curCMD->EraseEndLBA))
-						|| ((prevCMD->LBA > curCMD->LBA) && (prevCMD->LBA <= curCMD->EraseEndLBA + 1))
-						|| ((prevCMD->LBA < curCMD->LBA) && (prevCMD->EraseEndLBA + 1 >= curCMD->LBA))) {
-						//mrege
-						MergeEraseRange(prevCMD, curCMD);
-					}
-				}
-			}
-		}
-		int fileoffset = 0;
-		for (auto cmd : cmdList) {
-			if (cmd.IsValid == true) {
-				string newFileName = to_string(fileoffset) + "_" +
-					std::string(1, cmd.CMDType) + "_" +
-					cmd.LBAString + "_" +
-					cmd.input_data;
-				CommandFileMgr->updateFileName(fileList[fileoffset++], newFileName);
-			}
-		}
-		for (int nIter = fileoffset; nIter < 5; nIter++) {
-			string newFileName = to_string(nIter) + "_" + "empty";
-			CommandFileMgr->updateFileName(fileList[nIter], newFileName);
-		}
-	}
-    std::vector<CmdInfo> cmdList;
-    std::unique_ptr<CommandFileSystem> CommandFileMgr;
-    std::unique_ptr<DataFileSystem> DataFileMgr;
-	SSD MySSD;
+ private:
+  void doFlushOperation(void);
+  CmdInfo extractCMDfromFileName(std::string &file);
+  void loadPreviousCommand(std::string &file);
+  void insertNewCommand(int cmd_idx, CmdInfo &cmdInfo,
+                        std::vector<std::string> &fileList);
+  int processFileSlot(std::vector<std::string> &fileList, CmdInfo &cmdInfo);
+
+  void HandleWriteCommand(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void HandleEraseCommand(CmdInfo *prevCMD, CmdInfo *curCMD);
+
+  void HandleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD);
+  void HandleWriteWrite(CmdInfo *curCMD, CmdInfo *prevCMD);
+  void HandleWriteErase(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void HandleEraseErase(CmdInfo *prevCMD, CmdInfo *curCMD);
+
+  string generateFileName(int fileOffset, CmdInfo cmd);
+  void UpdateFileNames(std::vector<std::string> &fileList);
+  void changeFileNameToEmpty(std::vector<std::string> &fileList);
+  void MergeCMD(int cmd_index, std::vector<string> fileList);
+  void MergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD);
+  bool isEmptyBuffer(string name);
+
+  bool isErasedRange(const CmdInfo &prevCmd, int LBA) const;
+  bool isMatchingWrite(const CmdInfo &prevCmd, const CmdInfo &currentCmd) const;
+
+  std::vector<CmdInfo> cmdList;
+  CommandFileSystem &CommandFileMgr;
+  SSD MySSD;
 };
 
+class ICommandHandler {
+ public:
+  virtual void execute(BufferCommand *self, CmdInfo &cmd,
+                       std::vector<std::string> &files) = 0;
+  virtual ~ICommandHandler() = default;
+};
+
+class WriteOrEraseHandler : public ICommandHandler {
+ public:
+  void execute(BufferCommand *receiver, CmdInfo &cmd,
+               std::vector<std::string> &files) override {
+    receiver->doWriteAndEraseBuffer(files, cmd);
+  }
+};
+
+class ReadHandler : public ICommandHandler {
+ public:
+  void execute(BufferCommand *receiver, CmdInfo &cmd,
+               std::vector<std::string> &files) override {
+    receiver->doReadBuffer(cmd, files);
+  }
+};
+
+class FlushHandler : public ICommandHandler {
+ public:
+  void execute(BufferCommand *receiver, CmdInfo &cmd,
+               std::vector<std::string> &files) override {
+    receiver->doFlushBuffer(files);
+  }
+};
