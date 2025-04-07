@@ -21,7 +21,7 @@
     <ClCompile Include="ssd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UT\SSDOperation_Test.cpp">
+    <ClCompile Include="UT\ssd_Operation_Test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
     <ClCompile Include="ssd_data_file_system.cpp">
@@ -39,10 +39,10 @@
     <ClCompile Include="ssd_command_file_system.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UT\CommandParse_Test.cpp">
+    <ClCompile Include="UT\ssd_commandParse_Test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
-    <ClCompile Include="UT\Filesystem_Test.cpp">
+    <ClCompile Include="UT\ssd_filesystem_Test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
   </ItemGroup>
