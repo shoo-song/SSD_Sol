@@ -64,7 +64,7 @@ TEST_F(CommandExecutorFixture, ExecuteCommandCallsPushCommand) {
 
   executeCMD(cmd, bufferCmd);
 
-  string filename = "0_W_1_0x34567890";
+  string filename = "0_W_01_0x34567890";
   EXPECT_EQ(true, fs.fileExists(filename));
 }
 
