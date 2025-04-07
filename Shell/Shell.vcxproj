@@ -197,8 +197,11 @@
     <None Include="2_PartialLBAWrite.script" />
     <None Include="3_WriteReadAging.script" />
     <None Include="4_EraseAndWriteAging.script" />
+    <None Include="5_EraseCommandMerge.script" />
+    <None Include="7_Flush.script" />
     <None Include="MakeFile" />
     <None Include="packages.config" />
+    <None Include="6_WriteCommandMerge.script" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
