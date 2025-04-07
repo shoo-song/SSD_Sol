@@ -29,13 +29,12 @@ bool DataFileSystem::formatNandFile() {
   if (!Nand_file_.is_open()) {
     return false;
   }
-
-  for (int lba = 0; lba < 100; ++lba) {
+  for (int lba = 0; lba < 100; lba++) {
     Nand_file_.seekp(lba * BYTE_PER_LBA);
-    writeToFile("0x00000000", true);
+    writeToNandFile("0x00000000", true);
   }
-
   Nand_file_.close();
+
   return true;
 }
 bool DataFileSystem::nandFileOpen(void) {
@@ -67,13 +66,20 @@ bool DataFileSystem::writeFile(int LBA, string data) {
 
   writeToNand(LBA, data);
 
-  writeToFile(data, true);
+  writeToNandFile(data, true);
   closeFiles();
 
   return true;
 }
+void DataFileSystem::writeToNandFile(string data, bool bData) {
+    if (bData)
+        Nand_file_ << std::setw(10) << data;
+    else
+        Nand_file_ << data;
 
-void DataFileSystem::writeToFile(string data, bool bData) {
+    Nand_file_.flush();
+}
+void DataFileSystem::writeToOutputFile(string data, bool bData) {
   if (bData)
     Output_file_ << std::setw(10) << data;
   else
@@ -114,7 +120,7 @@ bool DataFileSystem::readFile(int LBA, bool bCached, char *cached_data) {
     return false;
   }
 
-  writeToFile(std::string(data_buf), true);
+  writeToOutputFile(std::string(data_buf), true);
   closeFiles();
   return true;
 }
@@ -133,7 +139,7 @@ string DataFileSystem::getReadDataFromOutput() {
 
 void DataFileSystem::writeInvalidLog() {
   if (outputFileOpenForWrite()) {
-    writeToFile("ERROR", false);
+    writeToOutputFile("ERROR", false);
     closeFiles();
   }
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "ssd_buffer_command.h"
+#include "ssd_command_parser.h"
 
 #include <unordered_map>
 
@@ -138,29 +139,30 @@ void BufferCommand::mergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD) {
   int EraseCount = max(curCMD->EraseEndLBA, prevCMD->EraseEndLBA) -
                    min(curCMD->LBA, prevCMD->LBA) + 1;
   if (EraseCount <= MAX_ERASE_SIZE) {
-    curCMD->LBA = min(curCMD->LBA, prevCMD->LBA);
-    curCMD->LBAString = to_string(curCMD->LBA);
-    curCMD->EraseEndLBA = max(curCMD->EraseEndLBA, prevCMD->EraseEndLBA);
-    strcpy_s(curCMD->input_data, to_string(EraseCount).data());
-    prevCMD->IsValid = false;
+      curCMD->LBA = min(curCMD->LBA, prevCMD->LBA);
+      curCMD->LBAString = to_string(curCMD->LBA);
+      curCMD->EraseEndLBA = max(curCMD->EraseEndLBA, prevCMD->EraseEndLBA);
+      strcpy_s(curCMD->input_data, to_string(EraseCount).data());
+      prevCMD->IsValid = false;
   }
 }
 
 void BufferCommand::handleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
-  // 이전 상태 저장
-  int originalLBA = prevCMD->LBA;
-  int originalEraseEnd = prevCMD->EraseEndLBA;
+    // 이전 상태 저장
+    int originalLBA = prevCMD->LBA;
+    int originalEraseEnd = prevCMD->EraseEndLBA;
 
-  // 연산 결과를 조건 없이 계산
-  int eraseBegin = originalLBA + (curCMD->LBA == originalLBA);
-  int eraseEnd = originalEraseEnd - (curCMD->LBA == originalEraseEnd);
+    // 연산 결과를 조건 없이 계산
+    int eraseBegin = originalLBA + (curCMD->LBA == originalLBA);
+    int eraseEnd = originalEraseEnd - (curCMD->LBA == originalEraseEnd);
 
-  // 적용
-  prevCMD->LBA = eraseBegin;
-  prevCMD->EraseEndLBA = eraseEnd;
-
-  // 유효성 검사
-  prevCMD->IsValid = eraseBegin <= eraseEnd;
+    // 적용
+    prevCMD->LBA = eraseBegin;
+    prevCMD->EraseEndLBA = eraseEnd;
+    strcpy_s(prevCMD->input_data, to_string(eraseEnd - eraseBegin + 1).c_str());
+    prevCMD->LBAString = to_string(eraseBegin);
+    // 유효성 검사
+    prevCMD->IsValid = eraseBegin <= eraseEnd;
 }
 
 void BufferCommand::handleWriteWrite(CmdInfo *curCMD, CmdInfo *prevCMD) {
@@ -203,8 +205,10 @@ void BufferCommand::handleEraseCommand(CmdInfo *prevCMD, CmdInfo *curCMD) {
   }
 }
 string BufferCommand::generateFileName(int fileOffset, CmdInfo cmd) {
+    CommandParser parser;
+    string LBAString = parser.toTwoDigitString(stoi(cmd.LBAString));
   return to_string(fileOffset) + "_" + std::string(1, cmd.CMDType) + "_" +
-         cmd.LBAString + "_" + cmd.input_data;
+      LBAString + "_" + cmd.input_data;
 }
 
 bool BufferCommand::isEmptyBuffer(string name) {

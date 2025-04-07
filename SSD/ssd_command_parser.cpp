@@ -24,11 +24,9 @@ bool CommandParser::isInvalidCommand(size_t pos, std::string &LBAstring,
                                      uint32_t LBA) {
   bool isLengthMismatch = (pos != LBAstring.length());
   bool isOutOfRange = (LBA >= MAX_LBA_COUNT);
-
   if (isLengthMismatch || isOutOfRange) {
     return printError();
   }
-
   return true;
 }
 
@@ -101,19 +99,19 @@ CmdInfo CommandParser::parseArg(int argCount, char CMD, string LBAstring,
 
   Command.LBA = lbaValue;
 
-  if (cmdChar == 'w') {
+  if (cmdChar == 'w' || cmdChar == 'W') {
     strcpy_s(Command.input_data, data);
     Command.CMDType = CMD_WRITE;
   }
-  if (cmdChar == 'r') {
+  if (cmdChar == 'r' || cmdChar == 'R') {
     Command.CMDType = CMD_READ;
   }
-  if (cmdChar == 'e') {
+  if (cmdChar == 'e' || cmdChar == 'E') {
     Command.EraseEndLBA = Command.LBA + stoi(data) - 1;
     strcpy_s(Command.input_data, data);
     Command.CMDType = CMD_ERASE;
   }
-  if (cmdChar == 'f') {
+  if (cmdChar == 'f' || cmdChar == 'F') {
     Command.CMDType = CMD_FLUSH;
   }
 
