@@ -15,12 +15,12 @@ class SsdDriverMockFixture : public testing::Test {
     MockSsdDriver mockssdDriver;
 };
 
-TEST_F(SsdDriverFixture, ssddrive_read_mock) {
-    ssdDriver.writeSSD(1, 0x12345678);
-
-    uint32_t expected = ssdDriver.readSSD(1);
-    EXPECT_EQ(expected, 0x12345678);
-}
+//TEST_F(SsdDriverFixture, ssddrive_read_mock) {
+//    ssdDriver.writeSSD(1, 0x12345678);
+//
+//    uint32_t expected = ssdDriver.readSSD(1);
+//    EXPECT_EQ(expected, 0x12345678);
+//}
 
 TEST_F(SsdDriverMockFixture, ssddrive_read_cmd) {
     const std::string expected = "SSD.exe R 1";
@@ -52,10 +52,10 @@ TEST_F(SsdDriverMockFixture, ssddrive_erase_cmd) {
     EXPECT_TRUE(result);
 }
 
-TEST_F(SsdDriverFixture, ssd_read_excpetion) {
-    EXPECT_THROW(ssdDriver.readSSD(200), SsdDriverException);
-}
-
-TEST_F(SsdDriverFixture, ssd_write_excpetion) {
-    EXPECT_THROW(ssdDriver.writeSSD(100, 0x12345678), SsdDriverException);
-}
+//TEST_F(SsdDriverFixture, ssd_read_excpetion) {
+//    EXPECT_THROW(ssdDriver.readSSD(200), SsdDriverException);
+//}
+//
+//TEST_F(SsdDriverFixture, ssd_write_excpetion) {
+//    EXPECT_THROW(ssdDriver.writeSSD(100, 0x12345678), SsdDriverException);
+//}

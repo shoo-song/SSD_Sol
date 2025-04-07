@@ -7,7 +7,7 @@ ShellEraseRangeCommand::ShellEraseRangeCommand() {
 string ShellEraseRangeCommand::execute(vector<string> args) {
     try {
         vector<unsigned int> convertedArgs = convertCmdArgs(args);
-        string output = "";
+        string output = "[Erase_Range] Done";
 
         int startLBA = (int)convertedArgs[0];
         int rangeLBA = (int)convertedArgs[1];
@@ -16,7 +16,6 @@ string ShellEraseRangeCommand::execute(vector<string> args) {
         while (rangeLBA > 0) {
             int chunk = std::min(rangeLBA, maxChunkSize);
             SsdDriverStore::getSsdDriverStore().getSsdDriver()->eraseSSD(startLBA, chunk);
-            output += "[Erase] Done " + std::to_string(startLBA) + ' ' + std::to_string(chunk) + '\n';
             startLBA += chunk;
             rangeLBA -= chunk;
         }
