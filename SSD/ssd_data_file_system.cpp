@@ -65,8 +65,6 @@ bool DataFileSystem::writeFile(int LBA, string data) {
   }
 
   writeToNand(LBA, data);
-
-  writeToNandFile(data, true);
   closeFiles();
 
   return true;
