@@ -68,7 +68,7 @@ TEST_F(ShellExecutorFixture, erase_range) {
 
     EXPECT_CALL(*mockDriver, eraseSSD(1, 2))
         .Times(1);
-    EXPECT_EQ("[Full Erase] Done", shellExecutor.execute("erase_range 1 2", false));
+    EXPECT_EQ("[Erase_Range] Done", shellExecutor.execute("erase_range 1 2", false));
 }
 
 TEST_F(ShellExecutorFixture, flush) {
