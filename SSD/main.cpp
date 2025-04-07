@@ -30,7 +30,6 @@ void executeCMD(const CmdInfo &command, BufferCommand &bufferCmd) {
 #ifndef UNIT_TEST
 int main(int argc, char *argv[]) {
   CmdInfo Command = commandParse(argc, argv);
-  cout << "outside" << Command.IsValid;
   if (!Command.IsValid) {
     return 0;
   }
