@@ -1,8 +1,16 @@
 #include "script_parser.h"
-
-void ScriptParser::setSsdDriver(SsdDriverInterface* pdriverInterface) {
-    mpDriverInterface = pdriverInterface;
-}
+#include "shell_script_compare_command.h"
+#include "shell_script_loop_command.h"
+#include "shell_script_write_command.h"
+#include "shell_script_erase_command.h"
+#include "shell_script_flush_command.h"
+#include "shell_util.h"
+#include <regex>
+#include <sstream>
+#include <stdexcept>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 
 std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(string scriptName) {
     std::vector<shared_ptr<ShellScriptCommandInterface>> script;
@@ -12,6 +20,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(
         throw std::runtime_error("Error: .");
     }
 
+    validationStackClear();
     std::vector<std::string> lines;
     std::string line;
     while (std::getline(file, line)) {
@@ -21,10 +30,19 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::makingScript(
     try {
         size_t idx = 0;
         script = parseStatements(nullptr, lines, idx);
+        if (!mValidationStack.empty()) {
+            throw std::runtime_error("Error: .");
+        }
     } catch (const std::exception& ex) {
         throw ex;
     }
     return script;
+}
+
+void ScriptParser::validationStackClear() {
+    while (!mValidationStack.empty()) {
+        mValidationStack.pop();
+    }
 }
 
 // 공백 제거 함수
@@ -40,39 +58,61 @@ std::string ScriptParser::trim(const std::string& s) {
     return std::string(start, end + 1);
 }
 
+ShellScriptApiCommand ScriptParser::parseScriptApiCmd(const string input) {
+    if (input.compare("WRITE") == 0) {
+        return WRITE_SCRIPT_COMMAND;
+    }
+    if (input.compare("COMPARE") == 0) {
+        return COMPARE_SCRIPT_COMMAND;
+    }
+    if (input.compare("ERASE") == 0) {
+        return ERASE_SCRIPT_COMMAND;
+    }
+    if (input.compare("FLUSH") == 0) {
+        return FLUSH_SCRIPT_COMMAND;
+    }
+    return SCRIPT_UNKOWN;
+}
+
+
 // 파라미터 토큰을 파싱하는 함수
 shared_ptr<ShellScriptParameterGenInterface> ScriptParser::parseParameter(
     const std::string& token, shared_ptr<ShellScriptLoopIdxGetter> looper) {
-    // VAL(숫자)
-    std::regex regexVal(R"(VAL\(\s*(\d+)\s*\))");
-    // IND(숫자) 또는 IND() : 숫자 없으면 기본 0
-    std::regex regexInd(R"(IND\(\s*(-?\d+)?\s*\))");
-    // RAND(숫자,숫자,숫자)
-    std::regex regexRand(R"(RAND\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\))");
-    // RAND_REF(숫자,숫자,숫자)
-    std::regex regexRandRef(R"(RAND_REF\(\s*(\d+)\s*\))");
+    // VAL(숫자) : 10진수 혹은 16진수
+    std::regex regexVal(R"(VAL\(\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*\))");
+
+    // IND(숫자) 또는 IND() : 숫자 없으면 기본 0, 음수 포함
+    std::regex regexInd(R"(IND\(\s*(-?(?:(?:0[xX][0-9a-fA-F]+)|\d+))?\s*\))");
+
+    // RAND(숫자,숫자,숫자) : 각 숫자가 10진수 또는 16진수
+    std::regex regexRand(R"(RAND\(\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*,\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*,\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*\))");
+
+    // RAND_REF(숫자) : 10진수 또는 16진수
+    std::regex regexRandRef(R"(RAND_REF\(\s*((?:0[xX][0-9a-fA-F]+)|\d+)\s*\))");
 
     std::smatch match;
 
     if (std::regex_match(token, match, regexVal)) {
-        return make_shared<ScriptParamValGen>(std::stoi(match[1]));
+        return make_shared<ScriptParamValGen>(std::stoul(match[1], nullptr, 0));
     } else if (std::regex_match(token, match, regexInd)) {
         if (looper == nullptr) {
             throw std::runtime_error("looper 0");
         }
-
-        return make_shared<ScriptParamIdxGen>(looper, std::stoi(match[1]));
+        return make_shared<ScriptParamIdxGen>(looper, std::stoi(match[1], nullptr, 0));
     } else if (std::regex_match(token, match, regexRand)) {
-        return make_shared<ScriptParamRanGen>(std::stoi(match[1]), std::stoi(match[2]),
-                                              std::stoi(match[3]));
+        return make_shared<ScriptParamRanGen>(
+            std::stoi(match[1], nullptr, 0),
+            std::stoi(match[2], nullptr, 0),
+            std::stoul(match[3], nullptr, 0)
+        );
     } else if (std::regex_match(token, match, regexRandRef)) {
-        return make_shared<ShellScriptRandGetGen>(std::stoi(match[1]));
+        return make_shared<ShellScriptRandGetGen>(std::stoi(match[1], nullptr, 0));
     }
     return nullptr;
 }
 
-// 재귀적으로 스크립트 라인을 파싱하는 함수
-// idx는 현재 라인 인덱스를 가리키며, block 종료('}')를 만나면 반환합니다.
+// 재귀적으로 스크립트 라인을 파싱
+// idx는 현재 라인 인덱스를 가리키며, block 종료('}')를 만나면 반환
 std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatements(
     shared_ptr<ShellScriptLoopIdxGetter> parentLooper, const std::vector<std::string>& lines,
     size_t& idx) {
@@ -86,7 +126,10 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
 
         // 블록 종료를 알리는 '}'를 만나면 이 블록의 파싱 종료
         if (line == "}") {
-            // 블록이 정상 종료되었으므로 idx를 한 칸 증가시키고 반환
+            if (mValidationStack.empty()) {
+                throw std::runtime_error("Error: .");
+            }
+            mValidationStack.pop();
             return commandVec;
         }
 
@@ -101,6 +144,7 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
                 parseParameter(match[3].str(), parentLooper);
 
             ++idx;  // loop 다음 줄부터 블록 내부 파싱 시작
+            mValidationStack.push('{');
 
             // 재귀 호출하여 현재 loop의 내부 구문 파싱
             shared_ptr<ShellScriptLoopCommand> compositCmd =
@@ -113,16 +157,9 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
             }
             commandVec.push_back(compositCmd);
         } else {
-            // loop header가 아닌 경우는 단순 명령어로 처리 (닫는 중괄호 '}'도 여기서 걸러짐)
-            // 만약 line이 "loop"로 시작하지만 형식이 올바르지 않으면 예외 처리
-            if (line.find("loop") == 0) {
-                throw std::runtime_error(
-                    "Error: Malformed loop statement or missing '{' at line: " + line);
-            }
-            // 명령어 파싱: 공백으로 분리
+            // 명령어 파싱: 공백으로 분리. Parameter는 
             vector<string> separatedStr = ShellUtil::getUtilObj().splitString(line);
-            ShellScriptApiCommand scriptCmdEnum =
-                ShellUtil::getUtilObj().parseScriptApiCmd(separatedStr[0]);
+            ShellScriptApiCommand scriptCmdEnum = parseScriptApiCmd(separatedStr[0]);
             shared_ptr<ShellScriptCommandInterface> scriptCmd;
 
             if (scriptCmdEnum == SCRIPT_UNKOWN) {
@@ -134,14 +171,25 @@ std::vector<shared_ptr<ShellScriptCommandInterface>> ScriptParser::parseStatemen
                     parseParameter(separatedStr[2], parentLooper);
 
                 scriptCmd =
-                    std::make_shared<ShellScriptCompareCommand>(mpDriverInterface, lba, expected);
+                    std::make_shared<ShellScriptCompareCommand>(lba, expected);
             } else if (scriptCmdEnum == WRITE_SCRIPT_COMMAND) {
                 shared_ptr<ShellScriptParameterGenInterface> lba =
                     parseParameter(separatedStr[1], parentLooper);
                 shared_ptr<ShellScriptParameterGenInterface> val =
                     parseParameter(separatedStr[2], parentLooper);
 
-                scriptCmd = std::make_shared<ShellScriptWriteCommand>(mpDriverInterface, lba, val);
+                scriptCmd = std::make_shared<ShellScriptWriteCommand>(lba, val);
+            } else if (scriptCmdEnum == ERASE_SCRIPT_COMMAND) {
+                shared_ptr<ShellScriptParameterGenInterface> startLba =
+                    parseParameter(separatedStr[1], parentLooper);
+                shared_ptr<ShellScriptParameterGenInterface> endLba =
+                    parseParameter(separatedStr[2], parentLooper);
+
+                scriptCmd =
+                    std::make_shared<ShellScriptEraseCommand>(startLba, endLba);
+            } else if (scriptCmdEnum == FLUSH_SCRIPT_COMMAND) {
+                scriptCmd =
+                    std::make_shared<ShellScriptFlushCommand>();
             }
             commandVec.push_back(scriptCmd);
         }

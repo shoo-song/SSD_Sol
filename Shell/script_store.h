@@ -2,7 +2,6 @@
 #include <memory>
 #include <unordered_map>
 
-#include "shell_exception.h"
 #include "shell_script_command_interface.h"
 
 using std::shared_ptr;

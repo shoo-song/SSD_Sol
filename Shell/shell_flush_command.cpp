@@ -1,19 +1,19 @@
 #include "shell_flush_command.h"
+#include "ssddriver_store.h"
 
-ShellFlushCommand::ShellFlushCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellFlushCommand::ShellFlushCommand() {
 }
 
 string ShellFlushCommand::execute(vector<string> args) {
     try {
         string output = "[Flush] Done";
 
-        mpDriverInterface->flushSSD();
+        SsdDriverStore::getSsdDriverStore().getSsdDriver()->flushSSD();
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

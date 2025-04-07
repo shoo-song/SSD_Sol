@@ -1,7 +1,7 @@
 #include "shell_read_command.h"
+#include "ssddriver_store.h"
 
-ShellReadCommand::ShellReadCommand(SsdDriverInterface* pDriverInterface) {
-    mpDriverInterface = pDriverInterface;
+ShellReadCommand::ShellReadCommand() {
 }
 
 string ShellReadCommand::execute(vector<string> args) {
@@ -9,17 +9,17 @@ string ShellReadCommand::execute(vector<string> args) {
         vector<unsigned int> convertedArgs = convertCmdArgs(args);
         string output = "[Read] LBA ";
 
-        unsigned int result = mpDriverInterface->readSSD((int)convertedArgs[0]);
+        unsigned int result = SsdDriverStore::getSsdDriverStore().getSsdDriver()->readSSD((int)convertedArgs[0]);
 
         output += ShellUtil::getUtilObj().toTwoDigitString(convertedArgs[0]);
         output += " : ";
         output += ShellUtil::getUtilObj().toHexFormat(result);
 
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }
 
@@ -28,14 +28,14 @@ vector<unsigned int> ShellReadCommand::convertCmdArgs(vector<string> args) {
         vector<unsigned int> output;
 
         if (args.size() != 2) {
-            throw ShellArgConvertException("args parameter size invalid");
+            throw ShellException("args parameter size invalid");
         }
 
         output.push_back(ShellUtil::getUtilObj().convertDecimalStringForLba(args[1]));
         return output;
-    } catch (ShellArgConvertException e) {
+    } catch (ShellException e) {
         throw e;
     } catch (exception e) {
-        throw ShellArgConvertException("invalid args");
+        throw ShellException("invalid args");
     }
 }

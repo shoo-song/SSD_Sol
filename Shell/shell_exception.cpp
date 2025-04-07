@@ -1,5 +1,5 @@
 #include "shell_exception.h"
 
-ShellArgConvertException::ShellArgConvertException(const std::string& msg) : message(msg) {}
+ShellException::ShellException(const std::string& msg) : message(msg) {}
 
-const char* ShellArgConvertException::what() const noexcept { return message.c_str(); }
+const char* ShellException::what() const noexcept { return message.c_str(); }

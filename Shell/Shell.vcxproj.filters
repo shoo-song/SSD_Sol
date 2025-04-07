@@ -149,6 +149,15 @@
     <ClCompile Include="shell_full_write_command.cpp">
       <Filter>소스 파일\shell\shellcommand</Filter>
     </ClCompile>
+    <ClCompile Include="shell_script_erase_command.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
+    <ClCompile Include="ssddriver_store.cpp">
+      <Filter>소스 파일\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_script_flush_command.cpp">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -162,7 +171,9 @@
     <None Include="3_WriteReadAging.script">
       <Filter>소스 파일\shell\shellscript\script</Filter>
     </None>
-    <None Include=".clang-format" />
+    <None Include="4_EraseAndWriteAging.script">
+      <Filter>소스 파일\shell\shellscript\script</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -183,27 +194,78 @@
     <ClInclude Include="shell_util.h">
       <Filter>소스 파일\common</Filter>
     </ClInclude>
-    <ClInclude Include="script_loader.h" />
-    <ClInclude Include="script_parser.h" />
-    <ClInclude Include="script_store.h" />
-    <ClInclude Include="shell.h" />
-    <ClInclude Include="shell_command_factory.h" />
-    <ClInclude Include="shell_erase_command.h" />
-    <ClInclude Include="shell_erase_range_command.h" />
-    <ClInclude Include="shell_exception.h" />
-    <ClInclude Include="shell_executor.h" />
-    <ClInclude Include="shell_exit_command.h" />
-    <ClInclude Include="shell_flush_command.h" />
-    <ClInclude Include="shell_full_read_command.h" />
-    <ClInclude Include="shell_full_write_command.h" />
-    <ClInclude Include="shell_help_command.h" />
-    <ClInclude Include="shell_script_compare_command.h" />
-    <ClInclude Include="shell_script_loop_command.h" />
-    <ClInclude Include="shell_script_run_command.h" />
-    <ClInclude Include="shell_script_write_command.h" />
-    <ClInclude Include="shell_read_command.h" />
-    <ClInclude Include="shell_write_command.h" />
-    <ClInclude Include="ssddriver_interface.h" />
+    <ClInclude Include="shell_script_erase_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="script_loader.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="script_parser.h">
+      <Filter>소스 파일\shell\shellscript\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="script_store.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="shell.h">
+      <Filter>소스 파일\shell</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_command_factory.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_erase_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_erase_range_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_exception.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_exit_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_flush_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_full_read_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_full_write_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_help_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_read_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_script_loop_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_script_write_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_script_run_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="ssddriver_interface.h">
+      <Filter>소스 파일\driver</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_executor.h">
+      <Filter>소스 파일\shell</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_write_command.h">
+      <Filter>소스 파일\shell\shellcommand</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_script_compare_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
+    <ClInclude Include="ssddriver_store.h">
+      <Filter>소스 파일\driver</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_script_flush_command.h">
+      <Filter>소스 파일\shell\shellscript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dummy_file1.txt">

@@ -1,4 +1,7 @@
 #include "shell_script_loop_command.h"
+#include <exception>
+
+using std::exception;
 
 ShellScriptLoopCommand::ShellScriptLoopCommand(
     shared_ptr<ShellScriptParameterGenInterface> startParameter,

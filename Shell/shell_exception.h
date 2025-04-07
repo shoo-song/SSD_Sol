@@ -6,9 +6,9 @@
 using std::exception;
 using std::string;
 
-class ShellArgConvertException : public std::exception {
+class ShellException : public std::exception {
    public:
-    explicit ShellArgConvertException(const std::string& msg);
+    explicit ShellException(const std::string& msg);
     const char* what() const noexcept override;
 
    private:

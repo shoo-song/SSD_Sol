@@ -1,0 +1,8 @@
+ERASE VAL(0) VAL(2)
+loop VAL(0) VAL(30) VAL(1) {
+	loop VAL(2) VAL(100) VAL(2) {
+		WRITE IND(0) VAL(10)
+		WRITE IND(0) VAL(10)
+		ERASE IND(0) IND(2)
+	}
+}
