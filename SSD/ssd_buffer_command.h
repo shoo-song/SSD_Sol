@@ -1,17 +1,17 @@
 #pragma once
 
-#include "CommandFileSystem.h"
-#include "Command_parser.h"
-#include "SSD.cpp"
+#include "ssd_command_file_system.h"
+#include "ssd_command_parser.h"
+#include "ssd.cpp"
 const int MAX_BUFFER_SIZE = 5;
 class BufferCommand {
  public:
   BufferCommand(CommandFileSystem &filesystem) : CommandFileMgr(filesystem) {}
   ~BufferCommand() = default;
-  void InitDir(void);
-  void InitCmdList(void);
-  int CheckValidCmdCount(void);
-  void PushCommand(CmdInfo cmdInfo);
+  void initDir(void);
+  void initCmdList(void);
+  int checkValidCmdCount(void);
+  void pushCommand(CmdInfo cmdInfo);
 
   void doWriteAndEraseBuffer(std::vector<std::string> &fileList,
                              CmdInfo &cmdInfo);
@@ -26,19 +26,19 @@ class BufferCommand {
                         std::vector<std::string> &fileList);
   int processFileSlot(std::vector<std::string> &fileList, CmdInfo &cmdInfo);
 
-  void HandleWriteCommand(CmdInfo *prevCMD, CmdInfo *curCMD);
-  void HandleEraseCommand(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void handleWriteCommand(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void handleEraseCommand(CmdInfo *prevCMD, CmdInfo *curCMD);
 
-  void HandleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD);
-  void HandleWriteWrite(CmdInfo *curCMD, CmdInfo *prevCMD);
-  void HandleWriteErase(CmdInfo *prevCMD, CmdInfo *curCMD);
-  void HandleEraseErase(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void handleEraseWrite(CmdInfo *curCMD, CmdInfo *prevCMD);
+  void handleWriteWrite(CmdInfo *curCMD, CmdInfo *prevCMD);
+  void handleWriteErase(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void handleEraseErase(CmdInfo *prevCMD, CmdInfo *curCMD);
 
   string generateFileName(int fileOffset, CmdInfo cmd);
-  void UpdateFileNames(std::vector<std::string> &fileList);
+  void updateFileNames(std::vector<std::string> &fileList);
   void changeFileNameToEmpty(std::vector<std::string> &fileList);
-  void MergeCMD(int cmd_index, std::vector<string> fileList);
-  void MergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD);
+  void mergeCMD(int cmd_index, std::vector<string> fileList);
+  void mergeEraseRange(CmdInfo *prevCMD, CmdInfo *curCMD);
   bool isEmptyBuffer(string name);
 
   bool isErasedRange(const CmdInfo &prevCmd, int LBA) const;

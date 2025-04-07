@@ -1,5 +1,5 @@
 #pragma once
-#include "DataFileSystem.h"
+#include "ssd_data_file_system.h"
 using namespace std;
 
 #define MAX_LBA_COUNT (100)
@@ -33,7 +33,7 @@ class CommandParser {
  private:
   std::unique_ptr<DataFileSystem> FileObj;
 
-  bool PrintError();
+  bool printError();
   bool isInvalidCommand(size_t pos, std::string &LBAstring, uint32_t LBA);
 
   bool isCmdTypeValid(const char &CMD);

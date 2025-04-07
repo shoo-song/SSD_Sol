@@ -1,4 +1,4 @@
-#include "CommandFileSystem.h"
+#include "ssd_command_file_system.h"
 
 bool CommandFileSystem::directoryExists(const std::string &path) {
   struct stat info;
