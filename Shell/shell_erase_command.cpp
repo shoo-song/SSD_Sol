@@ -7,9 +7,19 @@ ShellEraseCommand::ShellEraseCommand() {
 string ShellEraseCommand::execute(vector<string> args) {
     try {
         vector<unsigned int> convertedArgs = convertCmdArgs(args);
-        string output = "[Erase] Done";
+        string output = "";
+        
+        int startLBA = (int)convertedArgs[0];
+        int rangeLBA = (int)convertedArgs[1];
+        int maxChunkSize = 10;
 
-        SsdDriverStore::getSsdDriverStore().getSsdDriver()->eraseSSD((int)convertedArgs[0], (int)convertedArgs[1]);
+        while (rangeLBA > 0) {
+            int chunk = std::min(rangeLBA, maxChunkSize);
+            SsdDriverStore::getSsdDriverStore().getSsdDriver()->eraseSSD(startLBA, chunk);
+            output += "[Erase] Done " + std::to_string(startLBA) + ' ' + std::to_string(chunk) + '\n';
+            startLBA += chunk;
+            rangeLBA -= chunk;
+        }
 
         return output;
     } catch (ShellException e) {
